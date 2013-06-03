@@ -19,21 +19,27 @@
 from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError
 from flask.ext.wtf import Required
 from models import Servers
+import re
 
 class ServersForm(Form):
-    name = TextField('name', validators=[Required()])
-    address = TextField('address', validators=[Required()])
-    login = TextField('login', validators=[Required()])
-    password = PasswordField('password', validators=[Required()])
+    name = TextField('name', [Required()])
+    address = TextField('address', [Required()])
+    login = TextField('login')
+    password = PasswordField('password')
 
-#    def validate_login(self, field):
-#        user = self.get_user()
-#
-#        if user is None:
-#            raise ValidationError('Invalid user')
-#
-#        if user.password != self.password.data:
-#            raise ValidationError('Invalid password')
-#
-#    def get_user(self):
-#        return User(self.login.data, self.password.data)
+
+    def validate_name(self, field):
+        check_name = re.compile('^[a-zA-Z0-9\.]+$')
+        if not re.search(check_name, field.data):
+            raise ValidationError('Invalid Name')
+
+    def validate_address(self, field):
+        check_ip = re.compile('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')
+        if not re.match(check_ip, field.data):
+            raise ValidationError('Invalid Host')
+
+    def validate_login(self, field):
+        return
+
+    def validate_password(self, field):
+        return

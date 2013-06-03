@@ -1,25 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
+    {% from "forms/macros.html" import render_field %}
 
     <div class="container">
-
       <form class="form-signin" method="post" name="login">
-        {{loginform.hidden_tag()}}
+        {{ loginform.csrf_token }}
         <h2 class="form-signin-heading">Please sign in</h2>
-        {{loginform.login(class_="input-block-level",placeholder="Username")}}
-        {% for error in loginform.errors.login %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %}
-        {{loginform.password(class_="input-block-level",placeholder="Password",type="password")}}
-        {% for error in loginform.errors.password %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %}
-        <label class="checkbox">
-          {{loginform.remember_me}} Remember me
-        </label>
+        {{ render_field(loginform.login, class="input-block-level",placeholder="Username") }}
+        {{ render_field(loginform.password, class="input-block-level",placeholder="Password") }}
+        {{ render_field(loginform.remember_me, class="checkbox") }} 
         <button class="btn btn-large btn-primary" type="submit">Sign in</button>
       </form>
 
     </div>
 
 {% endblock %}
+

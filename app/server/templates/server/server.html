@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <a href="{{ url_for('servers.server_add') }}">Add</a>
+  <p class="text-right"><a class="btn btn-primary btn-small" href="{{ url_for('servers.server_add') }}"><i class="icon-plus icon-white"></i> Add</a></p>
   <table class="table table-bordered">
     {% for s in servers %}
       <tr>
@@ -11,8 +11,14 @@
       <td>{{ s.login }}</td>
       <td>{{ s.password }}</td>
       <td>
-        <a href="{{url_for('servers.server_del', id=s.id)}}"</a>del|
-        <a href="{{url_for('servers.server_edit', id=s.id)}}"</a>edit
+        <div class="btn-group">
+	  <a class="btn btn-primary btn-small" href="#"><i class="icon-circle-arrow-down icon-white"></i> Action</a>
+	  <a class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+	  <ul class="dropdown-menu">
+	    <li><a href="{{url_for('servers.server_edit', id=s.id)}}"><i class="icon-pencil"></i> Edit</a></li>
+	    <li><a href="{{url_for('servers.server_del', id=s.id)}}"><i class="icon-trash"></i> Delete</a></li>
+          </ul>
+        </div>
       </td>
       </tr>
     {% endfor %}

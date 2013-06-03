@@ -17,12 +17,12 @@
 
 from flask import render_template, Blueprint
 from flask.ext.login import login_required
-from app import servers_list, plugins_list
+from app import db, servers_list, plugins_list
 
-devices = Blueprint('devices', __name__, template_folder='templates/devices')
+example = Blueprint('example', __name__, template_folder='templates/example')
 
-@devices.route('/devices')
+@example.route('/example')
 @login_required
-def device():
-    return render_template('devices.html', servers_list=servers_list, plugins_list=plugins_list)
+def ex():
+    return render_template('example.html', servers_list=servers_list, plugins_list=plugins_list)
 

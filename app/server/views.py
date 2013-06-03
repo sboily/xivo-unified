@@ -19,15 +19,14 @@ from flask import render_template, Blueprint, request, flash, redirect, url_for
 from flask.ext.login import login_required
 from models import Servers
 from forms import ServersForm
-from app import db
+from app import db, plugins_list, servers_list
 
 servers = Blueprint('servers', __name__, template_folder='templates/server')
 
 @servers.route('/server')
 @login_required
 def server():
-    servers = Servers.query.order_by(Servers.name)
-    return render_template('server.html', servers=servers)
+    return render_template('server.html', servers_list=servers_list, plugins_list=plugins_list)
 
 @servers.route('/server/add', methods=['GET', 'POST'])
 @login_required
@@ -40,7 +39,7 @@ def server_add():
         db.session.commit()
         flash('Server added')
         return redirect(url_for("servers.server"))
-    return render_template('server_add.html', serverform=serverform)
+    return render_template('server_add.html', serverform=serverform, servers_list=servers_list, plugins_list=plugins_list)
 
 @servers.route('/server/del/<id>')
 @login_required
@@ -61,4 +60,4 @@ def server_edit(id):
         db.session.commit()
         flash('Server edit')
         return redirect(url_for("servers.server"))
-    return render_template('server_edit.html', serverform=serverform)
+    return render_template('server_edit.html', serverform=serverform, servers_list=servers_list, plugins_list=plugins_list)

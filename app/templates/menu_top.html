@@ -1,5 +1,9 @@
 {% if current_user.is_authenticated() %}
 
+<script>
+$('.dropdown-toggle').dropdown();
+</script>
+
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
@@ -16,6 +20,16 @@
             </p>
         <ul class="nav">
           <li><a href="{{ url_for('home') }}">Home</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <li id="fat-menu" class="dropdown">
+          <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Servers<b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="servers">
+              {% for s in servers_list %}
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_edit', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
+              {% endfor %}
+            </ul>
+          </li>
         </ul>
       </div>
     </div>

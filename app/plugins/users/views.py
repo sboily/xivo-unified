@@ -17,11 +17,12 @@
 
 from flask import render_template, Blueprint
 from flask.ext.login import login_required
+from app import db, servers_list, plugins_list
 
 users = Blueprint('users', __name__, template_folder='templates/users')
 
 @users.route('/users')
 @login_required
 def user():
-    return render_template('users.html')
+    return render_template('users.html', servers_list=servers_list, plugins_list=plugins_list)
 

@@ -30,12 +30,15 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login.login'
 
+from server.models import Servers
+servers_list = Servers.query.order_by(Servers.name)
+
 try:
-    plugins_menu = []
+    plugins_list = []
     for plugin in register_plugins(app):
         exec("from app.plugins.%s.views import %s" %(plugin, plugin))
         exec("app.register_blueprint(%s)" % plugin)
-        plugins_menu.append(plugin)
+        plugins_list.append(plugin)
 except ImportError, e:
     print "Can't register plugin : %s" % e
 
@@ -45,9 +48,4 @@ app.register_blueprint(login_form)
 from app.server.views import servers
 app.register_blueprint(servers)
 
-
-@app.route('/')
-@required_role('admin')
-def home():
-    return render_template('base.html')
-
+from home import home

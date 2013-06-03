@@ -10,7 +10,10 @@
       <td>{{ s.address }}</td>
       <td>{{ s.login }}</td>
       <td>{{ s.password }}</td>
-      <td><a href="{{url_for('servers.server_del')}}/{{ s.id }}"</a>del</td>
+      <td>
+        <a href="{{url_for('servers.server_del', id=s.id)}}"</a>del|
+        <a href="{{url_for('servers.server_edit', id=s.id)}}"</a>edit
+      </td>
       </tr>
     {% endfor %}
   </table>

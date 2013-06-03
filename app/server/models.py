@@ -1,3 +1,21 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2013 Sylvain Boily <sboily@proformatique.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from app import db
 
 class Servers(db.Model):
@@ -8,7 +26,7 @@ class Servers(db.Model):
     login = db.Column(db.String(200))
     password = db.Column(db.String(200))
 
-    def __init__(self, name, address, login, password):
+    def __init__(self, name, address, login=None, password=None):
         self.name = name
         self.address = address
         self.login = login

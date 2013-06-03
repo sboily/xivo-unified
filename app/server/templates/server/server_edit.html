@@ -5,7 +5,7 @@
 
       <form class="form" method="post" name="server/new">
         {{serverform.hidden_tag()}}
-        <h2 class="form">Add new server</h2>
+        <h2 class="form">Edit server</h2>
 
         {{serverform.name(class_="input-block-level",placeholder="Name")}}
         {% for error in serverform.errors.name %}
@@ -28,7 +28,7 @@
         {% endfor %}
 
 
-        <button class="btn btn-primary" type="submit">Add</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
 
       </form>
 

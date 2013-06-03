@@ -1,0 +1,9 @@
+
+sudo apt-get install lighttpd python-flup python-pip
+sudo lighttpd-enable-mod fastcgi accesslog
+
+sudo pip install flask
+sudo pip install flask-login
+sudo pip install flask-wtform
+sudo pip install flask-sqlalchemy
+sudo pip install restclient

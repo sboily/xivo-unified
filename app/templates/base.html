@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>XiVO</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+
+<body>
+
+{% include "menu_top.html" %}
+
+    <div class="container">
+        <!-- Show any flashed messages if required -->
+        <div class="row">
+            <div class="span12">
+                {% for category, msg in get_flashed_messages(with_categories=true) %}
+                <div class="alert">
+                    {{ msg }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- End show flashed messages -->
+    </div> <!-- /container of flashes -->
+
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+
+{% include "menu_left.html" %}
+
+        {% block content %}
+	<div class="container">
+	  <div class="hero-unit">
+	    <h1>Hello, XiVO</h1>
+	      <p>This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.</p>
+	      <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+	  </div>
+	</div>
+        {% endblock %}
+
+        </div>
+      </div>
+
+{% include "footer.html" %}
+
+    <!-- jQuery Library and Bootstrap functionality (such as handling the drop-down menu) -->
+    <script type=text/javascript src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

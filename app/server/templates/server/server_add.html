@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="container">
+
+      <form class="form" method="post" name="server/new">
+        {{serverform.hidden_tag()}}
+        <h2 class="form">Add new server</h2>
+
+        {{serverform.name(class_="input-block-level",placeholder="Name")}}
+        {% for error in serverform.errors.name %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+
+        {{serverform.address(class_="input-block-level",placeholder="Address")}}
+        {% for error in serverform.errors.address %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+
+        {{serverform.login(class_="input-block-level",placeholder="Login")}}
+        {% for error in serverform.errors.login %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+
+        {{serverform.password(class_="input-block-level",placeholder="Password",type="password")}}
+        {% for error in serverform.errors.password %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+
+
+        <button class="btn btn-primary" type="submit">Add</button>
+      </form>
+
+    </div>
+
+{% endblock %}
+

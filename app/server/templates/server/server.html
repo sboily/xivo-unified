@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+  <a href="{{ url_for('servers.server_add') }}">Add</a>
+  <table class="table table-bordered">
+    {% for s in servers %}
+      <tr>
+      <td>{{ s.name }}</td>
+      <td>{{ s.address }}</td>
+      <td>{{ s.login }}</td>
+      <td>{{ s.password }}</td>
+      <td><a href="{{url_for('servers.server_del')}}/{{ s.id }}"</a>del</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

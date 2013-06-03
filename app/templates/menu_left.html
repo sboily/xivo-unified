@@ -4,10 +4,10 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Configuration</li>
-              <li class="active"><a href="{{url_for('servers.server')}}">Servers</a></li>
+              <li {% if request.endpoint == active_page %} class="active" {% endif %}><a href="{{url_for('servers.server')}}">Servers</a></li>
               <li class="nav-header">Plugins</li>
               {% for p in plugins_list %}
-                <li><a href="/{{ p }}">{{ p }}</a></li>
+                <li {% if request.endpoint == active_page %} class="active" {% endif %}><a href="/{{ p }}">{{ p }}</a></li>
               {% endfor %}
             </ul>
           </div>

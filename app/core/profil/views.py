@@ -15,12 +15,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, g
-from decorators import required_role
-from app import app, servers_list, plugins_list
+from flask import render_template, Blueprint
+from flask.ext.login import login_required
+from app import db, plugins_list, servers_list
+
+profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
 
-@app.route('/')
-@required_role('admin')
-def home():
+@profil.route('/myprofil/<id>')
+@login_required
+def myprofil(id):
     return render_template('base.html', servers_list=servers_list, plugins_list=plugins_list)
+

@@ -30,7 +30,7 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login.login'
 
-from server.models import Servers
+from core.server.models import Servers
 servers_list = Servers.query.order_by(Servers.name)
 
 try:
@@ -42,10 +42,13 @@ try:
 except ImportError, e:
     print "Can't register plugin : %s" % e
 
-from app.login.views import login_form
+from app.core.login.views import login_form
 app.register_blueprint(login_form)
 
-from app.server.views import servers
+from app.core.server.views import servers
 app.register_blueprint(servers)
+
+from app.core.profil.views import profil
+app.register_blueprint(profil)
 
 from home import home

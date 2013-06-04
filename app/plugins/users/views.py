@@ -18,7 +18,7 @@
 from flask import render_template, Blueprint, session, flash, redirect, url_for, g, request
 from flask.ext.login import login_required
 from app import app, db, servers_list, plugins_list
-from app.server.models import Servers
+from app.core.server.models import Servers
 from restclient import GET, POST, PUT, DELETE
 import json
 from forms import UserForm

@@ -22,8 +22,10 @@ from app.core.server.models import Servers
 from restclient import GET, POST, PUT, DELETE
 import json
 from forms import UserForm
+import wtforms_json
 
 users = Blueprint('users', __name__, template_folder='templates/users')
+wtforms_json.init()
 
 @app.before_request
 def before_request():
@@ -54,11 +56,16 @@ def user_add():
         return redirect(url_for("users.user"))
     return render_template('users_add.html', servers_list=servers_list, plugins_list=plugins_list, userform=userform)
 
-@users.route('/users/<id>')
+@users.route('/users/<id>', methods=['GET', 'POST'])
 @login_required
 def user_edit(id):
     user = _get_user(id)
-    return render_template('users_edit.html', servers_list=servers_list, plugins_list=plugins_list, user=user)
+    userform = UserForm.from_json(user)
+    form = UserForm(obj=user)
+    if userform.is_submitted():
+        _edit_user(form, id)
+        return redirect(url_for("users.user"))
+    return render_template('users_edit.html', servers_list=servers_list, plugins_list=plugins_list, user=user, userform=userform)
 
 @users.route('/users/del/<id>')
 @login_required
@@ -82,13 +89,13 @@ def _get_users():
     return _check_json(users_response)
 
 def _get_user(id):
-    user_response = GET(g.url_rest_user + "/" + id, credentials=(g.server.login, g.server.password),
+    user_response = GET(g.url_rest_user + id, credentials=(g.server.login, g.server.password),
                                                     headers={'Content-Type': 'application/json'}, 
                                                     httplib_params={'disable_ssl_certificate_validation' : True})
     return _check_json(user_response)
 
 def _del_user(id):
-    del_response = DELETE(g.url_rest_user + "/" + id, credentials=(g.server.login, g.server.password),
+    del_response = DELETE(g.url_rest_user + id, credentials=(g.server.login, g.server.password),
                                                       headers={'Content-Type': 'application/json'}, 
                                                       httplib_params={'disable_ssl_certificate_validation' : True})
     return del_response
@@ -100,6 +107,19 @@ def _add_user(userform):
              'password' : userform.password.data
            }
     user_add = POST(g.url_rest_user,
+                    params=user,
+                    credentials=(g.server.login, g.server.password),
+                    headers={'Content-Type': 'application/json'},
+                    httplib_params={'disable_ssl_certificate_validation' : True})
+    return True
+
+def _edit_user(userform, id):
+    user = { 'firstname' : userform.firstname.data,
+             'lastname' : userform.lastname.data,
+             'username' : userform.username.data,
+             'password' : userform.password.data
+           }
+    user_edit = PUT(g.url_rest_user + id,
                     params=user,
                     credentials=(g.server.login, g.server.password),
                     headers={'Content-Type': 'application/json'},

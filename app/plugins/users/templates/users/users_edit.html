@@ -4,11 +4,17 @@
 
     <div class="container">
 
-    {% for u in user %}
-        {{ u }} : {{ user[u] }} <br>
-    {% endfor %}
+      <form class="form" method="post" name="user/edit">
+        {{ userform.csrf_token }}
+        <h2 class="form">Add user</h2>
+        {{ render_field(userform.firstname, class="input-block-level",placeholder="Firstname") }}
+        {{ render_field(userform.lastname, class="input-block-level",placeholder="Lastname") }}
+        {{ render_field(userform.username, class="input-block-level",placeholder="Username") }}
+        {{ render_field(userform.password, class="input-block-level",placeholder="Password") }}
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+      </form>
 
     </div>
 
 {% endblock %}
-

@@ -15,10 +15,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, g
+from flask import render_template, g, session
 from decorators import required_role
+from flask.ext.login import current_user
 from app import app, servers_list, plugins_list
+from core.server.models import Servers
 
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated():
+        if session.has_key('server_id') and session['server_id']:
+            g.server_id = session['server_id']
+            g.server = Servers.query.get_or_404(session['server_id'])
 
 @app.route('/')
 @required_role('admin')

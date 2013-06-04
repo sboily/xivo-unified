@@ -27,11 +27,9 @@ import wtforms_json
 users = Blueprint('users', __name__, template_folder='templates/users')
 wtforms_json.init()
 
-@app.before_request
+@users.before_request
 def before_request():
-    if session.has_key('server_id') and session['server_id']:
-        g.server_id = session['server_id']
-        g.server = Servers.query.get_or_404(session['server_id'])
+    if hasattr(g, 'server'):
         g.url_rest_user = "https://%s:50051/1.0/users/" % g.server.address
     else:
         flash('Sorry you need to choose a server !')

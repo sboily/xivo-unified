@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+Connecting to {{ server.address }}
+
+<div class="container">
+  <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('voicemails.voicemail_add')}}"><i class="icon-plus icon-white"></i> Add</a></p>
+  <table class="table table-bordered">
+    {% for v in voicemails %}
+      <tr>
+      <td>{{ v.mailbox }}</td>
+      <td>{{ v.email }}</td>
+      <td>{{ v.password }}</td>
+      <td>
+        <div class="btn-group">
+	  <a class="btn btn-primary btn-small" href="#"><i class="icon-circle-arrow-down icon-white"></i> Action</a>
+	  <a class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+	  <ul class="dropdown-menu">
+	    <li><a href="{{url_for('voicemails.voicemail_edit', id=v.id)}}"><i class="icon-pencil"></i> Edit</a></li>
+	    <li><a href="{{url_for('voicemails.voicemail_del', id=v.id)}}"><i class="icon-trash"></i> Delete</a></li>
+          </ul>
+        </div>
+      </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+
+
+{% endblock %}

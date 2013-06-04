@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, request, flash, redirect, url_for
+from flask import render_template, Blueprint, request, flash, redirect, url_for, session
 from flask.ext.login import login_required
 from models import Servers
 from forms import ServersForm
@@ -61,3 +61,10 @@ def server_edit(id):
         flash('Server edit')
         return redirect(url_for("servers.server"))
     return render_template('server_edit.html', serverform=serverform, servers_list=servers_list, plugins_list=plugins_list)
+
+@servers.route('/server/save/<id>')
+@login_required
+def server_save(id):
+    session['server_id'] = id
+    session.modified = True
+    return redirect(url_for("home"))

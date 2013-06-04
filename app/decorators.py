@@ -17,7 +17,7 @@
 
 
 from flask.ext.login import current_user
-from flask import current_app
+from flask import current_app, g
 from functools import wraps
 
 def required_role(role):

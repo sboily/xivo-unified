@@ -15,14 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, session
 from flask.ext.login import login_required
 from app import db, servers_list, plugins_list
+from app.server.models import Servers
+from restclient import GET, POST, PUT, DELETE
+import json
 
 users = Blueprint('users', __name__, template_folder='templates/users')
 
 @users.route('/users')
 @login_required
 def user():
-    return render_template('users.html', servers_list=servers_list, plugins_list=plugins_list)
-
+    id = session['server_id']
+    server = Servers.query.get_or_404(id)
+    r = GET("https://%s:50051/1.0/users/" % server.address, 
+             headers={'Content-Type': 'application/json'}, 
+             httplib_params={'disable_ssl_certificate_validation' : True})
+    d = json.loads(r)
+    return render_template('users.html', servers_list=servers_list, plugins_list=plugins_list, server=server, users=d['items'])

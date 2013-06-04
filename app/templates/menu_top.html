@@ -1,9 +1,5 @@
 {% if current_user.is_authenticated() %}
 
-<script>
-$('.dropdown-toggle').dropdown();
-</script>
-
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
@@ -26,7 +22,7 @@ $('.dropdown-toggle').dropdown();
           <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Servers<b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="servers">
               {% for s in servers_list %}
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_edit', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_save', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
               {% endfor %}
             </ul>
           </li>

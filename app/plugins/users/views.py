@@ -76,21 +76,21 @@ def _check_json(json_value):
     return check_json
 
 def _get_users():
-    users_response = GET(g.url_rest_user, 
-             headers={'Content-Type': 'application/json'}, 
-             httplib_params={'disable_ssl_certificate_validation' : True})
+    users_response = GET(g.url_rest_user, credentials=(g.server.login, g.server.password), 
+                                          headers={'Content-Type': 'application/json'}, 
+                                          httplib_params={'disable_ssl_certificate_validation' : True})
     return _check_json(users_response)
 
 def _get_user(id):
-    user_response = GET(g.url_rest_user + "/" + id, 
-             headers={'Content-Type': 'application/json'}, 
-             httplib_params={'disable_ssl_certificate_validation' : True})
+    user_response = GET(g.url_rest_user + "/" + id, credentials=(g.server.login, g.server.password),
+                                                    headers={'Content-Type': 'application/json'}, 
+                                                    httplib_params={'disable_ssl_certificate_validation' : True})
     return _check_json(user_response)
 
 def _del_user(id):
-    del_response = DELETE(g.url_rest_user + "/" + id, 
-             headers={'Content-Type': 'application/json'}, 
-             httplib_params={'disable_ssl_certificate_validation' : True})
+    del_response = DELETE(g.url_rest_user + "/" + id, credentials=(g.server.login, g.server.password),
+                                                      headers={'Content-Type': 'application/json'}, 
+                                                      httplib_params={'disable_ssl_certificate_validation' : True})
     return del_response
 
 def _add_user(userform):
@@ -101,6 +101,7 @@ def _add_user(userform):
            }
     user_add = POST(g.url_rest_user,
                     params=user,
+                    credentials=(g.server.login, g.server.password),
                     headers={'Content-Type': 'application/json'},
                     httplib_params={'disable_ssl_certificate_validation' : True})
     return True

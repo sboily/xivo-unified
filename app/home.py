@@ -24,3 +24,8 @@ from app import app, servers_list, plugins_list
 @required_role('admin')
 def home():
     return render_template('base.html', servers_list=servers_list, plugins_list=plugins_list)
+
+@app.route('/home')
+@required_role('admin')
+def home_server():
+    return render_template('home_server.html', servers_list=servers_list, plugins_list=plugins_list)

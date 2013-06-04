@@ -25,5 +25,5 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 @profil.route('/myprofil/<id>')
 @login_required
 def myprofil(id):
-    return render_template('base.html', servers_list=servers_list, plugins_list=plugins_list)
+    return render_template('profil.html', servers_list=servers_list, plugins_list=plugins_list)
 

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from "forms/macros.html" import render_field %}
+
+    <div class="container">
+
+    {% for u in user %}
+        {{ u }} : {{ user[u] }} <br>
+    {% endfor %}
+
+    </div>
+
+{% endblock %}
+

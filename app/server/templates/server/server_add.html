@@ -4,7 +4,7 @@
 
     <div class="container">
 
-      <form class="form" method="post" name="server/new">
+      <form class="form" method="post" name="server/add">
         {{ serverform.csrf_token }}
         <h2 class="form">Add server</h2>
         {{ render_field(serverform.name, class="input-block-level",placeholder="Name") }}

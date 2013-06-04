@@ -15,22 +15,92 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, session
+from flask import render_template, Blueprint, session, flash, redirect, url_for, g, request
 from flask.ext.login import login_required
-from app import db, servers_list, plugins_list
+from app import app, db, servers_list, plugins_list
 from app.server.models import Servers
 from restclient import GET, POST, PUT, DELETE
 import json
+from forms import UserForm
 
 users = Blueprint('users', __name__, template_folder='templates/users')
+
+@app.before_request
+def before_request():
+    if session.has_key('server_id') and session['server_id']:
+        g.server_id = session['server_id']
+        g.server = Servers.query.get_or_404(session['server_id'])
+        g.url_rest_user = "https://%s:50051/1.0/users/" % g.server.address
+    else:
+        flash('Sorry you need to choose a server !')
+        return redirect(url_for("home"))
 
 @users.route('/users')
 @login_required
 def user():
-    id = session['server_id']
-    server = Servers.query.get_or_404(id)
-    r = GET("https://%s:50051/1.0/users/" % server.address, 
+    users = _get_users()
+    if not users:
+        flash('Sorry the server have not any correct json data !')
+        return redirect(url_for("home"))
+    return render_template('users.html', servers_list=servers_list, plugins_list=plugins_list, server=g.server, users=users['items'])
+
+@users.route('/users/add', methods=['GET', 'POST'])
+@login_required
+def user_add():
+    userform = UserForm()
+    if request.method == 'POST' and userform.validate_on_submit():
+        _add_user(userform)
+        flash('User added')
+        return redirect(url_for("users.user"))
+    return render_template('users_add.html', servers_list=servers_list, plugins_list=plugins_list, userform=userform)
+
+@users.route('/users/<id>')
+@login_required
+def user_edit(id):
+    user = _get_user(id)
+    return render_template('users_edit.html', servers_list=servers_list, plugins_list=plugins_list, user=user)
+
+@users.route('/users/del/<id>')
+@login_required
+def user_del(id):
+    _del_user(id)
+    flash('User delete !')
+    return redirect(url_for("users.user"))
+
+def _check_json(json_value):
+    try:
+        check_json = json.loads(json_value)
+    except ValueError, e:
+        print 'Sorry there is no JSON response'
+        return False
+    return check_json
+
+def _get_users():
+    users_response = GET(g.url_rest_user, 
              headers={'Content-Type': 'application/json'}, 
              httplib_params={'disable_ssl_certificate_validation' : True})
-    d = json.loads(r)
-    return render_template('users.html', servers_list=servers_list, plugins_list=plugins_list, server=server, users=d['items'])
+    return _check_json(users_response)
+
+def _get_user(id):
+    user_response = GET(g.url_rest_user + "/" + id, 
+             headers={'Content-Type': 'application/json'}, 
+             httplib_params={'disable_ssl_certificate_validation' : True})
+    return _check_json(user_response)
+
+def _del_user(id):
+    del_response = DELETE(g.url_rest_user + "/" + id, 
+             headers={'Content-Type': 'application/json'}, 
+             httplib_params={'disable_ssl_certificate_validation' : True})
+    return del_response
+
+def _add_user(userform):
+    user = { 'firstname' : userform.firstname.data,
+             'lastname' : userform.lastname.data,
+             'username' : userform.username.data,
+             'password' : userform.password.data
+           }
+    user_add = POST(g.url_rest_user,
+                    params=user,
+                    headers={'Content-Type': 'application/json'},
+                    httplib_params={'disable_ssl_certificate_validation' : True})
+    return True

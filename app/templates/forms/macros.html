@@ -3,14 +3,14 @@
 {% if field.errors %}
   <div class="control-group error">
      <div class="controls">
-        {{ field.label(class="label") }} {{ field(id="inputError", **kwargs) }}
+        {{ field.label(class="control-label") }} {{ field(id="inputError", **kwargs) }}
         <span class="help-inline">{% for error in field.errors %} {{ error|e }} {% endfor %}</span>
     </div>
   </div>
       {% else %}
   <div class="control-group">
      <div class="controls">
-        {{ field.label(class="label") }} {{ field(**kwargs) }}
+        {{ field.label(class="control-label") }} {{ field(**kwargs) }}
     </div>
   </div>
       {% endif %}

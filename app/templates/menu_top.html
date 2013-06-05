@@ -14,7 +14,7 @@
           {% if g.server %}
               on {{ g.server.address }}&nbsp;&nbsp;
           {% endif %}
-              Welcome <a href="{{url_for('profil.myprofil', id=current_user.id)}}" class="navbar-link">{{current_user.username}}</a>&nbsp;&nbsp;
+              Welcome <a href="{{url_for('profil.myprofil', id=current_user.id)}}" class="navbar-link">{{current_user.displayname}}</a>&nbsp;&nbsp;
               <a href="{{ url_for('login.logout') }}"><i class="icon-off icon-white"></i></a>
             </p>
         <ul class="nav">

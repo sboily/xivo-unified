@@ -21,7 +21,7 @@ from flask.ext.wtf import Required
 from models import User
 
 class LoginForm(Form):
-    login = TextField('Username', validators=[Required()])
+    username = TextField('Username', validators=[Required()])
     password = PasswordField('Password', validators=[Required()])
     remember_me = BooleanField('Remember me', default=False)
 
@@ -38,4 +38,4 @@ class LoginForm(Form):
             raise ValidationError('Invalid password')
 
     def get_user(self):
-        return User.query.filter_by(email=self.login.data).first()
+        return User.query.filter_by(username=self.username.data).first()

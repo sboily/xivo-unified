@@ -33,7 +33,7 @@ def login():
         return redirect(url_for('home'))
     loginform = LoginForm()
     if loginform.validate_on_submit():
-        user = User.query.filter_by(email=loginform.login.data).first()
+        user = User.query.filter_by(username=loginform.username.data).first()
         if user and user.check_password(loginform.password.data):
             login_user(user, remember=loginform.remember_me.data)
             return redirect(request.args.get("next") or url_for("home"))

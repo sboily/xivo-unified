@@ -18,16 +18,16 @@
 
 
 from app import app, db
-from app.login.models import User, Role
-from app.server.models import Servers
+from app.core.login.models import User, Role
+from app.core.server.models import Servers
 
 def populate_db():
     db.drop_all()
     db.create_all()
     app.test_request_context().push()
 
-    ua = User('sboily@proformatique.com','Sylvain Boily','superpass')
-    sa = Servers('Sylvain Raspberry PI','192.168.1.123','root','superpass')
+    ua = User('quintana','superpass','sboily@proformatique.com','Sylvain Boily')
+    sa = Servers('Sylvain','192.168.1.123','test','test')
 
     ra = Role('admin')
     rb = Role('user')

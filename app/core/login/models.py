@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
+    displayname = db.Column(db.String(200))
     role = db.Column(db.SmallInteger, default=0)
     roles = db.relationship('Role', secondary=roles,
         backref=db.backref('users', lazy='dynamic'))
@@ -44,10 +45,11 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def __init__(self, email, username, password):
+    def __init__(self, username, password, email, displayname):
         self.email = email.lower()
         self.username = username
         self.password = generate_password_hash(password)
+        self.displayname = displayname
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.username, self.email)

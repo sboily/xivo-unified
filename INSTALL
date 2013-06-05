@@ -8,3 +8,4 @@ sudo pip install flask-wtf
 sudo pip install flask-sqlalchemy
 sudo pip install restclient
 sudo pip install wtforms-json
+sudo pip install flask-principal

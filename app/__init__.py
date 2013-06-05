@@ -18,6 +18,7 @@
 from flask import Flask, render_template
 from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.principal import Principal, Permission, RoleNeed
 from decorators import required_role
 from register_plugins import Plugins
 
@@ -25,6 +26,11 @@ app = Flask(__name__)
 app.config.from_object('conf')
 
 db = SQLAlchemy(app)
+
+Principal(app)
+admin_role = Permission(RoleNeed('admin'))
+manager_role = Permission(RoleNeed('manager')).union(admin_role)
+user_role = Permission(RoleNeed('user')).union(manager_role)
 
 lm = LoginManager()
 lm.init_app(app)

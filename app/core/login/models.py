@@ -16,52 +16,84 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask import current_app
-from flask.ext.login import UserMixin
-from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask.ext.login import UserMixin
+from flask.ext.principal import RoleNeed, UserNeed
+from werkzeug.utils import cached_property
+from flask.ext.sqlalchemy import BaseQuery
+from app import db
 
-roles = db.Table('roles',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
-)
+class UserQuery(BaseQuery):
+
+    def from_identity(self, identity):
+        try:
+            user = self.get(int(identity.id))
+        except ValueError:
+            user = None
+
+        if user:
+            identity.provides.update(user.provides)
+
+        identity.user = user
+
+        return user
 
 class User(db.Model, UserMixin):
+
+    query_class = UserQuery
+
+    USER = 100
+    MANAGER = 200
+    ADMIN = 300
+
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     displayname = db.Column(db.String(200))
-    role = db.Column(db.SmallInteger, default=0)
-    roles = db.relationship('Role', secondary=roles,
-        backref=db.backref('users', lazy='dynamic'))
+    role = db.Column(db.Integer, default=300)
 
-    def has_role(self,role_name):
-        if role_name in [x.name for x in self.roles]:
-            return True
-        return False
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-    def __init__(self, username, password, email, displayname):
+    def __init__(self, username, password, email, displayname, role):
         self.email = email.lower()
         self.username = username
         self.password = generate_password_hash(password)
         self.displayname = displayname
+        self.role = role
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    @cached_property
+    def permissions(self):
+        return self.Permissions(self)
+
+    @cached_property
+    def provides(self):
+        needs = [RoleNeed('authenticated'), UserNeed(self.id)]
+
+        if self.is_user:
+            needs.append(RoleNeed('user'))
+
+        if self.is_manager:
+            needs.append(RoleNeed('manager'))
+
+        if self.is_admin:
+            needs.append(RoleNeed('admin'))
+
+        return needs
+
+    @property
+    def is_user(self):
+        return self.role == self.USER
+
+    @property
+    def is_manager(self):
+        return self.role == self.MANAGER
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.username, self.email)
-
-class Role(db.Model):
-    __tablename__ = 'role'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    name = db.Column(db.String(200))
-
-    def __init__(self,name):
-        self.name = name
-
-    def __repr__(self):
-        return '<{name}>'.format(name=self.name)

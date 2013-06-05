@@ -15,30 +15,42 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, g, session
+from flask import render_template, g, session, flash, redirect, url_for
 from decorators import required_role
 from flask.ext.login import current_user
+from flask.ext.principal import identity_loaded
 from app import app, servers_list, plugins_list
 from core.server.models import Servers
+from core.login.models import User
+from flask.ext.login import login_required
 
 
 @app.before_request
 def before_request():
     if current_user.is_authenticated():
+        g.plugins_list = plugins_list
+        g.servers_list = servers_list
         if session.has_key('server_id') and session['server_id']:
             g.server_id = session['server_id']
             g.server = Servers.query.get_or_404(session['server_id'])
-            g.plugins_list = plugins_list
-            g.servers_list = servers_list
     else:
         print 'User not authentified !'
 
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    g.user = User.query.from_identity(identity)
+
 @app.route('/')
-@required_role('admin')
+@login_required
 def home():
-    return render_template('base.html', servers_list=servers_list, plugins_list=plugins_list)
+    return render_template('base.html')
 
 @app.route('/home')
-@required_role('admin')
+@login_required
 def home_server():
-    return render_template('home_server.html', servers_list=servers_list, plugins_list=plugins_list)
+    return render_template('home_server.html')
+
+@app.errorhandler(403)
+def page_not_found(e):
+    flash('Sorry you are not authorized !')
+    return redirect(url_for("home"))

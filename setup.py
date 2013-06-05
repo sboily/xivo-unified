@@ -18,7 +18,7 @@
 
 
 from app import app, db
-from app.core.login.models import User, Role
+from app.core.login.models import User
 from app.core.server.models import Servers
 
 def populate_db():
@@ -26,14 +26,8 @@ def populate_db():
     db.create_all()
     app.test_request_context().push()
 
-    ua = User('quintana','superpass','sboily@proformatique.com','Sylvain Boily')
-    sa = Servers('Sylvain','192.168.1.123','test','test')
-
-    ra = Role('admin')
-    rb = Role('user')
-    rc = Role('manager')
-
-    ua.roles = [ra]
+    ua = User('quintana','superpass','sboily@proformatique.com','Sylvain Boily',300)
+    sa = Servers('Sylvain','192.168.100.3','test','test')
 
     db.session.add_all([ua,sa])
     db.session.commit()

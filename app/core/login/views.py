@@ -15,8 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, flash, redirect, session, url_for, request, g, Blueprint
+from flask import render_template, flash, redirect, session, url_for, request, g, Blueprint, current_app
 from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.principal import Identity, identity_changed, AnonymousIdentity
 from app import app, lm
 from forms import LoginForm
 from models import User
@@ -35,6 +36,7 @@ def login():
     if loginform.validate_on_submit():
         user = User.query.filter_by(username=loginform.username.data).first()
         if user and user.check_password(loginform.password.data):
+            identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
             login_user(user, remember=loginform.remember_me.data)
             return redirect(request.args.get("next") or url_for("home"))
     return render_template('login.html', title='Sign In', loginform=loginform)
@@ -42,4 +44,4 @@ def login():
 @login_form.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("home"))
+    return redirect(url_for("login.login"))

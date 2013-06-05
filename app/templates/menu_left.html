@@ -1,7 +1,7 @@
 {% if current_user.is_authenticated() %}
 
         <div class="span2">
-          <div class="well sidebar-nav">
+          <div class="sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Configuration</li>
               <li {% if request.endpoint == active_page %} class="active" {% endif %}><a href="{{url_for('servers.server')}}">Servers</a></li>

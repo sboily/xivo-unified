@@ -3,12 +3,16 @@
         <div class="span2">
           <div class="sidebar-nav">
             <ul class="nav nav-list">
+              {% if g.user.role >= 200 %}
               <li class="nav-header">Configuration</li>
-                {%- for endpoint, caption in [
-                                  ('servers.server', 'Server'),
-                                  ('profil.accounts', 'Accounts')
+              {%- endif %}
+                {%- for endpoint, caption, role in [
+                                  ('servers.server', 'Server', 200),
+                                  ('profil.accounts', 'Accounts', 300)
                 ] %}
+                {% if g.user.role >= role %}
                   <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
+                {%- endif %}
                 {%- endfor %}
               <li class="nav-header">Plugins</li>
               {% for p in g.plugins_list %}

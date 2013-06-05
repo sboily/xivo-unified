@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from "forms/macros.html" import render_field %}
+
+    <div class="container">
+
+      <form class="form" method="post">
+        {{ form.csrf_token }}
+        <h2 class="form">Add account</h2>
+        {{ render_field(form.username, class="input-xlarge",placeholder="Username") }}
+        {{ render_field(form.email, class="input-xlarge",placeholder="Email") }}
+        {{ render_field(form.displayname, class="input-xlarge",placeholder="Display name") }}
+        {{ render_field(form.password, class="input-xlarge",placeholder="Password") }}
+        {{ render_field(form.role, class="input-xlarge") }}
+        <button class="btn btn-primary" type="submit">Submit</button>
+      </form>
+
+    </div>
+
+{% endblock %}
+

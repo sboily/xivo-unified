@@ -6,7 +6,7 @@
 
       <form class="form" method="post" name="user/edit">
         {{ userform.csrf_token }}
-        <h2 class="form">Add user</h2>
+        <h2 class="form">Edit user</h2>
         {{ render_field(userform.firstname, class="input-block-level",placeholder="Firstname") }}
         {{ render_field(userform.lastname, class="input-block-level",placeholder="Lastname") }}
         {{ render_field(userform.username, class="input-block-level",placeholder="Username") }}

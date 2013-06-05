@@ -7,7 +7,7 @@
               <li class="nav-header">Configuration</li>
               {%- endif %}
                 {%- for endpoint, caption, role in [
-                                  ('servers.server', 'Server', 200),
+                                  ('servers.server', 'Servers', 200),
                                   ('profil.accounts', 'Accounts', 300)
                 ] %}
                 {% if g.user.role >= role %}

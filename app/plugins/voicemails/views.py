@@ -16,8 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import render_template, Blueprint, session, flash, redirect, url_for, g, request
-from flask.ext.login import login_required
-from app import app, db, servers_list, plugins_list
+from flask.ext.login import login_required, current_user
+from app import app, db
 from app.core.server.models import Servers
 from restclient import GET, POST, PUT, DELETE
 import json
@@ -29,11 +29,14 @@ wtforms_json.init()
 
 @voicemails.before_request
 def before_request():
-    if hasattr(g, 'server'):
-        g.url_rest_user = "https://%s:50051/1.0/voicemails/" % g.server.address
+    if current_user.is_authenticated():
+        if hasattr(g, 'server'):
+            g.url_rest_user = "https://%s:50051/1.0/voicemails/" % g.server.address
+        else:
+            flash('Sorry you need to choose a server !')
+            return redirect(url_for("home"))
     else:
-        flash('Sorry you need to choose a server !')
-        return redirect(url_for("home"))
+        print 'User need to be identified !'
 
 @voicemails.route('/voicemails')
 @login_required
@@ -42,7 +45,7 @@ def voicemail():
     if not voicemails:
         flash('Sorry the server have not any correct json data !')
         return redirect(url_for("home"))
-    return render_template('voicemails.html', servers_list=servers_list, plugins_list=plugins_list, server=g.server, voicemails=voicemails['items'])
+    return render_template('voicemails.html', voicemails=voicemails['items'])
 
 @voicemails.route('/voicemails/add', methods=['GET', 'POST'])
 @login_required
@@ -52,19 +55,22 @@ def voicemail_add():
         _add_voicemail(voicemailform)
         flash('Voicemail added')
         return redirect(url_for("voicemails.voicemail"))
-    return render_template('voicemails_add.html', servers_list=servers_list, plugins_list=plugins_list, voicemailform=voicemailform)
+    return render_template('voicemails_add.html', voicemailform=voicemailform)
 
 @voicemails.route('/voicemails/<id>', methods=['GET', 'POST'])
 @login_required
 def voicemail_edit(id):
     voicemail = _get_voicemail(id)
-    print voicemail
-    voicemailform = VoicemailForm.from_json(voicemail)
-    form = VoicemailForm(obj=voicemail)
-    if voicemailform.is_submitted():
-        _edit_voicemail(form, id)
+    if voicemail:
+        voicemailform = VoicemailForm.from_json(voicemail)
+        form = VoicemailForm(obj=voicemail)
+        if voicemailform.is_submitted():
+            _edit_voicemail(form, id)
+            return redirect(url_for("voicemails.voicemail"))
+        return render_template('voicemail_edit.html', voicemail=voicemail, voicemailform=voicemailform)
+    else:
+        flash('Sorry edit voicemail is not implemented !')
         return redirect(url_for("voicemails.voicemail"))
-    return render_template('voicemail_edit.html', servers_list=servers_list, plugins_list=plugins_list, voicemail=voicemail, voicemailform=voicemailform)
 
 @voicemails.route('/voicemails/del/<id>')
 @login_required

@@ -28,6 +28,10 @@ def before_request():
         if session.has_key('server_id') and session['server_id']:
             g.server_id = session['server_id']
             g.server = Servers.query.get_or_404(session['server_id'])
+            g.plugins_list = plugins_list
+            g.servers_list = servers_list
+    else:
+        print 'User not authentified !'
 
 @app.route('/')
 @required_role('admin')

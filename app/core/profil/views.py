@@ -18,6 +18,7 @@
 from flask import render_template, Blueprint
 from flask.ext.login import login_required
 from app import db, plugins_list, servers_list
+from app.core.login.models import User, Role
 
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
@@ -27,3 +28,9 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 def myprofil(id):
     return render_template('profil.html', servers_list=servers_list, plugins_list=plugins_list)
 
+
+@profil.route('/accounts')
+@login_required
+def accounts():
+    users = User.query.all()
+    return render_template('accounts.html', servers_list=servers_list, plugins_list=plugins_list, users=users)

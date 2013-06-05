@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import Flask, render_template
-from flask.ext.login import LoginManager, login_required
+from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
 from decorators import required_role
-from register_plugins import register_plugins
+from register_plugins import Plugins
 
 app = Flask(__name__)
 app.config.from_object('conf')
@@ -33,14 +33,10 @@ lm.login_view = 'login.login'
 from core.server.models import Servers
 servers_list = Servers.query.order_by(Servers.name)
 
-try:
-    plugins_list = []
-    for plugin in register_plugins(app):
-        exec("from app.plugins.%s.views import %s" %(plugin, plugin))
-        exec("app.register_blueprint(%s)" % plugin)
-        plugins_list.append(plugin)
-except ImportError, e:
-    print "Can't register plugin : %s" % e
+plugins_list = ""
+plugins = Plugins(app)
+plugins.init_plugins()
+plugins_list = plugins.register_plugins(app)
 
 from app.core.login.views import login_form
 app.register_blueprint(login_form)

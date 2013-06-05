@@ -15,7 +15,6 @@
 {% include "menu_top.html" %}
 
     <div class="container">
-        <!-- Show any flashed messages if required -->
         <div class="row">
             <div class="span12">
                 {% for category, msg in get_flashed_messages(with_categories=true) %}
@@ -25,14 +24,13 @@
                 {% endfor %}
             </div>
         </div>
-        <!-- End show flashed messages -->
-    </div> <!-- /container of flashes -->
+    </div>
 
 
     <div class="container-fluid">
       <div class="row-fluid">
 
-{% include "menu_left.html" %}
+        {% include "menu_left.html" %}
 
         {% block content %}
 	<div class="container">
@@ -47,9 +45,12 @@
         </div>
       </div>
 
-{% include "footer.html" %}
+      <div id="footer"> 
+        {% block footer %}
+          {% include "footer.html" %}
+        {% endblock %}
+      </div>
 
-    <!-- jQuery Library and Bootstrap functionality (such as handling the drop-down menu) -->
     <script type=text/javascript src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
     <script type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>

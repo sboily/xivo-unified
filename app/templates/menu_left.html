@@ -4,10 +4,15 @@
           <div class="sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Configuration</li>
-              <li {% if request.endpoint == active_page %} class="active" {% endif %}><a href="{{url_for('servers.server')}}">Servers</a></li>
+                {%- for endpoint, caption in [
+                                  ('servers.server', 'Server'),
+                                  ('profil.accounts', 'Accounts')
+                ] %}
+                  <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
+                {%- endfor %}
               <li class="nav-header">Plugins</li>
-              {% for p in plugins_list %}
-                <li {% if request.endpoint == active_page %} class="active" {% endif %}><a href="/{{ p }}">{{ p }}</a></li>
+              {% for p in g.plugins_list %}
+                <li {% if  p.plugin.endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(p.plugin.endpoint)}}">{{ p.plugin.name }}</a></li>
               {% endfor %}
             </ul>
           </div>

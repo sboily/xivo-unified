@@ -16,15 +16,33 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import json
 
-def register_plugins(app):
-    plugins_directory = os.path.join(app.config['BASEDIR'], 'app/plugins/')
-    dirs = os.listdir(plugins_directory)
-    plugins = []
+class Plugins():
+        def __init__(self, app):
+            self.plugins_directory = os.path.join(app.config['BASEDIR'], 'app/plugins/')
+            self.plugins = []
 
-    for directory in dirs:
-        if os.path.isdir(os.path.join(plugins_directory,directory)):
-            plugins.append(directory)
+	def init_plugins(self):
+	    dirs = os.listdir(self.plugins_directory)
 
-    return plugins
+	    for directory in dirs:
+		if os.path.isdir(os.path.join(self.plugins_directory,directory)):
+                    plugins_information = os.path.join(self.plugins_directory,directory + '/plugin.json')
+		    if os.path.isfile(plugins_information):
+			json_data = open(plugins_information)
+			data = json.load(json_data)
+			self.plugins.append((directory, data))
 
+
+	def register_plugins(self, app):
+            plugins_list = []
+	    try:
+		for plugin, data in self.plugins:
+		    exec("from app.plugins.%s.views import %s" %(plugin, plugin))
+		    exec("app.register_blueprint(%s)" % plugin)
+		    plugins_list.append(data)
+	    except ImportError, e:
+		print "Can't register plugin : %s" % e
+
+            return plugins_list

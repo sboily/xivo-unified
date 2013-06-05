@@ -16,12 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import render_template, Blueprint, session, flash, redirect, url_for, g, request
-from flask.ext.login import login_required
-from app import app, db, servers_list, plugins_list
+from flask.ext.login import login_required, current_user
+from app import app, db
 from app.core.server.models import Servers
 from restclient import GET, POST, PUT, DELETE
-import json
 from forms import UserForm
+import json
 import wtforms_json
 
 users = Blueprint('users', __name__, template_folder='templates/users')
@@ -29,11 +29,14 @@ wtforms_json.init()
 
 @users.before_request
 def before_request():
-    if hasattr(g, 'server'):
-        g.url_rest_user = "https://%s:50051/1.0/users/" % g.server.address
+    if current_user.is_authenticated():
+        if hasattr(g, 'server'):
+            g.url_rest_user = "https://%s:50051/1.0/users/" % g.server.address
+        else:
+            flash('Sorry you need to choose a server !')
+            return redirect(url_for("home"))
     else:
-        flash('Sorry you need to choose a server !')
-        return redirect(url_for("home"))
+        print 'User need to be identified !'
 
 @users.route('/users')
 @login_required
@@ -42,7 +45,7 @@ def user():
     if not users:
         flash('Sorry the server have not any correct json data !')
         return redirect(url_for("home"))
-    return render_template('users.html', servers_list=servers_list, plugins_list=plugins_list, server=g.server, users=users['items'])
+    return render_template('users.html', users=users['items'])
 
 @users.route('/users/add', methods=['GET', 'POST'])
 @login_required
@@ -52,7 +55,7 @@ def user_add():
         _add_user(userform)
         flash('User added')
         return redirect(url_for("users.user"))
-    return render_template('users_add.html', servers_list=servers_list, plugins_list=plugins_list, userform=userform)
+    return render_template('users_add.html', userform=userform)
 
 @users.route('/users/<id>', methods=['GET', 'POST'])
 @login_required
@@ -63,7 +66,7 @@ def user_edit(id):
     if userform.is_submitted():
         _edit_user(form, id)
         return redirect(url_for("users.user"))
-    return render_template('users_edit.html', servers_list=servers_list, plugins_list=plugins_list, user=user, userform=userform)
+    return render_template('users_edit.html', user=user, userform=userform)
 
 @users.route('/users/del/<id>')
 @login_required

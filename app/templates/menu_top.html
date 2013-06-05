@@ -24,7 +24,7 @@
           <li id="fat-menu" class="dropdown">
           <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Servers<b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="servers">
-              {% for s in servers_list %}
+              {% for s in g.servers_list %}
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_save', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
               {% endfor %}
             </ul>

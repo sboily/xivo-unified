@@ -8,7 +8,8 @@
               {%- endif %}
                 {%- for endpoint, caption, role in [
                                   ('servers.server', 'Servers', 200),
-                                  ('profil.accounts', 'Accounts', 300)
+                                  ('profil.accounts', 'Accounts', 300),
+                                  ('market.themarket', 'Market', 300)
                 ] %}
                 {% if g.user.role >= role %}
                   <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>

@@ -50,6 +50,9 @@ app.register_blueprint(login_form)
 from app.core.server.views import servers
 app.register_blueprint(servers)
 
+from app.core.market.views import market
+app.register_blueprint(market)
+
 from app.core.profil.views import profil
 app.register_blueprint(profil)
 

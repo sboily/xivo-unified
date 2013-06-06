@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+
+<div class="widget stacked widget-table action-table">
+ <div class="widget-content">
+   <table class="table table-bordered table-striped table-highlight">
+     <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Author</th>
+        <th>Licence</th>
+        <th class="td-actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for u in g.plugins_list  %}
+      <tr>
+      <td>{{ u.informations.name }}</td>
+      <td>{{ u.informations.description }}</td>
+      <td>{{ u.informations.author }}</td>
+      <td>{{ u.informations.licence }}</td>
+      <td class="td-actions">
+        <a href="{{url_for('market.themarket')}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>
+        <a href="{{url_for('market.themarket')}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+{% endblock %}

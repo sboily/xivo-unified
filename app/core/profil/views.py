@@ -19,7 +19,7 @@ from flask import render_template, Blueprint, flash, redirect, url_for
 from flask.ext.login import login_required
 from app import db, admin_role
 from app.core.login.models import User
-from forms import AccountForm
+from forms import AccountForm, SignupForm
 
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
@@ -75,3 +75,15 @@ def account_edit(id):
         return redirect(url_for("profil.accounts"))
     return render_template('account_edit.html', form=form)
 
+@profil.route('/signup', methods=['GET', 'POST'])
+def signup():
+    default_role = 200
+    form = SignupForm()
+    if form.validate_on_submit():
+        account = User(form.username.data, form.password.data,
+                    form.email.data, form.displayname.data, default_role)
+        db.session.add(account)
+        db.session.commit()
+        flash('Account added')
+        return redirect(url_for('login.login'))
+    return render_template('signup.html', form=form)

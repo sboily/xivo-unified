@@ -23,6 +23,8 @@ from app import app, servers_list, plugins_list
 from core.server.models import Servers
 from core.login.models import User
 from flask.ext.login import login_required
+import sys, os, time
+from register_plugins import Plugins
 
 
 @app.before_request
@@ -44,6 +46,11 @@ def on_identity_loaded(sender, identity):
 @login_required
 def home():
     return render_template('base.html')
+
+@app.route('/reload')
+def reload_app():
+    os.utime(app.config['BASEDIR'] + '/app/__init__.py',None)
+    return render_template('reload.html')
 
 @app.route('/home')
 @login_required

@@ -10,6 +10,8 @@
         {{ render_field(loginform.password, class="input-block-level",placeholder="Password") }}
         {{ render_field(loginform.remember_me, class="checkbox") }} 
         <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+        <br><br>
+        <p>New account ? <a href="{{url_for('profil.signup')}}" class="btn btn-small">Sign up</a></p>
       </form>
 
     </div>

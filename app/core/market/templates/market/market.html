@@ -16,15 +16,19 @@
       </tr>
     </thead>
     <tbody>
-    {% for u in g.plugins_list  %}
+    {% for u in modules %}
       <tr>
-      <td>{{ u.informations.name }}</td>
+      <td>{{ u.name }}</td>
       <td>{{ u.informations.description }}</td>
       <td>{{ u.informations.author }}</td>
       <td>{{ u.informations.licence }}</td>
       <td class="td-actions">
-        <a href="{{url_for('market.themarket')}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>
-        <a href="{{url_for('market.themarket')}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>
+        {% for p in g.plugins_list %}
+          {% if p.informations.name == u.name %}
+            <a href="{{url_for('market.market_del', module=u.name)}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>
+          {% endif %}
+       {% endfor %}
+            <a href="{{url_for('market.market_get', module=u.name)}}" class="btn btn-small"><i class="btn-icon-only icon-arrow-down"></i></a>
         </td>
       </tr>
     {% endfor %}

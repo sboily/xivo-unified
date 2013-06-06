@@ -15,15 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
-BASEDIR = os.path.abspath(os.path.dirname(__file__))
-DEBUG = True
-CSRF_ENABLED = True
-SECRET_KEY = "XiVO_YEAH_GPLv3"
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'db/app.db')
-DATABASE_CONNECT_OPTIONS = {}
-RECAPTCHA_USE_SSL = False
-RECAPTCHA_PUBLIC_KEY = '6Lcae-ISAAAAAFXHrh4rgeIus4tjFMumcrbY2xDo'
-RECAPTCHA_PRIVATE_KEY = '6Lcae-ISAAAAAK_SSlE-Lrds272ISnizyHJue4M6'
-RECAPTCHA_OPTIONS = {'theme': 'white'}

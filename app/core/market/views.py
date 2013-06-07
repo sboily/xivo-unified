@@ -30,18 +30,15 @@ market = Blueprint('market', __name__, template_folder='templates/market')
 @login_required
 @admin_role.require(403)
 def themarket():
-    url = "http://market.xivo.fr/market.json"
-    json_read = urllib2.urlopen(url).read()
-    modules = json.loads(json_read)
-    return render_template('market.html', modules=modules)
+    modules = _get_modules()
+    modules_installed = _get_modules_installed()
+    return render_template('market.html', modules=modules, modules_installed=modules_installed)
 
 @market.route('/market/del/<module>')
 @login_required
 @admin_role.require(403)
 def market_del(module):
-    print "Removing module %s" % module
-    src = os.path.join(app.config['BASEDIR'], 'app/plugins/%s' % module)
-    shutil.rmtree(src)
+    _remove_module(module)
     flash('Module %s has been removed !' % module)
     return redirect(url_for("reload_app"))
 
@@ -49,6 +46,22 @@ def market_del(module):
 @login_required
 @admin_role.require(403)
 def market_get(module):
+    _install_module(module)
+    flash('Module %s has been installed !' % module)
+    return redirect(url_for("reload_app"))
+
+def _get_modules():
+    url = "http://market.xivo.fr/market.json"
+    json_read = urllib2.urlopen(url).read()
+    modules = json.loads(json_read)
+    return modules
+
+def _remove_module(module):
+    print "Removing module %s" % module
+    src = os.path.join(app.config['BASEDIR'], 'app/plugins/%s' % module)
+    shutil.rmtree(src)
+
+def _install_module(module):
     print "Installing module %s" % module
     dst = os.path.join(app.config['BASEDIR'], 'app/plugins/')
     src = "/tmp/"
@@ -61,5 +74,9 @@ def market_get(module):
     tar = tarfile.open(src + module + ".tgz")
     tar.extractall(path=dst)
     tar.close()
-    flash('Module %s has been installed !' % module)
-    return redirect(url_for("reload_app"))
+
+def _get_modules_installed():
+    installed = []
+    for mod in g.plugins_list:
+        installed.append(mod['informations']['name'])
+    return installed

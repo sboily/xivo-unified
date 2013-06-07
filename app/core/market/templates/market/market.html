@@ -23,12 +23,11 @@
       <td>{{ u.informations.author }}</td>
       <td>{{ u.informations.licence }}</td>
       <td class="td-actions">
-        {% for p in g.plugins_list %}
-          {% if p.informations.name == u.name %}
-            <a href="{{url_for('market.market_del', module=u.name)}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>
+          {% if u.name in modules_installed %}
+            <a href="{{url_for('market.market_del', module=u.name)}}" class="btn btn-small btn-danger"><i class="btn-icon-only icon-remove icon-white"></i></a>
+          {% else %}
+            <a href="{{url_for('market.market_get', module=u.name)}}" class="btn btn-small btn-success"><i class="btn-icon-only icon-arrow-down icon-white"></i></a>
           {% endif %}
-       {% endfor %}
-            <a href="{{url_for('market.market_get', module=u.name)}}" class="btn btn-small"><i class="btn-icon-only icon-arrow-down"></i></a>
         </td>
       </tr>
     {% endfor %}

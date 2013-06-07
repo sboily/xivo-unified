@@ -12,13 +12,18 @@
 
 <body>
 
+<script>
+$(".alert").alert()                   
+</script>
+
 {% include "menu_top.html" %}
 
     <div class="container">
         <div class="row">
             <div class="span12">
                 {% for category, msg in get_flashed_messages(with_categories=true) %}
-                <div class="alert">
+                <div class="alert fade in" data-dismiss="alert">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
                     {{ msg }}
                 </div>
                 {% endfor %}
@@ -37,7 +42,7 @@
 	  <div class="hero-unit">
 	    <h1>Hello, XiVO</h1>
 	      <p>This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.</p>
-	      <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+	      <p><a href="http://documentation.xivo.fr" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 	  </div>
 	</div>
         {% endblock %}

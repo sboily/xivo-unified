@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) 2013 Sylvain Boily <sboily@proformatique.com>
@@ -16,8 +15,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from flask import render_template, Blueprint, current_app
+from flask.ext.login import login_required
+from app import create_app as app
+import os
 
-from app import create_app
+home = Blueprint('home', __name__, template_folder='templates/login')
 
-app = create_app()
-app.run(debug=True, host='0.0.0.0')
+@home.route('/')
+@login_required
+def homepage():
+    return render_template('base.html')
+
+@home.route('/reload')
+def reload_app():
+    os.utime(current_app.config['BASEDIR'] + '/app/__init__.py',None)
+    return render_template('reload.html')
+
+@home.route('/home')
+@login_required
+def home_server():
+    return render_template('home_server.html')
+

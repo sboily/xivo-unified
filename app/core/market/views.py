@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, flash, redirect, url_for, g, flash
+from flask import render_template, Blueprint, flash, redirect, url_for, g, flash, current_app
 from flask.ext.login import login_required
-from app import db, admin_role, app
+from app import db, admin_role, create_app as app
 import json
 import urllib2
 import shutil
@@ -40,7 +40,7 @@ def themarket():
 def market_del(module):
     _remove_module(module)
     flash('Module %s has been removed !' % module)
-    return redirect(url_for("reload_app"))
+    return redirect(url_for('home.reload_app'))
 
 @market.route('/market/get/<module>')
 @login_required
@@ -48,7 +48,7 @@ def market_del(module):
 def market_get(module):
     _install_module(module)
     flash('Module %s has been installed !' % module)
-    return redirect(url_for("reload_app"))
+    return redirect(url_for('home.reload_app'))
 
 def _get_modules():
     url = "http://market.xivo.fr/market.json"
@@ -58,12 +58,12 @@ def _get_modules():
 
 def _remove_module(module):
     print "Removing module %s" % module
-    src = os.path.join(app.config['BASEDIR'], 'app/plugins/%s' % module)
+    src = os.path.join(current_app.config['BASEDIR'], 'app/plugins/%s' % module)
     shutil.rmtree(src)
 
 def _install_module(module):
     print "Installing module %s" % module
-    dst = os.path.join(app.config['BASEDIR'], 'app/plugins/')
+    dst = os.path.join(current_app.config['BASEDIR'], 'app/plugins/')
     src = "/tmp/"
     url = "http://market.xivo.fr/%s.tgz" % module
     mod = urllib2.urlopen(url)

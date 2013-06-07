@@ -19,30 +19,28 @@ import os
 import json
 
 class Plugins():
-        def __init__(self, app):
-            self.plugins_directory = os.path.join(app.config['BASEDIR'], 'app/plugins/')
+        def __init__(self):
             self.plugins = []
+            self.plugins_list = []
 
-	def init_plugins(self):
-	    dirs = os.listdir(self.plugins_directory)
+	def init_app(self, app):
+            plugins_directory = os.path.join(app.config['BASEDIR'], 'app/plugins/')
+	    dirs = os.listdir(plugins_directory)
 
 	    for directory in dirs:
-		if os.path.isdir(os.path.join(self.plugins_directory,directory)):
-                    plugins_information = os.path.join(self.plugins_directory,directory + '/plugin.json')
+		if os.path.isdir(os.path.join(plugins_directory,directory)):
+                    plugins_information = os.path.join(plugins_directory,directory + '/plugin.json')
 		    if os.path.isfile(plugins_information):
 			json_data = open(plugins_information)
 			data = json.load(json_data)
-			self.plugins.append((directory, data))
-
+			self.plugins_list.append(data)
+			self.plugins.append(directory)
 
 	def register_plugins(self, app):
-            plugins_list = []
 	    try:
-		for plugin, data in self.plugins:
+		for plugin in self.plugins:
 		    exec("from app.plugins.%s.views import %s" %(plugin, plugin))
 		    exec("app.register_blueprint(%s)" % plugin)
-		    plugins_list.append(data)
 	    except ImportError, e:
 		print "Can't register plugin : %s" % e
 
-            return plugins_list

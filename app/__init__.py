@@ -15,45 +15,109 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, render_template
-from flask.ext.login import LoginManager
+from flask import Flask, render_template, session, g, current_app, flash, redirect, url_for
+from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.principal import Principal, Permission, RoleNeed
+from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded
+from app.extensions import db, login_manager, babel, principal, plugins
 from decorators import required_role
 from register_plugins import Plugins
+from core.servers.models import Servers
+from core.login.models import User
 
-app = Flask(__name__)
-app.config.from_object('conf')
 
-db = SQLAlchemy(app)
+CORE_MODULES = (
+    'servers',
+    'login',
+    'market',
+    'profil',
+    'home'
+)
 
-Principal(app)
+
+def create_app():
+    core_modules = CORE_MODULES
+
+    app = Flask(__name__)
+    configure_app(app)
+    configure_hooks(app)
+    configure_core_modules(app, core_modules)
+    configure_extensions(app)
+    configure_logging(app)
+    configure_error_handlers(app)
+
+    return app
+
+
+def configure_app(app):
+    app.config.from_object('conf')
+
+
+def configure_core_modules(app, core_modules):
+    for module in core_modules:
+        exec("from app.core.%s.views import %s" %(module, module))
+        exec("app.register_blueprint(%s)" % module)
+
+
+def configure_extensions(app):
+    # I18N
+    babel.init_app(app)
+
+    # Database
+    db.init_app(app)
+
+    # Roles
+    principal.init_app(app)
+
+    # Authentification
+    login_manager.init_app(app)
+    login_manager.login_view = 'login.log'
+
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.filter_by(id=userid).first()
+
+    # Plugins list global
+    plugins.init_app(app)
+    plugins.register_plugins(app)
+
+
+def configure_hooks(app):
+    @app.before_request
+    def before_request():
+        pass
+
+    @identity_loaded.connect_via(app)
+    def on_identity_loaded(sender, identity):
+        g.plugins_list = _get_plugins_info()
+        g.user = User.query.from_identity(identity)
+        g.servers_list = Servers.query.order_by(Servers.name)
+        if session.has_key('server_id') and session['server_id']:
+            g.server_id = session['server_id']
+            g.server = Servers.query.get_or_404(session['server_id'])
+
+
+def configure_error_handlers(app):
+    @app.errorhandler(403)
+    def page_not_found(e):
+        flash('Sorry you are not authorized !')
+        return redirect(url_for('home.homepage'))
+
+def configure_logging(app):
+    if app.debug or app.testing:
+        return
+
+    import logging
+    app.logger.setLevel(logging.INFO)
+
+
+def _get_plugins_info():
+    plugins = Plugins()
+    plugins.init_app(current_app)
+    return plugins.plugins_list
+
+
+# Configure roles
 admin_role = Permission(RoleNeed('admin'))
 manager_role = Permission(RoleNeed('manager')).union(admin_role)
 user_role = Permission(RoleNeed('user')).union(manager_role)
-
-lm = LoginManager()
-lm.init_app(app)
-lm.login_view = 'login.login'
-
-from core.server.models import Servers
-servers_list = Servers.query.order_by(Servers.name)
-
-plugins_list = ""
-plugins = Plugins(app)
-plugins.init_plugins()
-plugins_list = plugins.register_plugins(app)
-
-from app.core.login.views import login_form
-app.register_blueprint(login_form)
-
-from app.core.server.views import servers
-app.register_blueprint(servers)
-
-from app.core.market.views import market
-app.register_blueprint(market)
-
-from app.core.profil.views import profil
-app.register_blueprint(profil)
-
-from home import home

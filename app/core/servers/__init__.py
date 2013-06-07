@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) 2013 Sylvain Boily <sboily@proformatique.com>
@@ -16,8 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from app import create_app
-
-app = create_app()
-app.run(debug=True, host='0.0.0.0')

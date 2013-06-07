@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) 2013 Sylvain Boily <sboily@proformatique.com>
@@ -16,8 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from flask.ext.sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
-from app import create_app
+from flask.ext.login import LoginManager
+login_manager = LoginManager()
 
-app = create_app()
-app.run(debug=True, host='0.0.0.0')
+from flask.ext.babel import Babel
+babel = Babel()
+
+from flask.ext.principal import Principal
+principal = Principal()
+
+from register_plugins import Plugins
+plugins = Plugins()

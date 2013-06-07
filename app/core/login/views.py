@@ -16,32 +16,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import render_template, flash, redirect, session, url_for, request, g, Blueprint, current_app
-from flask.ext.login import login_user, logout_user, current_user, login_required
-from flask.ext.principal import Identity, identity_changed, AnonymousIdentity
-from app import app, lm
+from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.principal import Identity, identity_changed
+from app import create_app as app
 from forms import LoginForm
 from models import User
 
-login_form = Blueprint('login', __name__, template_folder='templates/login')
+login = Blueprint('login', __name__, template_folder='templates/login')
 
-@lm.user_loader
-def load_user(userid):
-    return User.query.filter_by(id=userid).first()
-
-@login_form.route("/login", methods=['GET', 'POST'])
-def login():
+@login.route("/login", methods=['GET', 'POST'])
+def log():
     if current_user.is_authenticated():
-        return redirect(url_for('home'))
-    loginform = LoginForm()
-    if loginform.validate_on_submit():
-        user = User.query.filter_by(username=loginform.username.data).first()
-        if user and user.check_password(loginform.password.data):
+        return redirect(url_for('home.homepage'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
             identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
-            login_user(user, remember=loginform.remember_me.data)
-            return redirect(request.args.get("next") or url_for("home"))
-    return render_template('login.html', title='Sign In', loginform=loginform)
+            login_user(user, remember=form.remember_me.data)
+            return redirect(request.args.get('next') or url_for('home.homepage'))
+    return render_template('login.html', title='Sign In', form=form)
 
-@login_form.route("/logout")
+@login.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("login.login"))
+    return redirect(url_for('login.log'))

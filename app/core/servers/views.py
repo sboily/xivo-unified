@@ -69,4 +69,4 @@ def server_edit(id):
 def server_save(id):
     session['server_id'] = id
     session.modified = True
-    return redirect(url_for("home_server"))
+    return redirect(url_for('home.home_server'))

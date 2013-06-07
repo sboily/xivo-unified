@@ -1,7 +1,6 @@
+Installation of the dependance
 
-sudo apt-get install lighttpd python-flup python-pip
-sudo lighttpd-enable-mod fastcgi accesslog
-
+sudo apt-get install python-flup python-pip
 sudo pip install flask
 sudo pip install flask-login
 sudo pip install flask-wtf
@@ -9,3 +8,9 @@ sudo pip install flask-sqlalchemy
 sudo pip install restclient
 sudo pip install wtforms-json
 sudo pip install flask-principal
+
+You need to execute the setup.py to create the database.
+
+$ python ./setup.py
+
+Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.

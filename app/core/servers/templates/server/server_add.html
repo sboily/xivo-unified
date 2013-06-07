@@ -5,14 +5,14 @@
     <div class="container">
 
       <form class="form" method="post" name="server/add">
-        {{ serverform.csrf_token }}
+        {{ form.csrf_token }}
         <h2 class="form">Add server</h2>
-        {{ render_field(serverform.name, class="input-xlarge",placeholder="Name") }}
-        {{ render_field(serverform.address, class="input-xlarge",placeholder="Address") }}
-        {{ render_field(serverform.login, class="input-xlarge",placeholder="Login") }}
-        {{ render_field(serverform.password, class="input-xlarge",placeholder="Password") }}
-        <button class="btn btn-primary" type="submit">Submit</button>
-
+        {{ render_field(form.name, class="input-xlarge",placeholder="Name") }}
+        {{ render_field(form.address, class="input-xlarge",placeholder="Address") }}
+        {{ render_field(form.login, class="input-xlarge",placeholder="Login") }}
+        {{ render_field(form.password, class="input-xlarge",placeholder="Password") }}
+        {{ render_field(form.users, class="input-xlarge") }}
+        {{ render_field(form.submit, class="btn btn-primary") }}
       </form>
 
     </div>

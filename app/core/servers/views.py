@@ -17,7 +17,7 @@
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, session
 from flask.ext.login import login_required
-from models import Servers
+from models import Servers, UsersServer
 from forms import ServersForm
 from app import db, manager_role
 
@@ -33,15 +33,17 @@ def server():
 @servers.route('/server/add', methods=['GET', 'POST'])
 @login_required
 def server_add():
-    serverform = ServersForm()
-    if request.method == 'POST' and serverform.validate_on_submit():
-        server = Servers(serverform.name.data, serverform.address.data,
-                           serverform.login.data, serverform.password.data)
+    form = ServersForm()
+    if form.validate_on_submit():
+        server = Servers(form.name.data, form.address.data,
+                           form.login.data, form.password.data,
+                        UsersServer(user_id=form.users.data)
+                        )
         db.session.add(server)
         db.session.commit()
         flash('Server added')
         return redirect(url_for("servers.server"))
-    return render_template('server_add.html', serverform=serverform)
+    return render_template('server_add.html', form=form)
 
 @servers.route('/server/del/<id>')
 @login_required
@@ -55,14 +57,14 @@ def server_del(id):
 @login_required
 def server_edit(id):
     server = Servers.query.get_or_404(id)
-    serverform = ServersForm(obj=server)
-    if serverform.validate_on_submit():
-        serverform.populate_obj(server)
+    form = ServersForm(obj=server)
+    if form.validate_on_submit():
+        form.populate_obj(server)
         db.session.add(server)
         db.session.commit()
         flash('Server edit')
         return redirect(url_for("servers.server"))
-    return render_template('server_edit.html', serverform=serverform)
+    return render_template('server_edit.html', form=form)
 
 @servers.route('/server/save/<id>')
 @login_required

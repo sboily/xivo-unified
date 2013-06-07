@@ -16,16 +16,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError
+from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
 from flask.ext.wtf import Required
 from models import Servers
+from app.core.login.models import User
 import re
 
+def get_servers_list():
+    return User.query.order_by(User.displayname)
+
 class ServersForm(Form):
-    name = TextField('name', [Required()])
-    address = TextField('address', [Required()])
-    login = TextField('login')
-    password = PasswordField('password')
+    name = TextField('Name', [Required()])
+    address = TextField('Address', [Required()])
+    login = TextField('Login')
+    password = PasswordField('Password')
+
+    users = QuerySelectMultipleField(get_label='displayname',query_factory=get_servers_list)
+
+    submit = SubmitField('Submit')
 
 
     def validate_name(self, field):
@@ -43,3 +51,4 @@ class ServersForm(Form):
 
     def validate_password(self, field):
         return
+

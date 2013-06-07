@@ -22,6 +22,7 @@ from flask.ext.principal import RoleNeed, UserNeed
 from werkzeug.utils import cached_property
 from flask.ext.sqlalchemy import BaseQuery
 from app import db
+from datetime import datetime
 
 class UserQuery(BaseQuery):
 
@@ -53,6 +54,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(200), unique=True)
     displayname = db.Column(db.String(200))
     role = db.Column(db.Integer, default=300)
+    created_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, username, password, email, displayname, role):
         self.email = email.lower()
@@ -97,3 +99,4 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.username, self.email)
+

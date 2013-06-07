@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% set real_role = {100 : 'User', 200 : 'Manager', 300 : 'Admin' } %}
+
 <div class="container">
 
 <div class="widget stacked widget-table action-table">
@@ -13,7 +15,7 @@
         <th>Username</th>
         <th>Email</th>
         <th>Display name</th>
-        <th>Password</th>
+        <th>Role</th>
       <th class="td-actions"></th>
       </tr>
     </thead>
@@ -23,7 +25,7 @@
       <td>{{ u.username }}</td>
       <td>{{ u.email }}</td>
       <td>{{ u.displayname }}</td>
-      <td>{{ u.password }}</td>
+      <td>{{ real_role[u.role] }}</td>
       <td class="td-actions">
         <a href="{{url_for('profil.account_edit', id=u.id)}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>
         <a href="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>

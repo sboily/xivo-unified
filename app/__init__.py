@@ -20,9 +20,8 @@ from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded
 from app.extensions import db, login_manager, babel, principal, plugins
-from decorators import required_role
 from register_plugins import Plugins
-from core.servers.models import Servers
+from core.servers.models import Servers, UsersServer
 from core.login.models import User
 
 
@@ -91,10 +90,19 @@ def configure_hooks(app):
     def on_identity_loaded(sender, identity):
         g.plugins_list = _get_plugins_info()
         g.user = User.query.from_identity(identity)
-        g.servers_list = Servers.query.order_by(Servers.name)
+        if g.user.role == 300:
+            g.servers_list = Servers.query.order_by(Servers.name)
+        else:
+            g.servers_list = Servers.query.filter(Servers.id == UsersServer.server_id) \
+                                          .filter(UsersServer.user_id == g.user.id).order_by(Servers.name)
+
         if session.has_key('server_id') and session['server_id']:
             g.server_id = session['server_id']
-            g.server = Servers.query.get_or_404(session['server_id'])
+            g.server = Servers.query.get(session['server_id'])
+            if g.server is None:
+                del session['server_id']
+                g.server_id = ""
+                g.server = ""
 
 
 def configure_error_handlers(app):

@@ -38,9 +38,14 @@ def initdb():
     db.create_all()
 
     ua = User('quintana','superpass','sboily@proformatique.com','Sylvain Boily',300)
-    sa = Servers('Sylvain','192.168.100.3','test','test', UsersServer(server_id=1))
+    ca = User('chloe','superpass','chloe@proformatique.com','Chloe Mourat',200)
 
-    db.session.add_all([ua,sa])
+    sa = Servers('Sylvain','192.168.100.3','test','test')
+
+    re = UsersServer(user=ua,server=sa)
+    ri = UsersServer(user=ca,server=sa)
+
+    db.session.add_all([ua,sa,re,ri])
     db.session.commit()
 
 

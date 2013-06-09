@@ -39,5 +39,7 @@ def log():
 
 @login.route("/logout")
 def logout():
+    if session.has_key('server_id'):
+        del session['server_id']
     logout_user()
     return redirect(url_for('login.log'))

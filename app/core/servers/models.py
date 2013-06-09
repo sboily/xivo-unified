@@ -28,16 +28,13 @@ class Servers(db.Model):
     login = db.Column(db.String(200))
     password = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    #users = db.relationship('UsersServer', uselist=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users_server.id'))
-    user = db.relationship("UsersServer")
+    users = db.relationship('UsersServer', backref='server', lazy = 'dynamic')
 
-    def __init__(self, name, address, login=None, password=None, users=None):
+    def __init__(self, name, address, login=None, password=None):
         self.name = name
         self.address = address
         self.login = login
         self.password = password
-        self.users = users
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.name, self.address)
@@ -45,6 +42,8 @@ class Servers(db.Model):
 class UsersServer(db.Model):
     __tablename__ = 'users_server'
     id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer)
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __repr__(self):
+        return "<%d : serv=%d user=%d>" % (self.id, self.server_id, self.user_id)

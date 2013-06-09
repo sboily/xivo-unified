@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, request, flash, redirect, url_for, session
-from flask.ext.login import login_required
+from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g
+from flask.ext.login import login_required, current_user
 from models import Servers, UsersServer
+from app.core.login.models import User
 from forms import ServersForm
-from app import db, manager_role
+from app import db, manager_role, user_role
 
 servers = Blueprint('servers', __name__, template_folder='templates/server')
 
@@ -27,19 +28,30 @@ servers = Blueprint('servers', __name__, template_folder='templates/server')
 @login_required
 @manager_role.require(403)
 def server():
-    servers = Servers.query.all()
+    servers = _get_servers()
     return render_template('server.html', servers=servers)
 
 @servers.route('/server/add', methods=['GET', 'POST'])
 @login_required
+@manager_role.require(403)
 def server_add():
     form = ServersForm()
     if form.validate_on_submit():
         server = Servers(form.name.data, form.address.data,
-                           form.login.data, form.password.data,
-                        UsersServer(user_id=form.users.data)
-                        )
+                         form.login.data, form.password.data)
         db.session.add(server)
+        for choice in form.users.iter_choices():
+            if choice[2]:
+                user = User.query.filter_by(id=choice[0]).first()
+                relation = UsersServer(user=user,server=server)
+                db.session.add(relation)
+
+        if current_user.id not in form.users.iter_choices():
+            flash('Missing your self but added automaticaly !')
+            user = User.query.filter_by(id=current_user.id).first()
+            relation = UsersServer(user=user,server=server)
+            db.session.add(relation)
+
         db.session.commit()
         flash('Server added')
         return redirect(url_for("servers.server"))
@@ -47,16 +59,31 @@ def server_add():
 
 @servers.route('/server/del/<id>')
 @login_required
+@manager_role.require(403)
 def server_del(id):
+    servers = Servers.query.filter(Servers.id == UsersServer.server_id) \
+                           .filter(UsersServer.user_id == current_user.id) \
+                           .filter(UsersServer.server_id == id).first()
+    if servers is None and g.user.role < 200:
+        flash('You are not authorized !')
+        return redirect(url_for("servers.server"))
     server = Servers.query.filter_by(id=id).first()
+    users_server = UsersServer.query.filter_by(server_id=id).filter_by(user_id=current_user.id).first()
     db.session.delete(server)
+    if users_server is not None:
+        db.session.delete(users_server)
     db.session.commit()
     return redirect(url_for("servers.server"))
 
 @servers.route('/server/edit/<id>', methods=['GET', 'POST'])
 @login_required
+@manager_role.require(403)
 def server_edit(id):
-    server = Servers.query.get_or_404(id)
+    server = Servers.query.filter(Servers.id == UsersServer.server_id) \
+                          .filter(UsersServer.server_id == id) \
+                          .filter(User.id == UsersServer.user_id) \
+                          .filter(UsersServer.user_id == current_user.id)
+    #users = UsersServer.query.filter_by(server_id=id).all()
     form = ServersForm(obj=server)
     if form.validate_on_submit():
         form.populate_obj(server)
@@ -68,7 +95,23 @@ def server_edit(id):
 
 @servers.route('/server/save/<id>')
 @login_required
+@user_role.require(403)
 def server_save(id):
+    servers = Servers.query.filter(Servers.id == UsersServer.server_id) \
+                           .filter(UsersServer.user_id == current_user.id) \
+                           .filter(UsersServer.server_id == id).first()
+    if servers is None and g.user.role != 300:
+        flash('You are not authorized !')
+        return redirect(url_for("servers.server"))
     session['server_id'] = id
     session.modified = True
     return redirect(url_for('home.home_server'))
+
+
+def _get_servers():
+    if g.user.role == 300:
+        servers = Servers.query.order_by(Servers.name)
+    else:
+        servers = Servers.query.filter(Servers.id == UsersServer.server_id) \
+                               .filter(UsersServer.user_id == current_user.id).order_by(Servers.name)
+    return servers

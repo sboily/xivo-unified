@@ -34,6 +34,9 @@ class LoginForm(Form):
     def validate_password(self, field):
         user = self.get_user()
 
+        if user is None:
+            raise ValidationError('Invalid user')
+
         if not User.check_password(user, self.password.data):
             raise ValidationError('Invalid password')
 

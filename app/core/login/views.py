@@ -21,6 +21,7 @@ from flask.ext.principal import Identity, identity_changed
 from app import create_app as app
 from forms import LoginForm
 from models import User
+from flask.ext.babel import gettext as _
 
 login = Blueprint('login', __name__, template_folder='templates/login')
 
@@ -34,8 +35,13 @@ def log():
         if user and user.check_password(form.password.data):
             identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
             login_user(user, remember=form.remember_me.data)
+            for choice in form.language.iter_choices():
+                if choice[2]:
+                    g.user_lang = choice[0]
+                else:
+                    g.user_lang = 'en'
             return redirect(request.args.get('next') or url_for('home.homepage'))
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', form=form)
 
 @login.route("/logout")
 def logout():

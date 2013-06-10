@@ -17,38 +17,21 @@
 
 
 from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
-from flask.ext.wtf import Required
+from flask.ext.wtf import Required, IPAddress, Regexp
 from models import Servers
 from app.core.login.models import User
+from flask.ext.babel import lazy_gettext as _
 import re
 
 def get_servers_list():
     return User.query.order_by(User.displayname)
 
 class ServersForm(Form):
-    name = TextField('Name', [Required()])
-    address = TextField('Address', [Required()])
-    login = TextField('Login')
-    password = PasswordField('Password')
+    name = TextField(_('Name'), [Required(), Regexp('^[a-zA-Z0-9\.]+$', message=_('Invalid Name'))])
+    address = TextField(_('Address'), [Required(), IPAddress()])
+    login = TextField(_('Login'))
+    password = PasswordField(_('Password'))
 
     users = QuerySelectMultipleField(get_label='displayname',query_factory=get_servers_list)
 
-    submit = SubmitField('Submit')
-
-
-    def validate_name(self, field):
-        check_name = re.compile('^[a-zA-Z0-9\.]+$')
-        if not re.search(check_name, field.data):
-            raise ValidationError('Invalid Name')
-
-    def validate_address(self, field):
-        check_ip = re.compile('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')
-        if not re.match(check_ip, field.data):
-            raise ValidationError('Invalid Host')
-
-    def validate_login(self, field):
-        return
-
-    def validate_password(self, field):
-        return
-
+    submit = SubmitField(_('Submit'))

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, render_template, session, g, current_app, flash, redirect, url_for
+from flask import Flask, render_template, session, g, current_app, flash, redirect, url_for, request
 from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded
@@ -33,15 +33,20 @@ CORE_MODULES = (
     'home'
 )
 
+LANGUAGES = {
+    'en': 'English',
+    'fr': 'French'
+}
+
 
 def create_app():
     core_modules = CORE_MODULES
 
     app = Flask(__name__)
     configure_app(app)
-    configure_hooks(app)
     configure_core_modules(app, core_modules)
     configure_extensions(app)
+    configure_hooks(app)
     configure_logging(app)
     configure_error_handlers(app)
 
@@ -104,6 +109,10 @@ def configure_hooks(app):
                 g.server_id = ""
                 g.server = ""
 
+
+    @babel.localeselector
+    def get_locale():
+        return request.accept_languages.best_match(LANGUAGES.keys())
 
 def configure_error_handlers(app):
     @app.errorhandler(403)

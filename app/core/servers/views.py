@@ -21,6 +21,7 @@ from models import Servers, UsersServer
 from app.core.login.models import User
 from forms import ServersForm
 from app import db, manager_role, user_role
+from flask.ext.babel import gettext as _
 
 servers = Blueprint('servers', __name__, template_folder='templates/server')
 
@@ -47,13 +48,13 @@ def server_add():
                 db.session.add(relation)
 
         if current_user.id not in form.users.iter_choices():
-            flash('Missing your self but added automaticaly !')
+            flash(_('Missing your self but added automaticaly !'))
             user = User.query.filter_by(id=current_user.id).first()
             relation = UsersServer(user=user,server=server)
             db.session.add(relation)
 
         db.session.commit()
-        flash('Server added')
+        flash(_('Server added'))
         return redirect(url_for("servers.server"))
     return render_template('server_add.html', form=form)
 
@@ -65,7 +66,7 @@ def server_del(id):
                            .filter(UsersServer.user_id == current_user.id) \
                            .filter(UsersServer.server_id == id).first()
     if servers is None and g.user.role < 200:
-        flash('You are not authorized !')
+        flash(_('You are not authorized !'))
         return redirect(url_for("servers.server"))
     server = Servers.query.filter_by(id=id).first()
     users_server = UsersServer.query.filter_by(server_id=id).filter_by(user_id=current_user.id).first()
@@ -80,16 +81,15 @@ def server_del(id):
 @manager_role.require(403)
 def server_edit(id):
     server = Servers.query.filter(Servers.id == UsersServer.server_id) \
-                          .filter(UsersServer.server_id == id) \
-                          .filter(User.id == UsersServer.user_id) \
-                          .filter(UsersServer.user_id == current_user.id)
+                          .filter(UsersServer.user_id == current_user.id) \
+                          .filter(UsersServer.server_id == id).first()
     #users = UsersServer.query.filter_by(server_id=id).all()
     form = ServersForm(obj=server)
     if form.validate_on_submit():
         form.populate_obj(server)
         db.session.add(server)
         db.session.commit()
-        flash('Server edit')
+        flash(_('Server edit'))
         return redirect(url_for("servers.server"))
     return render_template('server_edit.html', form=form)
 
@@ -101,7 +101,7 @@ def server_save(id):
                            .filter(UsersServer.user_id == current_user.id) \
                            .filter(UsersServer.server_id == id).first()
     if servers is None and g.user.role != 300:
-        flash('You are not authorized !')
+        flash(_('You are not authorized !'))
         return redirect(url_for("servers.server"))
     session['server_id'] = id
     session.modified = True

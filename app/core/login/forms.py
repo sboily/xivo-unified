@@ -16,29 +16,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError
+from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, SelectField
 from flask.ext.wtf import Required
+from flask.ext.babel import lazy_gettext as _
 from models import User
 
 class LoginForm(Form):
-    username = TextField('Username', validators=[Required()])
-    password = PasswordField('Password', validators=[Required()])
-    remember_me = BooleanField('Remember me', default=False)
+    username = TextField(_('Username'), validators=[Required()])
+    password = PasswordField(_('Password'), validators=[Required()])
+    remember_me = BooleanField(_('Remember me'), default=False)
+
+    language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
 
     def validate_login(self, field):
         user = self.get_user()
 
         if user is None:
-            raise ValidationError('Invalid user')
+            raise ValidationError(_('Invalid user'))
 
     def validate_password(self, field):
         user = self.get_user()
 
         if user is None:
-            raise ValidationError('Invalid user')
+            raise ValidationError(_('Invalid user'))
 
         if not User.check_password(user, self.password.data):
-            raise ValidationError('Invalid password')
+            raise ValidationError(_('Invalid password'))
 
     def get_user(self):
         return User.query.filter_by(username=self.username.data).first()

@@ -40,9 +40,9 @@ $(".alert").alert()
         {% block content %}
 	<div class="container">
 	  <div class="hero-unit">
-	    <h1>Hello, XiVO</h1>
-	      <p>This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.</p>
-	      <p><a href="http://documentation.xivo.fr" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+	    <h1>{{ _('Hello, XiVO') }}</h1>
+	      <p>{{ _('This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.') }}</p>
+	      <p><a href="http://documentation.xivo.fr" class="btn btn-primary btn-large">{{_('Learn more')}} &raquo;</a></p>
 	  </div>
 	</div>
         {% endblock %}

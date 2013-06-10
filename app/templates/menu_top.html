@@ -12,17 +12,17 @@
       <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
           {% if g.server %}
-              on {{ g.server.address }}&nbsp;&nbsp;
+              {{_('on') }} {{ g.server.address }}&nbsp;&nbsp;
           {% endif %}
-              Welcome <a href="{{url_for('profil.myprofil', id=current_user.id)}}" class="navbar-link">{{current_user.displayname}}</a>&nbsp;&nbsp;
+              {{ _('Welcome') }} <a href="{{url_for('profil.myprofil', id=current_user.id)}}" class="navbar-link">{{current_user.displayname}}</a>&nbsp;&nbsp;
               <a href="{{ url_for('login.logout') }}"><i class="icon-off icon-white"></i></a>
             </p>
         <ul class="nav">
-          <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
+          <li><a href="{{ url_for('home.homepage') }}">{{ _('Home') }}</a></li>
         </ul>
         <ul class="nav pull-right">
           <li id="fat-menu" class="dropdown">
-          <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Servers<b class="caret"></b></a>
+          <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ _('Servers') }}<b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="servers">
               {% for s in g.servers_list %}
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_save', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>

@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import render_template, Blueprint, flash, redirect, url_for
-from flask.ext.login import login_required
+from flask.ext.login import login_required, current_user
 from app import db, admin_role
 from app.core.login.models import User
 from forms import AccountForm, SignupForm
@@ -24,10 +24,12 @@ from forms import AccountForm, SignupForm
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
 
-@profil.route('/myprofil/<id>')
+@profil.route('/myprofil')
 @login_required
-def myprofil(id):
-    return render_template('profil.html')
+def myprofil():
+    account = User.query.get_or_404(current_user.id)
+    form = AccountForm(obj=account)
+    return render_template('profil.html', form=form)
 
 
 @profil.route('/accounts')

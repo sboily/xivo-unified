@@ -32,6 +32,7 @@ class AccountForm(Form):
         validators.Length(min=8, message="It's probably best if your password is longer than 8 characters.")
     ])
     role = SelectField('Role', choices=[('300', 'Admin'),('200', 'Manager'),('100', 'User')])
+    submit = SubmitField('Save')
 
 class SignupForm(Form):
     displayname = TextField('Display name')

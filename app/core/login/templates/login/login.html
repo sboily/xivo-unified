@@ -6,8 +6,8 @@
       <form class="form-signin" method="post" name="login">
         {{ form.csrf_token }}
         <h2 class="form-signin-heading">{{ _('Please sign in') }}</h2>
-        {{ render_field(form.username, class="input-block-level",placeholder="Username") }}
-        {{ render_field(form.password, class="input-block-level",placeholder="Password") }}
+        {{ render_field(form.username, class="input-block-level") }}
+        {{ render_field(form.password, class="input-block-level") }}
         {{ render_field(form.remember_me, class="checkbox") }} 
         {{ render_field(form.language, class="input-small") }} 
         <button class="btn btn-large btn-primary" type="submit">{{ _('Sign in') }}</button>

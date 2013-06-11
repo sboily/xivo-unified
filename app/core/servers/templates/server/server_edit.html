@@ -7,10 +7,10 @@
       <form class="form" method="post">
         {{ form.csrf_token }}
         <h2 class="form">{{ _('Edit server') }}</h2>
-        {{ render_field(form.name, class="input-xlarge",placeholder="Name") }}
-        {{ render_field(form.address, class="input-xlarge",placeholder="Address") }}
-        {{ render_field(form.login, class="input-xlarge",placeholder="Login") }}
-        {{ render_field(form.password, class="input-xlarge",placeholder="Password") }}
+        {{ render_field(form.name, class="input-xlarge") }}
+        {{ render_field(form.address, class="input-xlarge") }}
+        {{ render_field(form.login, class="input-xlarge") }}
+        {{ render_field(form.password, class="input-xlarge") }}
         {{ render_field(form.users, class="input-xlarge") }}
         {{ render_field(form.submit, class="btn btn-primary") }}
       </form>

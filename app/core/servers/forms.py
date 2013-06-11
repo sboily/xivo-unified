@@ -36,6 +36,6 @@ class ServersForm(Form):
     login = TextField(_('Login'))
     password = PasswordField(_('Password'))
 
-    users = QuerySelectMultipleField(get_label='displayname',query_factory=get_servers_list)
+    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=get_servers_list)
 
     submit = SubmitField(_('Submit'))

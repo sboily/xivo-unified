@@ -25,13 +25,18 @@ from flask.ext.babel import gettext as _
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
 
-@profil.route('/myprofil')
+@profil.route('/myprofil', methods=['GET', 'POST'])
 @login_required
 def myprofil():
     account = User.query.get_or_404(current_user.id)
     form = AccountForm(obj=account)
+    if form.validate_on_submit():
+        form.populate_obj(account)
+        db.session.add(account)
+        db.session.commit()
+        flash(_('Profil edit'))
+        return redirect(url_for("profil.myprofil"))
     return render_template('profil.html', form=form)
-
 
 @profil.route('/accounts')
 @login_required

@@ -6,11 +6,11 @@
       <form class="form-signin" method="post">
         {{ form.csrf_token }}
         <h2 class="form">{{ _('Signup') }}</h2>
-        {{ render_field(form.username, class="input-xlarge" }}
-        {{ render_field(form.email, class="input-xlarge" }}
-        {{ render_field(form.displayname, class="input-xlarge" }}
-        {{ render_field(form.password, class="input-xlarge" }}
-        {{ render_field(form.confirm, class="input-xlarge" }}
+        {{ render_field(form.username, class="input-xlarge") }}
+        {{ render_field(form.email, class="input-xlarge") }}
+        {{ render_field(form.displayname, class="input-xlarge") }}
+        {{ render_field(form.password, class="input-xlarge") }}
+        {{ render_field(form.confirm, class="input-xlarge") }}
         {{ render_field(form.captcha, class="input-xlarge") }}
         {{ render_field(form.agree) }}
         {{ render_field(form.submit, class="btn btn-primary") }}

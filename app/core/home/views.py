@@ -28,6 +28,7 @@ def homepage():
     return render_template('base.html')
 
 @home.route('/reload')
+@login_required
 def reload_app():
     os.utime(current_app.config['BASEDIR'] + '/app/__init__.py',None)
     return render_template('reload.html')

@@ -17,7 +17,7 @@
                 {%- endfor %}
               <li class="nav-header">{{ _('Plugins') }}</li>
               {% for p in g.plugins_list %}
-                <li {% if  p.plugin.endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(p.plugin.endpoint)}}">{{ p.plugin.name }}</a></li>
+                <li {% if  p.url == request.endpoint %} class="active" {% endif %}><a href="{{url_for(p.url)}}">{{ p.name }}</a></li>
               {% endfor %}
             </ul>
           </div>

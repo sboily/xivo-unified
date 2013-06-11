@@ -25,6 +25,8 @@ import shutil
 import os
 import tarfile
 
+from app import plugin_manager
+
 market = Blueprint('market', __name__, template_folder='templates/market')
 
 @market.route('/market')
@@ -41,7 +43,7 @@ def themarket():
 def market_del(module):
     _remove_module(module)
     flash(_('Module %s has been removed !' % module))
-    return redirect(url_for('home.reload_app'))
+    return redirect(url_for('market.themarket'))
 
 @market.route('/market/get/<module>')
 @login_required
@@ -55,29 +57,27 @@ def _get_modules():
     url = "http://market.xivo.fr/market.json"
     json_read = urllib2.urlopen(url).read()
     modules = json.loads(json_read)
+    for module in modules:
+        module['installed'] = _is_module_installed(module)
+
     return modules
+
+def _is_module_installed(module):
+    available_modules = [m['module'] for m in plugin_manager.get_plugin_list()]
+    print "is module installed", module['name'], available_modules
+    return module['name'] in available_modules
+
 
 def _remove_module(module):
     print "Removing module %s" % module
-    src = os.path.join(current_app.config['BASEDIR'], 'app/plugins/%s' % module)
-    shutil.rmtree(src)
+    plugin_manager.remove_plugin(module)
 
 def _install_module(module):
     print "Installing module %s" % module
-    dst = os.path.join(current_app.config['BASEDIR'], 'app/plugins/')
-    src = "/tmp/"
-    url = "http://market.xivo.fr/%s.tgz" % module
-    mod = urllib2.urlopen(url)
-    mod_file = open(src + url.split('/')[-1], 'w')
-    mod_file.write(mod.read())
-    mod_file.close()
-    mod.close()
-    tar = tarfile.open(src + module + ".tgz")
-    tar.extractall(path=dst)
-    tar.close()
+    plugin_manager.install_plugin(module)
 
 def _get_modules_installed():
     installed = []
     for mod in g.plugins_list:
-        installed.append(mod['informations']['name'])
+        installed.append(mod['name'])
     return installed

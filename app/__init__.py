@@ -24,6 +24,9 @@ from register_plugins import Plugins
 from core.servers.models import Servers, UsersServer
 from core.login.models import User
 
+import plugin_manager
+import os
+
 
 CORE_MODULES = (
     'servers',
@@ -82,8 +85,10 @@ def configure_extensions(app):
         return User.query.filter_by(id=userid).first()
 
     # Plugins list global
-    plugins.init_app(app)
-    plugins.register_plugins(app)
+    path = os.path.join(app.config['BASEDIR'], 'app/plugins')
+    plugin_manager.init_plugin_manager(path, app)
+    plugin_manager.activate_plugins()
+    plugin_manager.setup_plugins()
 
 
 def configure_hooks(app):
@@ -129,10 +134,7 @@ def configure_logging(app):
 
 
 def _get_plugins_info():
-    plugins = Plugins()
-    plugins.init_app(current_app)
-    return plugins.plugins_list
-
+    return plugin_manager.get_plugin_list()
 
 # Configure roles
 admin_role = Permission(RoleNeed('admin'))

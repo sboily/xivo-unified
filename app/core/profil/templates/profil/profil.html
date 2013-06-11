@@ -22,14 +22,14 @@
           <br>
           <div class="tab-content">
             <div class="tab-pane active" id="profil">
-              <form id="form" class="form-horizontal">
+              <form id="form" class="form">
               {{ form.csrf_token }}
               <fieldset>
-                {{ render_field(form.username, class="input-medium" disabled="disabled") }}
-                {{ render_field(form.displayname, class="input-medium" }}
-                {{ render_field(form.email, class="input-medium" }}
+                {{ render_field(form.username, class="input-xlarge", disabled="disabled") }}
+                {{ render_field(form.displayname, class="input-xlarge") }}
+                {{ render_field(form.email, class="input-xlarge") }}
                 <br><br>
-                {{ render_field(form.password, class="input-medium" }}
+                {{ render_field(form.password, class="input-xlarge") }}
                 <br>
                 {{ render_field(form.submit, class="btn btn-primary") }}
               </fieldset>

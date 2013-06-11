@@ -21,6 +21,7 @@ from flask.ext.script import Manager, prompt_bool, Server
 from app.extensions import db
 from app import create_app
 from app.core.servers.models import Servers, UsersServer
+from app.core.organisations.models import Organisations, UsersOrganisation
 from app.core.login.models import User
 
 app = create_app()
@@ -45,7 +46,10 @@ def initdb():
     re = UsersServer(user=ua,server=sa)
     ri = UsersServer(user=ca,server=sa)
 
-    db.session.add_all([ua,sa,re,ri])
+    org = Organisations(name='test organisation')
+    org_user = UsersOrganisation(organisation=org,user=ua)
+
+    db.session.add_all([ua,sa,re,ri,org,org_user])
     db.session.commit()
 
 

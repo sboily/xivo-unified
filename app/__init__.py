@@ -19,8 +19,7 @@ from flask import Flask, render_template, session, g, current_app, flash, redire
 from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded
-from app.extensions import db, login_manager, babel, principal, plugins
-from register_plugins import Plugins
+from app.extensions import db, login_manager, babel, principal
 from core.servers.models import Servers, UsersServer
 from core.login.models import User
 
@@ -33,7 +32,8 @@ CORE_MODULES = (
     'login',
     'market',
     'profil',
-    'home'
+    'home',
+    'organisations',
 )
 
 LANGUAGES = {

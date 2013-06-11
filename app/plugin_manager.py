@@ -13,7 +13,6 @@ plugin_directory = None
 app = None
 
 def init_plugin_manager(directory, created_app):
-    print "plugin manager init"
     global plugin_manager
     global plugin_directory
     global app
@@ -26,17 +25,12 @@ def init_plugin_manager(directory, created_app):
 
 
 def setup_plugins():
-    print "plugin setup"
-    print plugin_manager.getAllPlugins()
     for plugin_info in plugin_manager.getAllPlugins():
-        print "setuping plugin", plugin_info.name
         plugin_info.plugin_object.setup(app)
 
 
 def activate_plugins():
-    print "plugin activation"
     for plugin_info in plugin_manager.getAllPlugins():
-        print "activating plugin", plugin_info.name
         plugin_manager.activatePluginByName(plugin_info.name)
 
 
@@ -53,7 +47,6 @@ def get_plugin_list():
 
 
 def remove_plugin(plugin_name):
-    print "removing plugin", plugin_name
     _remove_files(plugin_name)
     _unload_plugin(plugin_name)
 

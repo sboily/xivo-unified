@@ -15,14 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask.ext.sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
-
-from flask.ext.login import LoginManager
-login_manager = LoginManager()
-
-from flask.ext.babel import Babel
-babel = Babel()
-
-from flask.ext.principal import Principal
-principal = Principal()

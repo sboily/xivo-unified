@@ -24,6 +24,7 @@ from flask.ext.sqlalchemy import BaseQuery
 from app import db
 from datetime import datetime
 from app.core.servers.models import UsersServer
+from app.core.organisations.models import UsersOrganisation
 
 class UserQuery(BaseQuery):
 
@@ -57,6 +58,7 @@ class User(db.Model, UserMixin):
     role = db.Column(db.Integer, default=300)
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     server = db.relationship('UsersServer', backref='user', lazy = 'dynamic')
+    organisation = db.relationship('UsersOrganisation', backref='user', lazy='dynamic')
 
     def __init__(self, username, password, email, displayname, role):
         self.email = email.lower()

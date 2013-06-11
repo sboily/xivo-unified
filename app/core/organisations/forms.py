@@ -15,14 +15,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask.ext.sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
 
-from flask.ext.login import LoginManager
-login_manager = LoginManager()
+from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
+from flask.ext.wtf import Required, Regexp, validators
+from app.core.login.models import User
+from flask.ext.babel import lazy_gettext as _
 
-from flask.ext.babel import Babel
-babel = Babel()
+def get_users_list():
+    return User.query.order_by(User.displayname)
 
-from flask.ext.principal import Principal
-principal = Principal()
+class OrganisationsForm(Form):
+    name = TextField(_('Name'), [Required(),
+        validators.Length(min=3, max=30),
+        validators.Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
+    ])
+
+    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=get_users_list)
+
+    submit = SubmitField(_('Submit'))

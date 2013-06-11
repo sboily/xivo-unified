@@ -17,42 +17,45 @@
 
 
 from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, SelectField, RecaptchaField, html5, fields, validators, SubmitField, Required
+from flask.ext.babel import lazy_gettext as _
 
 class AccountForm(Form):
-    username = TextField('Username', [Required(),
+    username = TextField(_('Username'), [Required(),
         validators.Length(min=3, max=20),
-        validators.Regexp(r'^[^@:]*$', message="Username shouldn't contain '@' or ':'")
+        validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
     ])
-    email = html5.EmailField('Email address', [
+    email = html5.EmailField(_('Email address'), [
         validators.Length(min=3, max=128),
-        validators.Email(message="This should be a valid email address.")
+        validators.Email(message=_("This should be a valid email address."))
     ])
-    displayname = TextField('Display name')
-    password = PasswordField('Password', [Required(),
-        validators.Length(min=8, message="It's probably best if your password is longer than 8 characters.")
+    displayname = TextField(_('Display name'))
+    password = PasswordField(_('Password'), [Required(),
+        validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
-    role = SelectField('Role', choices=[('300', 'Admin'),('200', 'Manager'),('100', 'User')])
-    submit = SubmitField('Save')
+    role = SelectField(_('Role'), choices=[('300', 'Admin'),('200', 'Manager'),('100', 'User')])
+    submit = SubmitField(_('Save'))
+
+    #language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
 
 class SignupForm(Form):
-    displayname = TextField('Display name')
+    displayname = TextField(_('Display name'))
 
-    username = TextField('Username', [Required(),
+    username = TextField(_('Username'), [Required(),
         validators.Length(min=3, max=20),
-        validators.Regexp(r'^[^@:]*$', message="Username shouldn't contain '@' or ':'")
+        validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
     ])
-    email = html5.EmailField('Email address', [
+    email = html5.EmailField(_('Email address'), [
         validators.Length(min=3, max=128),
-        validators.Email(message="This should be a valid email address.")
+        validators.Email(message=_("This should be a valid email address."))
     ])
-    password = PasswordField('Password', [
+    password = PasswordField(_('Password'), [
         Required(),
-        validators.Length(min=8, message="It's probably best if your password is longer than 8 characters."),
-        validators.EqualTo('confirm', message="Passwords must match.")
+        validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters.")),
+        validators.EqualTo('confirm', message=_("Passwords must match."))
     ])
-    confirm = PasswordField('Confirm password')
-    captcha = RecaptchaField('Captcha')
+    confirm = PasswordField(_('Confirm password'))
+    captcha = RecaptchaField(_('Captcha'))
 
-    agree = BooleanField('I agree with the Terms and Conditions')
+    agree = BooleanField(_('I agree with the Terms and Conditions'))
 
-    submit = SubmitField('Signup')
+    submit = SubmitField(_('Signup'))

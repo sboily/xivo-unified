@@ -18,6 +18,7 @@
 from flask import render_template, Blueprint, flash, redirect, url_for, g, flash, current_app
 from flask.ext.login import login_required
 from app import db, admin_role, create_app as app
+from flask.ext.babel import gettext as _
 import json
 import urllib2
 import shutil
@@ -39,7 +40,7 @@ def themarket():
 @admin_role.require(403)
 def market_del(module):
     _remove_module(module)
-    flash('Module %s has been removed !' % module)
+    flash(_('Module %s has been removed !' % module))
     return redirect(url_for('home.reload_app'))
 
 @market.route('/market/get/<module>')
@@ -47,7 +48,7 @@ def market_del(module):
 @admin_role.require(403)
 def market_get(module):
     _install_module(module)
-    flash('Module %s has been installed !' % module)
+    flash(_('Module %s has been installed !' % module))
     return redirect(url_for('home.reload_app'))
 
 def _get_modules():

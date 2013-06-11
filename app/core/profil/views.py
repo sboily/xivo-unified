@@ -20,6 +20,7 @@ from flask.ext.login import login_required, current_user
 from app import db, admin_role
 from app.core.login.models import User
 from forms import AccountForm, SignupForm
+from flask.ext.babel import gettext as _
 
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
@@ -49,7 +50,7 @@ def account_add():
                     form.email.data, form.displayname.data, form.role.data)
         db.session.add(account)
         db.session.commit()
-        flash('Account added')
+        flash(_('Account added'))
         return redirect(url_for("profil.accounts"))
     return render_template('account_add.html', form=form)
 
@@ -60,7 +61,7 @@ def account_del(id):
     account = User.query.filter_by(id=id).first()
     db.session.delete(account)
     db.session.commit()
-    flash('Account delete')
+    flash(_('Account delete'))
     return redirect(url_for("profil.accounts"))
 
 @profil.route('/account/edit/<id>', methods=['GET', 'POST'])
@@ -73,7 +74,7 @@ def account_edit(id):
         form.populate_obj(account)
         db.session.add(account)
         db.session.commit()
-        flash('Account edit')
+        flash(_('Account edit'))
         return redirect(url_for("profil.accounts"))
     return render_template('account_edit.html', form=form)
 
@@ -86,6 +87,6 @@ def signup():
                     form.email.data, form.displayname.data, default_role)
         db.session.add(account)
         db.session.commit()
-        flash('Account added')
+        flash(_('Account added'))
         return redirect(url_for('login.login'))
     return render_template('signup.html', form=form)

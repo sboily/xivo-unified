@@ -6,16 +6,16 @@
 <div class="container">
 
 <div class="widget stacked widget-table action-table">
-  <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('profil.account_add')}}"><i class="icon-plus icon-white"></i> Add</a></p>
+  <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('profil.account_add')}}"><i class="icon-plus icon-white"></i> {{ _('Add') }}</a></p>
   <table class="table table-bordered">
 <div class="widget-content">
   <table class="table table-bordered table-striped table-highlight">
     <thead>
       <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Display name</th>
-        <th>Role</th>
+        <th>{{ _('Username') }}</th>
+        <th>{{ _('Email') }}</th>
+        <th>{{ _('Display name') }}</th>
+        <th>{{ _('Role') }}</th>
       <th class="td-actions"></th>
       </tr>
     </thead>

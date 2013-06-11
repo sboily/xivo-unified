@@ -9,14 +9,14 @@
   <div class="span8">      		
     <div class="widget stacked ">
       <div class="widget-header">
-         <h3>Your Account ({{ current_user.username }})</h3>
+         <h3>{{ _('Your Account') }} ({{ current_user.username }})</h3>
       </div> 
 				
       <div class="widget-content">
         <div class="tabbable">
           <ul class="nav nav-tabs">
             <li class="active">
-              <a href="#profil" data-toggle="tab">Profil</a>
+              <a href="#profil" data-toggle="tab">{{ _('Profil') }}</a>
             </li>
           </ul>
           <br>
@@ -25,12 +25,11 @@
               <form id="form" class="form-horizontal">
               {{ form.csrf_token }}
               <fieldset>
-                {{ render_field(form.username, class="input-medium",placeholder="Username", disabled="disabled") }}
-                <p class="help-block">Your username is for logging in and cannot be changed.</p>
-                {{ render_field(form.displayname, class="input-medium",placeholder="Display name") }}
-                {{ render_field(form.email, class="input-medium",placeholder="Email") }}
+                {{ render_field(form.username, class="input-medium" disabled="disabled") }}
+                {{ render_field(form.displayname, class="input-medium" }}
+                {{ render_field(form.email, class="input-medium" }}
                 <br><br>
-                {{ render_field(form.password, class="input-medium",placeholder="Password") }}
+                {{ render_field(form.password, class="input-medium" }}
                 <br>
                 {{ render_field(form.submit, class="btn btn-primary") }}
               </fieldset>

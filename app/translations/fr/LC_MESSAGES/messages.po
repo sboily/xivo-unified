@@ -7,22 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-06-10 14:57-0400\n"
-"PO-Revision-Date: 2013-06-10 14:59-0500\n"
+"POT-Creation-Date: 2013-06-10 21:01-0400\n"
+"PO-Revision-Date: 2013-06-10 21:01-0500\n"
 "Last-Translator: Sylvain Boily <sboily@proformatique.com>\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
-"X-Generator: Poedit 1.5.4\n"
 
 #: app/core/login/forms.py:25
+#: app/core/profil/forms.py:23
+#: app/core/profil/forms.py:43
+#: app/core/profil/templates/profil/accounts.html:15
 msgid "Username"
 msgstr "Utilisateur"
 
-#: app/core/login/forms.py:26 app/core/servers/forms.py:33
+#: app/core/login/forms.py:26
+#: app/core/profil/forms.py:32
+#: app/core/profil/forms.py:51
+#: app/core/servers/forms.py:37
+#: app/core/servers/templates/server/server.html:16
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -42,7 +48,8 @@ msgstr "Anglais"
 msgid "French"
 msgstr "Français"
 
-#: app/core/login/forms.py:35 app/core/login/forms.py:41
+#: app/core/login/forms.py:35
+#: app/core/login/forms.py:41
 msgid "Invalid user"
 msgstr "Utilisateur invalide"
 
@@ -66,29 +73,136 @@ msgstr "Nouveau compte ?"
 msgid "Sign up"
 msgstr "Se connecter"
 
+#: app/core/market/views.py:43
+#, python-format
+msgid "Module %s has been removed !"
+msgstr "Greffons %s a été supprimé !"
+
+#: app/core/market/views.py:51
+#, python-format
+msgid "Module %s has been installed !"
+msgstr "Modules %s a été installé !"
+
+#: app/core/market/templates/market/market.html:11
 #: app/core/servers/forms.py:30
+#: app/core/servers/templates/server/server.html:13
 msgid "Name"
 msgstr "Nom"
 
-#: app/core/servers/forms.py:31
+#: app/core/market/templates/market/market.html:12
+msgid "Description"
+msgstr "Description"
+
+#: app/core/market/templates/market/market.html:13
+msgid "Author"
+msgstr "Auteur"
+
+#: app/core/market/templates/market/market.html:14
+msgid "Licence"
+msgstr "License"
+
+#: app/core/profil/forms.py:25
+#: app/core/profil/forms.py:45
+msgid "Username shouldn't contain '@' or ':'"
+msgstr "L'utilisateur ne doit pas contenir '@' ou  ':'"
+
+#: app/core/profil/forms.py:27
+#: app/core/profil/forms.py:47
+msgid "Email address"
+msgstr "Courriel"
+
+#: app/core/profil/forms.py:29
+#: app/core/profil/forms.py:49
+msgid "This should be a valid email address."
+msgstr "Il faut une adresse email valide"
+
+#: app/core/profil/forms.py:31
+#: app/core/profil/forms.py:41
+#: app/core/profil/templates/profil/accounts.html:17
+msgid "Display name"
+msgstr "Nom affiché"
+
+#: app/core/profil/forms.py:33
+#: app/core/profil/forms.py:53
+msgid "It's probably best if your password is longer than 8 characters."
+msgstr "Il serait mieux d'avoir un mot de passe plus long que 8 caractères."
+
+#: app/core/profil/forms.py:35
+#: app/core/profil/templates/profil/accounts.html:18
+msgid "Role"
+msgstr "Rôle"
+
+#: app/core/profil/forms.py:36
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: app/core/profil/forms.py:54
+msgid "Passwords must match."
+msgstr "Les mots de passe doivent être identique"
+
+#: app/core/profil/forms.py:56
+msgid "Confirm password"
+msgstr "Confirmer le mot de passe"
+
+#: app/core/profil/forms.py:57
+msgid "Captcha"
+msgstr "Captcha"
+
+#: app/core/profil/forms.py:59
+msgid "I agree with the Terms and Conditions"
+msgstr "Je suis d'accord avec les conditions données"
+
+#: app/core/profil/forms.py:61
+msgid "Signup"
+msgstr "Se connecter"
+
+#: app/core/profil/views.py:53
+#: app/core/profil/views.py:90
+msgid "Account added"
+msgstr "Utilisateur ajouté"
+
+#: app/core/profil/views.py:64
+msgid "Account delete"
+msgstr "Utilisateur supprimé"
+
+#: app/core/profil/views.py:77
+msgid "Account edit"
+msgstr "Utilisateur modifié"
+
+#: app/core/profil/templates/profil/account_add.html:9
+msgid "Add account"
+msgstr "Ajouter un utilisateur"
+
+#: app/core/profil/templates/profil/account_edit.html:9
+msgid "Edit account"
+msgstr "Modifier un utilisateur"
+
+#: app/core/profil/templates/profil/accounts.html:9
+#: app/core/servers/templates/server/server.html:7
+msgid "Add"
+msgstr "Ajouter"
+
+#: app/core/profil/templates/profil/accounts.html:16
+msgid "Email"
+msgstr "Courriel"
+
+#: app/core/servers/forms.py:32
+msgid "Name shouldn't contain '@' or ':'"
+msgstr "Le nom ne doit pas contenir '@' ou ':'"
+
+#: app/core/servers/forms.py:35
+#: app/core/servers/templates/server/server.html:14
 msgid "Address"
 msgstr "Adresse"
 
-#: app/core/servers/forms.py:32
+#: app/core/servers/forms.py:36
+#: app/core/servers/templates/server/server.html:15
 msgid "Login"
 msgstr "Utilisateur"
 
-#: app/core/servers/forms.py:37
+#: app/core/servers/forms.py:41
 msgid "Submit"
 msgstr "Envoyer"
-
-#: app/core/servers/forms.py:43
-msgid "Invalid Name"
-msgstr "Nom invalide"
-
-#: app/core/servers/forms.py:48
-msgid "Invalid Host"
-msgstr "Hôte invalide"
 
 #: app/core/servers/views.py:51
 msgid "Missing your self but added automaticaly !"
@@ -98,29 +212,42 @@ msgstr "Ajout automatique de la personne qui ajoute"
 msgid "Server added"
 msgstr "Serveur ajouté"
 
-#: app/core/servers/views.py:69 app/core/servers/views.py:105
+#: app/core/servers/views.py:69
+#: app/core/servers/views.py:104
 msgid "You are not authorized !"
 msgstr "Vous n'êtes pas autorisé !"
 
-#: app/core/servers/views.py:93
+#: app/core/servers/views.py:92
 msgid "Server edit"
 msgstr "Serveur modifié"
+
+#: app/core/servers/templates/server/server_add.html:9
+msgid "Add server"
+msgstr "Ajouter un serveur"
+
+#: app/core/servers/templates/server/server_edit.html:9
+msgid "Edit server"
+msgstr "Éditer un serveur"
 
 #: app/templates/base.html:43
 msgid "Hello, XiVO"
 msgstr "Bienvenue, XiVO"
 
 #: app/templates/base.html:44
-msgid ""
-"This is the new webi interfaces for XiVO, developp with flask for better "
-"performance and better experiences."
-msgstr ""
-"Bienvenue sur la nouvelle interface web de XiVO, développé avec Flask pour "
-"de meilleure performance et une expérience meilleure."
+msgid "This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences."
+msgstr "Bienvenue sur la nouvelle interface web de XiVO, développé avec Flask pour de meilleure performance et une expérience meilleure."
 
 #: app/templates/base.html:45
 msgid "Learn more"
 msgstr "En savoir plus"
+
+#: app/templates/menu_left.html:7
+msgid "Configuration"
+msgstr "Configuration"
+
+#: app/templates/menu_left.html:18
+msgid "Plugins"
+msgstr "Greffons"
 
 #: app/templates/menu_top.html:15
 msgid "on"
@@ -137,3 +264,4 @@ msgstr "Accueil"
 #: app/templates/menu_top.html:25
 msgid "Servers"
 msgstr "Serveurs"
+

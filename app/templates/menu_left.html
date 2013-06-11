@@ -4,7 +4,7 @@
           <div class="sidebar-nav">
             <ul class="nav nav-list">
               {% if g.user.role >= 200 %}
-              <li class="nav-header">Configuration</li>
+              <li class="nav-header">{{ _('Configuration') }}</li>
               {%- endif %}
                 {%- for endpoint, caption, role in [
                                   ('servers.server', 'Servers', 200),
@@ -15,7 +15,7 @@
                   <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
                 {%- endif %}
                 {%- endfor %}
-              <li class="nav-header">Plugins</li>
+              <li class="nav-header">{{ _('Plugins') }}</li>
               {% for p in g.plugins_list %}
                 <li {% if  p.plugin.endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(p.plugin.endpoint)}}">{{ p.plugin.name }}</a></li>
               {% endfor %}

@@ -17,7 +17,7 @@
 
 
 from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
-from flask.ext.wtf import Required, IPAddress, Regexp
+from flask.ext.wtf import Required, IPAddress, Regexp, validators
 from models import Servers
 from app.core.login.models import User
 from flask.ext.babel import lazy_gettext as _
@@ -27,7 +27,11 @@ def get_servers_list():
     return User.query.order_by(User.displayname)
 
 class ServersForm(Form):
-    name = TextField(_('Name'), [Required(), Regexp('^[a-zA-Z0-9\.]+$', message=_('Invalid Name'))])
+    name = TextField(_('Name'), [Required(),
+        validators.Length(min=3, max=30),
+        validators.Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
+    ])
+
     address = TextField(_('Address'), [Required(), IPAddress()])
     login = TextField(_('Login'))
     password = PasswordField(_('Password'))

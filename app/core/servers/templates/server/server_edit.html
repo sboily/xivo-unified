@@ -4,9 +4,9 @@
 
     <div class="container">
 
-      <form class="form" method="post" name="server/new">
+      <form class="form" method="post">
         {{ form.csrf_token }}
-        <h2 class="form">Edit server</h2>
+        <h2 class="form">{{ _('Edit server') }}</h2>
         {{ render_field(form.name, class="input-xlarge",placeholder="Name") }}
         {{ render_field(form.address, class="input-xlarge",placeholder="Address") }}
         {{ render_field(form.login, class="input-xlarge",placeholder="Login") }}

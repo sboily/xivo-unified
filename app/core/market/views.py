@@ -19,11 +19,9 @@ from flask import render_template, Blueprint, flash, redirect, url_for, g, flash
 from flask.ext.login import login_required
 from app import db, root_role, create_app as app
 from flask.ext.babel import gettext as _
+from app.models import Plugins
 import json
 import urllib2
-import shutil
-import os
-import tarfile
 
 from app import plugin_manager
 
@@ -66,7 +64,6 @@ def _is_module_installed(module):
     available_modules = [m['module'] for m in plugin_manager.get_plugin_list()]
     print "is module installed", module['name'], available_modules
     return module['name'] in available_modules
-
 
 def _remove_module(module):
     print "Removing module %s" % module

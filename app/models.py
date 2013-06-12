@@ -18,12 +18,12 @@
 
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import cached_property
 from flask.ext.login import UserMixin
 from flask.ext.principal import RoleNeed, UserNeed
-from werkzeug.utils import cached_property
 from flask.ext.sqlalchemy import BaseQuery
-from app import db
 from datetime import datetime
+from app import db
 
 class UserQuery(BaseQuery):
 

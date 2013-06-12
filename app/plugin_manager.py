@@ -7,6 +7,8 @@ import urllib2
 import json
 
 from flask import current_app
+from app import db
+from models import Plugins
 
 plugin_manager = None
 plugin_directory = None
@@ -47,8 +49,15 @@ def get_plugin_list():
 
 
 def remove_plugin(plugin_name):
+    _remove_from_db(plugin_name)
     _remove_files(plugin_name)
     _unload_plugin(plugin_name)
+
+
+def _remove_from_db(plugin_name):
+    plugin = Plugins.query.filter(Plugins.name == plugin_name).first()
+    db.session.delete(plugin)
+    db.session.commit()
 
 
 def _remove_files(plugin_name):
@@ -66,9 +75,16 @@ def _unload_plugin(plugin_name):
 
 def install_plugin(plugin_name):
     print "Installing plugin %s" % plugin_name
+    _add_to_db(plugin_name)
     _download_and_extract(plugin_name)
     _move_config_file(plugin_name)
     #_load_plugin(plugin_name)
+
+
+def _add_to_db(plugin_name):
+    plugin = Plugins(plugin_name)
+    db.session.add(plugin)
+    db.session.commit()
 
 def _download_and_extract(plugin_name):
     dst = plugin_directory

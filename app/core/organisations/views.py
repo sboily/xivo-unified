@@ -17,10 +17,9 @@
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g
 from flask.ext.login import login_required, current_user
-from models import Organisations, UsersOrganisation
-from app.core.login.models import User
+from app.models import Organisations, UsersOrganisation, User
 from forms import OrganisationsForm
-from app import db, manager_role, user_role
+from app import db, manager_role, admin_role
 from flask.ext.babel import gettext as _
 
 organisations = Blueprint('organisations', __name__, template_folder='templates/organisations')
@@ -94,7 +93,7 @@ def organisation_edit(id):
 
 @organisations.route('/organisation/save/<id>')
 @login_required
-@user_role.require(403)
+@admin_role.require(403)
 def organisation_save(id):
     organisations = Organisations.query.filter(Organisations.id == UsersOrganisation.organisation_id) \
                            .filter(UsersOrganisation.user_id == current_user.id) \

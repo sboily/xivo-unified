@@ -17,10 +17,10 @@
 
 from flask import render_template, flash, redirect, session, url_for, request, g, Blueprint, current_app
 from flask.ext.login import login_user, logout_user, current_user
-from flask.ext.principal import Identity, identity_changed
+from flask.ext.principal import Identity, identity_changed, AnonymousIdentity
 from app import create_app as app
 from forms import LoginForm
-from models import User
+from app.models import User
 from flask.ext.babel import gettext as _
 
 login = Blueprint('login', __name__, template_folder='templates/login')
@@ -45,7 +45,11 @@ def log():
 
 @login.route("/logout")
 def logout():
-    if session.has_key('server_id'):
-        del session['server_id']
+    for key in ('identity.name', 'identity.auth_type', 'server_id'):
+        session.pop(key, None)
+
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
+
     logout_user()
     return redirect(url_for('login.log'))

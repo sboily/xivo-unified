@@ -18,8 +18,7 @@
 
 from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
 from flask.ext.wtf import Required, IPAddress, Regexp, validators
-from models import Servers
-from app.core.login.models import User
+from app.models import User, Servers
 from flask.ext.babel import lazy_gettext as _
 import re
 

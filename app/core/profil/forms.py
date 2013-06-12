@@ -32,7 +32,7 @@ class AccountForm(Form):
     password = PasswordField(_('Password'), [Required(),
         validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
-    role = SelectField(_('Role'), choices=[('300', 'Admin'),('200', 'Manager'),('100', 'User')])
+    role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
     submit = SubmitField(_('Save'))
 
     #language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])

@@ -19,7 +19,7 @@
 from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, SelectField
 from flask.ext.wtf import Required
 from flask.ext.babel import lazy_gettext as _
-from models import User
+from app.models import User
 
 class LoginForm(Form):
     username = TextField(_('Username'), validators=[Required()])

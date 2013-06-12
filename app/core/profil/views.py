@@ -17,8 +17,8 @@
 
 from flask import render_template, Blueprint, flash, redirect, url_for
 from flask.ext.login import login_required, current_user
-from app import db, admin_role
-from app.core.login.models import User
+from app import db, root_role, admin_role
+from app.models import User
 from forms import AccountForm, SignupForm
 from flask.ext.babel import gettext as _
 
@@ -27,6 +27,7 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
 @profil.route('/myprofil', methods=['GET', 'POST'])
 @login_required
+@admin_role.require(403)
 def myprofil():
     account = User.query.get_or_404(current_user.id)
     form = AccountForm(obj=account)
@@ -40,14 +41,14 @@ def myprofil():
 
 @profil.route('/accounts')
 @login_required
-@admin_role.require(403)
+@root_role.require(403)
 def accounts():
     users = User.query.all()
     return render_template('accounts.html', users=users)
 
 @profil.route('/account/add', methods=['GET', 'POST'])
 @login_required
-@admin_role.require(403)
+@root_role.require(403)
 def account_add():
     form = AccountForm()
     if form.validate_on_submit():
@@ -61,7 +62,7 @@ def account_add():
 
 @profil.route('/account/del/<id>')
 @login_required
-@admin_role.require(403)
+@root_role.require(403)
 def account_del(id):
     account = User.query.filter_by(id=id).first()
     db.session.delete(account)
@@ -71,7 +72,7 @@ def account_del(id):
 
 @profil.route('/account/edit/<id>', methods=['GET', 'POST'])
 @login_required
-@admin_role.require(403)
+@root_role.require(403)
 def account_edit(id):
     account = User.query.get_or_404(id)
     form = AccountForm(obj=account)

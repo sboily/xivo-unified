@@ -17,10 +17,9 @@
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g
 from flask.ext.login import login_required, current_user
-from models import Servers, UsersServer
-from app.core.login.models import User
+from app.models import Servers, UsersServer, User
 from forms import ServersForm
-from app import db, manager_role, user_role
+from app import db, manager_role, admin_role
 from flask.ext.babel import gettext as _
 
 servers = Blueprint('servers', __name__, template_folder='templates/server')
@@ -95,7 +94,7 @@ def server_edit(id):
 
 @servers.route('/server/save/<id>')
 @login_required
-@user_role.require(403)
+@admin_role.require(403)
 def server_save(id):
     servers = Servers.query.filter(Servers.id == UsersServer.server_id) \
                            .filter(UsersServer.user_id == current_user.id) \

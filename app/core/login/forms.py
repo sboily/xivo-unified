@@ -16,10 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import Form, TextField, BooleanField, PasswordField, ValidationError, SelectField
+from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField
 from flask.ext.wtf import Required
 from flask.ext.babel import lazy_gettext as _
 from app.models import User
+from app.utils import Form
 
 class LoginForm(Form):
     username = TextField(_('Username'), validators=[Required()])

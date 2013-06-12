@@ -35,18 +35,22 @@ def server():
 @login_required
 @manager_role.require(403)
 def server_add():
+    auto_add = False
     form = ServersForm()
     if form.validate_on_submit():
         server = Servers(form.name.data, form.address.data,
                          form.login.data, form.password.data)
         db.session.add(server)
         for choice in form.users.iter_choices():
+            print choice[0], current_user.id, choice[2]
             if choice[2]:
                 user = User.query.filter_by(id=choice[0]).first()
                 relation = UsersServer(user=user,server=server)
                 db.session.add(relation)
+            if int(choice[0]) == int(current_user.id) and choice[2] == False:
+                auto_add = True
 
-        if current_user.id not in form.users.iter_choices():
+        if auto_add:
             flash(_('Missing your self but added automaticaly !'))
             user = User.query.filter_by(id=current_user.id).first()
             relation = UsersServer(user=user,server=server)
@@ -82,6 +86,7 @@ def server_edit(id):
     server = Servers.query.filter(Servers.id == UsersServer.server_id) \
                           .filter(UsersServer.user_id == current_user.id) \
                           .filter(UsersServer.server_id == id).first()
+    print server
     #users = UsersServer.query.filter_by(server_id=id).all()
     form = ServersForm(obj=server)
     if form.validate_on_submit():

@@ -16,21 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
-from flask.ext.wtf import Required, Regexp, validators
-from flask.ext.babel import lazy_gettext as _
-from app.utils import Form
-from app.models import User
+import wtforms.ext.i18n.form
+import flask.ext.wtf.form
 
-def get_users_list():
-    return User.query.order_by(User.displayname)
+class Form(flask.ext.wtf.Form, wtforms.ext.i18n.form.Form):
+    pass
 
-class OrganisationsForm(Form):
-    name = TextField(_('Name'), [Required(),
-        validators.Length(min=3, max=30),
-        validators.Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
-    ])
+    def apply_monkey_patch():
+        flask.ext.wtf.form.Form = Form
+        flask.ext.wtf.Form = Form
 
-    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=get_users_list)
-
-    submit = SubmitField(_('Submit'))

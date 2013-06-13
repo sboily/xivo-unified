@@ -18,6 +18,7 @@
 
 from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
 from flask.ext.wtf import Required, IPAddress, Regexp, validators
+from wtforms import widgets
 from app.models import User, Servers
 from app.utils import Form
 from flask.ext.babel import lazy_gettext as _
@@ -34,7 +35,7 @@ class ServersForm(Form):
 
     address = TextField(_('Address'), [Required(), IPAddress()])
     login = TextField(_('Login'))
-    password = PasswordField(_('Password'))
+    password = PasswordField(_('Password'), widget=widgets.PasswordInput(hide_value=False))
 
     users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=get_servers_list)
 

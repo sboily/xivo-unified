@@ -86,8 +86,6 @@ def server_edit(id):
     server = Servers.query.filter(Servers.id == UsersServer.server_id) \
                           .filter(UsersServer.user_id == current_user.id) \
                           .filter(UsersServer.server_id == id).first()
-    print server
-    #users = UsersServer.query.filter_by(server_id=id).all()
     form = ServersForm(obj=server)
     if form.validate_on_submit():
         form.populate_obj(server)

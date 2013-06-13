@@ -159,6 +159,16 @@ class UsersOrganisation(db.Model):
     def __repr__(self):
         return "<%d : orga=%d user=%d>" % (self.id, self.organisation_id, self.user_id)
 
+class UsersServer(db.Model):
+    __tablename__ = 'users_server'
+    id = db.Column(db.Integer, primary_key=True)
+    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return "<%d : serv=%d user=%d>" % (self.id, self.server_id, self.user_id)
+
+
 class Servers(db.Model):
     __tablename__ = 'servers'
     id = db.Column(db.Integer, primary_key=True)
@@ -177,13 +187,4 @@ class Servers(db.Model):
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.name, self.address)
-
-class UsersServer(db.Model):
-    __tablename__ = 'users_server'
-    id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return "<%d : serv=%d user=%d>" % (self.id, self.server_id, self.user_id)
 

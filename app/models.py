@@ -25,6 +25,7 @@ from flask.ext.sqlalchemy import BaseQuery
 from datetime import datetime
 from app import db
 
+
 class UserQuery(BaseQuery):
 
     def from_identity(self, identity):
@@ -56,7 +57,6 @@ class User(db.Model, UserMixin):
     displayname = db.Column(db.String(200))
     role = db.Column(db.Integer, default=300)
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    server = db.relationship('UsersServer', backref='user', lazy = 'dynamic')
     organisation = db.relationship('UsersOrganisation', backref='user', lazy='dynamic')
 
     def __init__(self, username, password, email, displayname, role):
@@ -164,10 +164,10 @@ class UsersServer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("User", backref='user')
 
     def __repr__(self):
         return "<%d : serv=%d user=%d>" % (self.id, self.server_id, self.user_id)
-
 
 class Servers(db.Model):
     __tablename__ = 'servers'
@@ -177,7 +177,7 @@ class Servers(db.Model):
     login = db.Column(db.String(200))
     password = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    users = db.relationship('UsersServer', backref='server', lazy = 'dynamic')
+    users = db.relationship('UsersServer', backref='server')
 
     def __init__(self, name, address, login=None, password=None):
         self.name = name

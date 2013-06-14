@@ -10,6 +10,7 @@ sudo pip install wtforms-json
 sudo pip install flask-principal
 sudo pip install Flask-Babel
 sudo pip install Flask-Script
+sudo pip install Yapsy
 
 You need to execute the setup.py to create the database.
 

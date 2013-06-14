@@ -22,15 +22,12 @@ from flask.ext.babel import lazy_gettext as _
 from app.utils import Form
 from app.models import User
 
-def get_users_list():
-    return User.query.order_by(User.displayname)
-
 class OrganisationsForm(Form):
     name = TextField(_('Name'), [Required(),
         validators.Length(min=3, max=30),
         validators.Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
     ])
 
-    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=get_users_list)
+    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=lambda: User.query.order_by(User.displayname))
 
     submit = SubmitField(_('Submit'))

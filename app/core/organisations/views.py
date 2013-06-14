@@ -45,14 +45,8 @@ def organisation_add():
                 relation = UsersOrganisation(user=user,organisation=organisation)
                 db.session.add(relation)
 
-        if current_user.id not in form.users.iter_choices():
-            flash(_('Missing your self but added automaticaly !'))
-            user = User.query.filter_by(id=current_user.id).first()
-            relation = UsersOrganisation(user=user,organisation=organisation)
-            db.session.add(relation)
-
         db.session.commit()
-        flash(_('Server added'))
+        flash(_('Organisation added'))
         return redirect(url_for("organisations.organisation"))
     return render_template('organisation_add.html', form=form)
 
@@ -87,7 +81,7 @@ def organisation_edit(id):
         form.populate_obj(organisation)
         db.session.add(organisation)
         db.session.commit()
-        flash(_('Server edit'))
+        flash(_('Organisation edit'))
         return redirect(url_for("organisations.organisation"))
     return render_template('organisation_edit.html', form=form)
 

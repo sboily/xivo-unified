@@ -16,8 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField, RecaptchaField, html5, fields, validators, SubmitField, Required
+from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField, RecaptchaField, html5, fields, validators, SubmitField, Required, QuerySelectField
 from flask.ext.babel import lazy_gettext as _
+from app.models import Organisations
 from app.utils import Form
 
 class AccountForm(Form):
@@ -36,7 +37,9 @@ class AccountForm(Form):
     role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
     submit = SubmitField(_('Save'))
 
-    #language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
+    language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
+
+    organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=lambda: Organisations.query)
 
 class SignupForm(Form):
     displayname = TextField(_('Display name'))

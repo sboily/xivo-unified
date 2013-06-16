@@ -20,7 +20,7 @@ from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded, AnonymousIdentity, identity_changed
 from app.extensions import db, login_manager, babel, principal
-from models import Servers, UsersServer, User
+from models import Servers, User
 
 import plugin_manager
 import os
@@ -106,8 +106,7 @@ def configure_hooks(app):
             if g.user.role == 300:
                 g.servers_list = Servers.query.order_by(Servers.name)
             else:
-                g.servers_list = Servers.query.filter(Servers.id == UsersServer.server_id) \
-                                              .filter(UsersServer.user_id == g.user.id).order_by(Servers.name)
+                g.servers_list = Servers.query.join(User.servers).filter(User.id == g.user.id).order_by(Servers.name)
 
         if session.has_key('server_id') and session['server_id']:
             g.server_id = session['server_id']

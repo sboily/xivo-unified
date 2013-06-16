@@ -17,34 +17,32 @@
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g
 from flask.ext.login import login_required, current_user
-from app.models import Organisations, UsersOrganisation, User
+from app.models import Organisations, User
 from forms import OrganisationsForm
-from app import db, manager_role, admin_role
+from app import db, root_role, manager_role, admin_role
 from flask.ext.babel import gettext as _
 
 organisations = Blueprint('organisations', __name__, template_folder='templates/organisations')
 
 @organisations.route('/organisations')
 @login_required
-@manager_role.require(403)
+@root_role.require(403)
 def organisation():
     organisations = _get_organisations()
     return render_template('organisations.html', organisations=organisations)
 
 @organisations.route('/organisation/add', methods=['GET', 'POST'])
 @login_required
-@manager_role.require(403)
+@root_role.require(403)
 def organisation_add():
     form = OrganisationsForm()
     if form.validate_on_submit():
         organisation = Organisations(form.name.data)
-        db.session.add(organisation)
-        for choice in form.users.iter_choices():
-            if choice[2]:
-                user = User.query.filter_by(id=choice[0]).first()
-                relation = UsersOrganisation(user=user,organisation=organisation)
-                db.session.add(relation)
 
+        users = _add_users(form)
+
+        organisation.users = users
+        db.session.add(organisation)
         db.session.commit()
         flash(_('Organisation added'))
         return redirect(url_for("organisations.organisation"))
@@ -52,58 +50,52 @@ def organisation_add():
 
 @organisations.route('/organisation/del/<id>')
 @login_required
-@manager_role.require(403)
+@root_role.require(403)
 def organisation_del(id):
-    organisations = Organisations.query.filter(Organisations.id == UsersOrganisation.organisation_id) \
-                           .filter(UsersOrganisation.user_id == current_user.id) \
-                           .filter(UsersOrganisation.organisation_id == id).first()
-    if organisations is None and g.user.role < 200:
-        flash(_('You are not authorized !'))
-        return redirect(url_for("organisations.organisation"))
-    organisation = Organisations.query.filter_by(id=id).first()
-    users_organisation = UsersOrganisation.query.filter_by(organisation_id=id).filter_by(user_id=current_user.id).first()
-    db.session.delete(organisation)
-    if users_organisation is not None:
-        db.session.delete(users_organisation)
-    db.session.commit()
+    organisations = Organisations.query \
+                                 .join(User.organisations) \
+                                 .filter(User.id == current_user.id) \
+                                 .filter(Organisations.id == id) \
+                                 .first()
+
+    if organisations:
+        db.session.delete(organisations)
+        db.session.commit()
+        flash(_('Organisation deleted'))
     return redirect(url_for("organisations.organisation"))
 
 @organisations.route('/organisation/edit/<id>', methods=['GET', 'POST'])
 @login_required
-@manager_role.require(403)
+@root_role.require(403)
 def organisation_edit(id):
-    organisation = Organisations.query.filter(Organisations.id == UsersOrganisation.organisation_id) \
-                          .filter(UsersOrganisation.user_id == current_user.id) \
-                          .filter(UsersOrganisation.organisation_id == id).first()
-    #users = UsersOrganisation.query.filter_by(organisation_id=id).all()
+    organisation = Organisations.query \
+                                .join(User.organisations) \
+                                .filter(Organisations.id == id) \
+                                .first()
+ 
     form = OrganisationsForm(obj=organisation)
     if form.validate_on_submit():
         form.populate_obj(organisation)
+
+        users = _add_users(form)
+
+        organisation.users = users
         db.session.add(organisation)
         db.session.commit()
         flash(_('Organisation edit'))
         return redirect(url_for("organisations.organisation"))
     return render_template('organisation_edit.html', form=form)
 
-@organisations.route('/organisation/save/<id>')
-@login_required
-@admin_role.require(403)
-def organisation_save(id):
-    organisations = Organisations.query.filter(Organisations.id == UsersOrganisation.organisation_id) \
-                           .filter(UsersOrganisation.user_id == current_user.id) \
-                           .filter(UsersOrganisation.organisation_id == id).first()
-    if organisations is None and g.user.role != 300:
-        flash(_('You are not authorized !'))
-        return redirect(url_for("organisations.organisation"))
-    session['organisation_id'] = id
-    session.modified = True
-    return redirect(url_for('home.home_organisation'))
-
 
 def _get_organisations():
-    if g.user.role == 300:
-        organisations = Organisations.query.order_by(Organisations.name)
-    else:
-        organisations = Organisations.query.filter(Organisations.id == UsersOrganisation.organisation_id) \
-                               .filter(UsersOrganisation.user_id == current_user.id).order_by(Organisations.name)
-    return organisations
+        return Organisations.query.order_by(Organisations.name)
+
+def _add_users(form):
+    users = []
+    for choice in form.users.iter_choices():
+        if choice[2]:
+            user = User.query.filter_by(id=choice[0]).first()
+            users.append(user)
+
+    return users
+

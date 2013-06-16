@@ -25,6 +25,16 @@ from flask.ext.sqlalchemy import BaseQuery
 from datetime import datetime
 from app import db
 
+users_server = db.Table('users_server',
+    db.Column('server_id', db.Integer, db.ForeignKey('servers.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
+users_organisation = db.Table('users_organisation',
+    db.Column('organisation_id', db.Integer, db.ForeignKey('organisations.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 class UserQuery(BaseQuery):
 
     def from_identity(self, identity):
@@ -56,8 +66,6 @@ class User(db.Model, UserMixin):
     displayname = db.Column(db.String(200))
     role = db.Column(db.Integer, default=300)
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    server = db.relationship('UsersServer', backref='user', lazy = 'dynamic')
-    organisation = db.relationship('UsersOrganisation', backref='user', lazy='dynamic')
 
     def __init__(self, username, password, email, displayname, role):
         self.email = email.lower()
@@ -104,70 +112,18 @@ class User(db.Model, UserMixin):
         return "<%d : %s (%s)>" % (self.id, self.username, self.email)
 
 
-class Plugins(db.Model):
-    __tablename__ = 'plugins'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
-    installed_time = db.Column(db.DateTime, default=datetime.utcnow)
-    organisation = db.relationship('PluginsOrganisation', backref='organisation', lazy = 'dynamic')
-    server = db.relationship('PluginsServer', backref='server', lazy = 'dynamic')
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return "<%d : %s (%s)>" % (self.id, self.name, self.address)
-
-class PluginsServer(db.Model):
-    __tablename__ = 'plugins_server'
-    id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
-    plugin_id = db.Column(db.Integer, db.ForeignKey('plugins.id'))
-
-    def __repr__(self):
-        return "<%d : serv=%d plugin=%d>" % (self.id, self.server_id, self.plugin_id)
-
-class PluginsOrganisation(db.Model):
-    __tablename__ = 'plugins_organisation'
-    id = db.Column(db.Integer, primary_key=True)
-    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
-    plugin_id = db.Column(db.Integer, db.ForeignKey('plugins.id'))
-
-    def __repr__(self):
-        return "<%d : orga=%d plugin=%d>" % (self.id, self.organisation_id, self.plugin_id)
-
-
 class Organisations(db.Model):
     __tablename__ = 'organisations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    users = db.relationship('UsersOrganisation', backref='organisation', lazy = 'dynamic')
+    users = db.relationship('User', secondary=users_organisation, backref='organisations')
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
         return "<%d : %s>" % (self.id, self.name)
-
-class UsersOrganisation(db.Model):
-    __tablename__ = 'users_organisation'
-    id = db.Column(db.Integer, primary_key=True)
-    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return "<%d : orga=%d user=%d>" % (self.id, self.organisation_id, self.user_id)
-
-class UsersServer(db.Model):
-    __tablename__ = 'users_server'
-    id = db.Column(db.Integer, primary_key=True)
-    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return "<%d : serv=%d user=%d>" % (self.id, self.server_id, self.user_id)
-
 
 class Servers(db.Model):
     __tablename__ = 'servers'
@@ -177,7 +133,7 @@ class Servers(db.Model):
     login = db.Column(db.String(200))
     password = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    users = db.relationship('UsersServer', backref='server', lazy = 'dynamic')
+    users = db.relationship('User', secondary=users_server, backref='servers')
 
     def __init__(self, name, address, login=None, password=None):
         self.name = name
@@ -187,4 +143,36 @@ class Servers(db.Model):
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.name, self.address)
+
+class Plugins(db.Model):
+    __tablename__ = 'plugins'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    installed_time = db.Column(db.DateTime, default=datetime.utcnow)
+    #organisation = db.relationship('PluginsOrganisation', backref='organisation', lazy = 'dynamic')
+    #server = db.relationship('PluginsServer', backref='server', lazy = 'dynamic')
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "<%d : %s (%s)>" % (self.id, self.name, self.address)
+
+#class PluginsServer(db.Model):
+#    __tablename__ = 'plugins_server'
+#    id = db.Column(db.Integer, primary_key=True)
+#    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
+#    plugin_id = db.Column(db.Integer, db.ForeignKey('plugins.id'))
+#
+#    def __repr__(self):
+#        return "<%d : serv=%d plugin=%d>" % (self.id, self.server_id, self.plugin_id)
+#
+#class PluginsOrganisation(db.Model):
+#    __tablename__ = 'plugins_organisation'
+#    id = db.Column(db.Integer, primary_key=True)
+#    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
+#    plugin_id = db.Column(db.Integer, db.ForeignKey('plugins.id'))
+#
+#    def __repr__(self):
+#        return "<%d : orga=%d plugin=%d>" % (self.id, self.organisation_id, self.plugin_id)
 

@@ -20,7 +20,7 @@
 from flask.ext.script import Manager, prompt_bool, Server
 from app.extensions import db
 from app import create_app
-from app.models import Servers, UsersServer, Organisations, UsersOrganisation, User
+from app.models import Servers, Organisations, User
 
 app = create_app()
 manager = Manager(app)
@@ -40,17 +40,14 @@ def initdb():
     ca = User('chloe','superpass','chloe@proformatique.com','Chloe Mourat',200)
 
     sa = Servers('Sylvain','192.168.100.3','test','test')
+    sa.users = [ua,ca]
 
-    re = UsersServer(user=ua,server=sa)
-    ri = UsersServer(user=ca,server=sa)
+    org = Organisations('Proformatique Inc')
+    org.users = [ua,ca]
 
-    org = Organisations(name='test organisation')
-    org_user = UsersOrganisation(organisation=org,user=ua)
-
-    db.session.add_all([ua,sa,re,ri,org,org_user])
+    db.session.add_all([ua,ca,sa,org])
     db.session.commit()
 
 
 if __name__ == "__main__":
-    #app.run(debug=True, host='0.0.0.0')
     manager.run()

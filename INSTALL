@@ -12,8 +12,12 @@ sudo pip install Flask-Babel
 sudo pip install Flask-Script
 sudo pip install Yapsy
 
-You need to execute the setup.py to create the database.
+You need to execute the run.py to create the database.
 
-$ python ./run init_db
+$ python ./run.py init_db
+
+for launch
+
+$ python ./run.py run
 
 Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.

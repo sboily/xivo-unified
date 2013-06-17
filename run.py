@@ -44,6 +44,7 @@ def initdb():
 
     org = Organisations('Proformatique Inc')
     org.users = [ua,ca]
+    org.servers = [sa]
 
     db.session.add_all([ua,ca,sa,org])
     db.session.commit()

@@ -54,6 +54,7 @@ def account_add():
     if form.validate_on_submit():
         account = User(form.username.data, form.password.data,
                     form.email.data, form.displayname.data, form.role.data)
+        account.organisations = form.organisations.data
         db.session.add(account)
         db.session.commit()
         flash(_('Account added'))

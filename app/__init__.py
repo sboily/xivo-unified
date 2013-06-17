@@ -20,7 +20,7 @@ from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded, AnonymousIdentity, identity_changed
 from app.extensions import db, login_manager, babel, principal
-from models import Servers, User
+from models import Servers, User, Organisations
 
 import plugin_manager
 import os
@@ -102,6 +102,7 @@ def configure_hooks(app):
 
         if identity.id:
             g.user = User.query.from_identity(identity)
+            g.user_organisation = Organisations.query.get(g.user.organisation_id)
 
             if g.user.role == 300:
                 g.servers_list = Servers.query.order_by(Servers.name)

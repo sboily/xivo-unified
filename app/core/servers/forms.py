@@ -22,10 +22,14 @@ from wtforms import widgets
 from app.models import User, Servers
 from app.utils import Form
 from flask.ext.babel import lazy_gettext as _
-import re
+from flask import g
 
 def get_servers_list():
-    return User.query.order_by(User.displayname)
+    if g.user.role == 300:
+        return User.query.order_by(User.displayname)
+    else:
+        return User.query.filter(User.organisation_id==g.user_organisation.id) \
+                         .order_by(User.displayname)
 
 class ServersForm(Form):
     name = TextField(_('Name'), [Required(),

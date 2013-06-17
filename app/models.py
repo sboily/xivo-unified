@@ -30,11 +30,6 @@ users_server = db.Table('users_server',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-users_organisation = db.Table('users_organisation',
-    db.Column('organisation_id', db.Integer, db.ForeignKey('organisations.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
-)
-
 class UserQuery(BaseQuery):
 
     def from_identity(self, identity):
@@ -66,6 +61,7 @@ class User(db.Model, UserMixin):
     displayname = db.Column(db.String(200))
     role = db.Column(db.Integer, default=300)
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
 
     def __init__(self, username, password, email, displayname, role):
         self.email = email.lower()
@@ -117,7 +113,8 @@ class Organisations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    users = db.relationship('User', secondary=users_organisation, backref='organisations')
+    users = db.relationship('User', backref='organisations',lazy='dynamic')
+    servers = db.relationship('Servers', backref='servers',lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
@@ -134,6 +131,7 @@ class Servers(db.Model):
     password = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     users = db.relationship('User', secondary=users_server, backref='servers')
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
 
     def __init__(self, name, address, login=None, password=None):
         self.name = name

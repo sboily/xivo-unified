@@ -17,7 +17,7 @@
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g
 from flask.ext.login import login_required, current_user
-from app.models import Servers, User
+from app.models import Servers, User, Organisations
 from forms import ServersForm
 from app import db, manager_role, admin_role
 from flask.ext.babel import gettext as _
@@ -40,10 +40,13 @@ def server_add():
         server = Servers(form.name.data, form.address.data,
                          form.login.data, form.password.data)
 
+        organisation = Organisations.query.get(g.user_organisation.id)
+        organisation.servers = [server]
+
         users = _add_users(form)
 
         server.users = users
-        db.session.add(server)
+        db.session.add_all([server,organisation])
         db.session.commit()
         flash(_('Server added'))
         return redirect(url_for("servers.server"))

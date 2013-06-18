@@ -98,11 +98,15 @@ def configure_hooks(app):
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
         g.plugins_list = _get_plugins_info()
-        g.user = ""
+        g.user = None
+        g.wizard = None
 
         if identity.id:
             g.user = User.query.from_identity(identity)
-            g.user_organisation = Organisations.query.get(g.user.organisation_id)
+            if g.user.organisation_id is None:
+                g.wizard = True
+            else:
+                g.user_organisation = Organisations.query.get(g.user.organisation_id)
 
             if g.user.role == 300:
                 g.servers_list = Servers.query.order_by(Servers.name)

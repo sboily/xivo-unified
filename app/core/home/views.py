@@ -15,9 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, current_app
+from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash
 from flask.ext.login import login_required
-from app import create_app as app
+from app import db
+from app.core.organisations.forms import OrganisationsForm
+from app.models import User, Organisations
+from flask.ext.babel import gettext as _
 import os
 
 home = Blueprint('home', __name__, template_folder='templates/login')
@@ -25,6 +28,8 @@ home = Blueprint('home', __name__, template_folder='templates/login')
 @home.route('/')
 @login_required
 def homepage():
+    if g.wizard:
+        return redirect(url_for('home.wizard'))
     return render_template('base.html')
 
 @home.route('/reload')
@@ -38,3 +43,18 @@ def reload_app():
 def home_server():
     return render_template('home_server.html')
 
+@home.route('/wizard', methods=['GET', 'POST'])
+@login_required
+def wizard():
+    form = OrganisationsForm()
+    if form.validate_on_submit():
+        organisation = Organisations(form.name.data)
+
+        user = User.query.get_or_404(g.user.id)
+
+        organisation.users = [user]
+        db.session.add(organisation)
+        db.session.commit()
+        flash(_('Organisation added'))
+        return redirect(url_for("home.homepage"))
+    return render_template('wizard.html', form=form)

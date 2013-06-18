@@ -53,8 +53,6 @@ def organisation_add():
 @root_role.require(403)
 def organisation_del(id):
     organisations = Organisations.query \
-                                 .join(User.organisations) \
-                                 .filter(User.id == current_user.id) \
                                  .filter(Organisations.id == id) \
                                  .first()
 

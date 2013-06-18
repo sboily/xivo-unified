@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, flash, redirect, url_for
+from flask import render_template, Blueprint, flash, redirect, url_for, request
+from werkzeug.security import generate_password_hash
 from flask.ext.login import login_required, current_user
 from app import db, root_role, admin_role
 from app.models import User
@@ -77,6 +78,9 @@ def account_del(id):
 def account_edit(id):
     account = User.query.get_or_404(id)
     form = AccountForm(obj=account)
+    if request.method == 'POST':
+        form.username.data = User.query.get_or_404(id).username
+        form.password.data = generate_password_hash(form.password.data)
     if form.validate_on_submit():
         form.populate_obj(account)
         db.session.add(account)

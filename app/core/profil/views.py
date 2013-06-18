@@ -32,6 +32,12 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 def myprofil():
     account = User.query.get_or_404(current_user.id)
     form = AccountForm(obj=account)
+    if request.method == 'POST':
+        form.username.data = User.query.get_or_404(current_user.id).username
+        if not form.password.data and account.password:
+            del form.password
+        elif form.password.data:
+            form.password.data = generate_password_hash(form.password.data)
     if form.validate_on_submit():
         form.populate_obj(account)
         db.session.add(account)
@@ -55,6 +61,7 @@ def account_add():
     if form.validate_on_submit():
         account = User(form.username.data, form.password.data,
                     form.email.data, form.displayname.data, form.role.data)
+        account.language = form.language.data
         account.organisations = form.organisations.data
         db.session.add(account)
         db.session.commit()
@@ -80,7 +87,10 @@ def account_edit(id):
     form = AccountForm(obj=account)
     if request.method == 'POST':
         form.username.data = User.query.get_or_404(id).username
-        form.password.data = generate_password_hash(form.password.data)
+        if not form.password.data and account.password:
+            del form.password
+        elif form.password.data:
+            form.password.data = generate_password_hash(form.password.data)
     if form.validate_on_submit():
         form.populate_obj(account)
         db.session.add(account)

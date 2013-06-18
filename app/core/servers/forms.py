@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
+from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField, SelectMultipleField
 from flask.ext.wtf import Required, IPAddress, Regexp, validators
 from wtforms import widgets
-from app.models import User, Servers
+from app.models import User, Servers, Organisations
 from app.utils import Form
 from flask.ext.babel import lazy_gettext as _
 from flask import g
@@ -41,6 +41,8 @@ class ServersForm(Form):
     login = TextField(_('Login'))
     password = PasswordField(_('Password'), widget=widgets.PasswordInput(hide_value=False))
 
-    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=get_servers_list)
+
+    organisations = QuerySelectField(_('Organisations'), get_label='name', query_factory=lambda: Organisations.query, allow_blank=True, blank_text=_('Please choose an organisation ...'))
+    users = QuerySelectMultipleField(_('Users'), get_label='displayname', query_factory=get_servers_list)
 
     submit = SubmitField(_('Submit'))

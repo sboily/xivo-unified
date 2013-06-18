@@ -37,7 +37,9 @@ def initdb():
     db.create_all()
 
     ua = User('quintana','superpass','sboily@proformatique.com','Sylvain Boily',300)
+    ua.language = 'en'
     ca = User('chloe','superpass','chloe@proformatique.com','Chloe Mourat',200)
+    ca.language = 'fr'
 
     sa = Servers('Sylvain','192.168.100.3','test','test')
     sa.users = [ua,ca]

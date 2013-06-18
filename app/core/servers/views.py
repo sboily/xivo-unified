@@ -36,11 +36,16 @@ def server():
 @manager_role.require(403)
 def server_add():
     form = ServersForm()
+    if g.user.role != 300:
+        del form.organisations
     if form.validate_on_submit():
         server = Servers(form.name.data, form.address.data,
                          form.login.data, form.password.data)
 
-        organisation = Organisations.query.get(g.user_organisation.id)
+        if g.user.role != 300:
+            organisation = Organisations.query.get(g.user_organisation.id)
+        else:
+            organisation = Organisations.query.get(form.organisations.data.id)
         organisation.servers = [server]
 
         users = _add_users(form)
@@ -69,8 +74,10 @@ def server_del(id):
 @manager_role.require(403)
 def server_edit(id):
     server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
-                                             .filter(Servers.id == id) \
+                                             .filter(User.organisation_id==g.user_organisation.id) \
                                              .order_by(Servers.name).first()
+    # XXX Fix only server with the good right
+    server = Servers.query.filter(Servers.id == id).order_by(Servers.name).first()
     form = ServersForm(obj=server)
     if form.validate_on_submit():
         form.populate_obj(server)
@@ -103,7 +110,7 @@ def _get_servers():
     if g.user.role == 300:
         servers = Servers.query.order_by(Servers.name)
     else:
-        servers = Servers.query.join(User.servers).filter(User.id == current_user.id).order_by(Servers.name)
+        servers = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
 
     return servers
 
@@ -116,7 +123,8 @@ def _add_users(form):
             user = User.query.filter_by(id=choice[0]).first()
             users.append(user)
         if int(choice[0]) == int(current_user.id) and choice[2] == False:
-            auto_add = True
+            if g.user.role != 300:
+                auto_add = True
 
     if auto_add:
         flash(_('Missing your self but added automaticaly !'))

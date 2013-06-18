@@ -11,10 +11,8 @@
 </head>
 
 <body>
-
-<script>
-$(".alert").alert()                   
-</script>
+    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
+    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
 {% include "menu_top.html" %}
 
@@ -58,7 +56,5 @@ $(".alert").alert()
         {% endblock %}
       </div>
 
-    <script type=text/javascript src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
-    <script type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>

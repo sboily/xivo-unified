@@ -124,7 +124,10 @@ def configure_hooks(app):
 
     @babel.localeselector
     def get_locale():
-        return request.accept_languages.best_match(LANGUAGES.keys())
+        if hasattr(g, 'user') and hasattr(g.user, 'language'):
+            return g.user.language
+        else:
+            return request.accept_languages.best_match(LANGUAGES.keys())
 
 def configure_error_handlers(app):
     @app.errorhandler(403)

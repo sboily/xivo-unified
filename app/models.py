@@ -59,6 +59,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     displayname = db.Column(db.String(200))
+    language = db.Column(db.String(10), default='en')
     role = db.Column(db.Integer, default=300)
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))

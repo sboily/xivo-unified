@@ -30,16 +30,12 @@ def log():
     if current_user.is_authenticated():
         return redirect(url_for('home.homepage'))
     form = LoginForm()
+    del form.language
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
             identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
             login_user(user, remember=form.remember_me.data)
-            for choice in form.language.iter_choices():
-                if choice[2]:
-                    g.user_lang = choice[0]
-                else:
-                    g.user_lang = 'en'
             return redirect(request.args.get('next') or url_for('home.homepage'))
     return render_template('login.html', form=form)
 

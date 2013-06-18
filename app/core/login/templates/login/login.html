@@ -9,7 +9,6 @@
         {{ render_field(form.username, class="input-block-level") }}
         {{ render_field(form.password, class="input-block-level") }}
         {{ render_field(form.remember_me, class="checkbox") }} 
-        {{ render_field(form.language, class="input-small") }} 
         <button class="btn btn-large btn-primary" type="submit">{{ _('Sign in') }}</button>
         <br><br>
         <p>{{ _('New account ?') }} <a href="{{url_for('profil.signup')}}" class="btn btn-small">{{ _('Sign up') }}</a></p>

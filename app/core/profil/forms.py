@@ -18,7 +18,7 @@
 
 from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField, RecaptchaField, html5, fields, validators, SubmitField, Required, QuerySelectField
 from flask.ext.babel import lazy_gettext as _
-from app.models import Organisations
+from app.models import Organisations, User
 from app.utils import Form
 
 class AccountForm(Form):
@@ -40,6 +40,7 @@ class AccountForm(Form):
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
 
     organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=lambda: Organisations.query)
+
 
 class SignupForm(Form):
     displayname = TextField(_('Display name'))
@@ -63,3 +64,13 @@ class SignupForm(Form):
     agree = BooleanField(_('I agree with the Terms and Conditions'))
 
     submit = SubmitField(_('Signup'))
+
+    def validate_username(self, field):
+        user = self.get_user()
+
+        if user:
+            raise ValidationError(_('Username already used'))
+
+    def get_user(self):
+        return User.query.filter_by(username=self.username.data).first()
+

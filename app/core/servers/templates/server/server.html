@@ -14,6 +14,9 @@
         <th>{{ _('Address') }}</th>
         <th>{{ _('Login') }}</th>
         <th>{{ _('Password') }}</th>
+        {% if g.user.role == 300 %}
+            <th>{{ _('Organisation') }}</th>
+        {% endif %}
       <th class="td-actions"></th>
       </tr>
     </thead>
@@ -24,6 +27,9 @@
       <td>{{ s.address }}</td>
       <td>{{ s.login }}</td>
       <td>{{ s.password }}</td>
+      {% if g.user.role == 300 %}
+          <td>{{ s.organisation_id }}</td>
+      {% endif %}
       <td class="td-actions">
         <a href="{{url_for('servers.server_edit', id=s.id)}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>
         <a href="{{url_for('servers.server_del', id=s.id)}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>

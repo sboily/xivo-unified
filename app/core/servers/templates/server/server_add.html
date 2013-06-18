@@ -11,9 +11,31 @@
         {{ render_field(form.address, class="input-xlarge") }}
         {{ render_field(form.login, class="input-xlarge") }}
         {{ render_field(form.password, class="input-xlarge") }}
+        {% if g.user.role == 300 %}
+            {{ render_field(form.organisations, class="input-xlarge") }}
+        {% endif %}
         {{ render_field(form.users, class="input-xlarge") }}
         {{ render_field(form.submit, class="btn btn-primary") }}
       </form>
+
+{% if g.user.role == 300 %}
+<script type=text/javascript>
+    $("label[for=users]").hide()
+    $('#users').hide();
+
+    $('#organisations').change(function() {
+        var id = $('#organisations option:selected').val()
+        var items = [];
+        $.getJSON('/organisation/accounts/' + id, function(data) {
+            $("label[for=users]").show()
+            $.each( data.accounts, function( key, val ) {
+                    items.push('<option value="' + val.id + '">' + val.displayname + '</option>');
+                })
+            $('#users').show().html(items);
+            })
+    });
+</script>
+{% endif %}
 
     </div>
 

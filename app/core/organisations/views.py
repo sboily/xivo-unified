@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g
+from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g, jsonify
 from flask.ext.login import login_required, current_user
 from app.models import Organisations, User
 from forms import OrganisationsForm
@@ -83,6 +83,19 @@ def organisation_edit(id):
         flash(_('Organisation edit'))
         return redirect(url_for("organisations.organisation"))
     return render_template('organisation_edit.html', form=form)
+
+@organisations.route('/organisation/accounts/<id>')
+@login_required
+@root_role.require(403)
+def organisation_accounts(id):
+    users = []
+    lists = User.query.filter(Organisations.id == id) \
+                      .filter(User.organisation_id == Organisations.id) \
+                      .order_by('displayname')
+
+    for user in lists:
+        users.append({'id': user.id, 'displayname': user.displayname})
+    return jsonify(accounts=users)
 
 
 def _get_organisations():

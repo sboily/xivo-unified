@@ -42,11 +42,13 @@ def initdb():
     ca.language = 'fr'
 
     sa = Servers('Sylvain','192.168.100.3','test','test')
+    sb = Servers('Chloe','192.168.100.4','toto','toto')
     sa.users = [ua,ca]
+    sb.users = [ca]
 
     org = Organisations('Proformatique Inc')
     org.users = [ua,ca]
-    org.servers = [sa]
+    org.servers = [sa,sb]
 
     db.session.add_all([ua,ca,sa,org])
     db.session.commit()

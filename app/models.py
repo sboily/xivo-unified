@@ -115,7 +115,7 @@ class Organisations(db.Model):
     name = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     users = db.relationship('User', backref='organisations',lazy='dynamic')
-    servers = db.relationship('Servers', backref='servers',lazy='dynamic')
+    servers = db.relationship('Servers', backref='organisations',lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
@@ -131,8 +131,8 @@ class Servers(db.Model):
     login = db.Column(db.String(200))
     password = db.Column(db.String(200))
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
-    users = db.relationship('User', secondary=users_server, backref='servers')
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
+    users = db.relationship('User', secondary=users_server, backref='servers')
 
     def __init__(self, name, address, login=None, password=None):
         self.name = name

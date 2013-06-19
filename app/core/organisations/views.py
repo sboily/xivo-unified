@@ -66,12 +66,13 @@ def organisation_del(id):
 @login_required
 @root_role.require(403)
 def organisation_edit(id):
-    organisation = Organisations.query \
-                                .join(User.organisations) \
-                                .filter(Organisations.id == id) \
-                                .first()
+    organisation = Organisations.query.filter(Organisations.id == id) \
+                                      .first()
  
     form = OrganisationsForm(obj=organisation)
+    form.users.query_factory = lambda: User.query.filter(User.organisation_id == Organisations.id) \
+                                                 .filter(Organisations.id == id) \
+                                                 .all()
     if form.validate_on_submit():
         form.populate_obj(organisation)
 

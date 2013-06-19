@@ -37,21 +37,18 @@ def server():
 def server_add():
     form = ServersForm()
     if g.user.role != 300:
-        del form.organisations
+        form.organisations.query_factory = lambda: Organisations.query.filter(Organisations.id == g.user_organisation.id).all()
+        form.organisations.allow_blank = False
+
     if form.validate_on_submit():
         server = Servers(form.name.data, form.address.data,
                          form.login.data, form.password.data)
 
-        if g.user.role != 300:
-            organisation = Organisations.query.get(g.user_organisation.id)
-        else:
-            organisation = Organisations.query.get(form.organisations.data.id)
-        organisation.servers = [server]
-
         users = _add_users(form)
-
         server.users = users
-        db.session.add_all([server,organisation])
+        server.organisation_id = form.organisations.data.id
+
+        db.session.add(server)
         db.session.commit()
         flash(_('Server added'))
         return redirect(url_for("servers.server"))
@@ -108,7 +105,7 @@ def server_save(id):
 
 def _get_servers():
     if g.user.role == 300:
-        servers = Servers.query.order_by(Servers.name)
+        servers = Servers.query.order_by(Servers.organisation_id)
     else:
         servers = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
 

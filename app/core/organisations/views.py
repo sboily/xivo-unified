@@ -92,19 +92,18 @@ def organisation_accounts(id):
     users = []
     if request.referrer:
         server_id = request.referrer.rsplit('/',1)[1]
-    else:
-        server_id = 0
     lists = User.query.filter(Organisations.id == id) \
                       .filter(User.organisation_id == Organisations.id) \
                       .order_by('displayname')
 
     for user in lists:
         selected = False
-        for server in user.servers:
-            if int(server.id) == int(server_id):
-                for user_in_server in server.users:
-                    if int(user.id) == int(user_in_server.id):
-                        selected = True
+        if isinstance( server_id, int):
+            for server in user.servers:
+                if int(server.id) == int(server_id):
+                    for user_in_server in server.users:
+                        if int(user.id) == int(user_in_server.id):
+                            selected = True
         users.append({'id': user.id, 'displayname': user.displayname, 'selected': selected})
     return jsonify(accounts=users)
 

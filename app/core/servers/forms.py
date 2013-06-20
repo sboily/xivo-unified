@@ -42,7 +42,9 @@ class ServersForm(Form):
     password = PasswordField(_('Password'), widget=widgets.PasswordInput(hide_value=False))
 
 
-    organisations = QuerySelectField(_('Organisations'), get_label='name', query_factory=lambda: Organisations.query, allow_blank=True, blank_text=_('Please choose an organisation ...'))
+    organisations = QuerySelectField(_('Organisations'), [Required()], get_label='name', \
+                                       query_factory=lambda: Organisations.query, \
+                                       allow_blank=True, blank_text=_('Please choose an organisation ...'))
     users = QuerySelectMultipleField(_('Users'), get_label='displayname', query_factory=get_servers_list)
 
     submit = SubmitField(_('Submit'))

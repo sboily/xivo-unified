@@ -16,11 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField
+from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField, TextAreaField
 from flask.ext.wtf import Required, Regexp, validators
+from flask.ext.login import current_user
 from flask.ext.babel import lazy_gettext as _
 from app.utils import Form
 from app.models import User
+from wtforms import widgets
 
 class OrganisationsForm(Form):
     name = TextField(_('Name'), [Required(),
@@ -28,6 +30,18 @@ class OrganisationsForm(Form):
         validators.Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
     ])
 
+    description = TextAreaField(_('Description'))
+
     users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=lambda: User.query.order_by(User.displayname))
 
     submit = SubmitField(_('Submit'))
+
+
+    def validate_users(self, field):
+        miss_me = False
+        for choice in field.iter_choices():
+            if int(choice[0]) == int(current_user.id) and choice[2] == False:
+                miss_me = True
+
+        if miss_me:
+            raise ValidationError(_('Missing your self !'))

@@ -113,6 +113,7 @@ class Organisations(db.Model):
     __tablename__ = 'organisations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
+    description = db.Column(db.Text())
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     users = db.relationship('User', backref='organisations',lazy='dynamic')
     servers = db.relationship('Servers', backref='organisations',lazy='dynamic')

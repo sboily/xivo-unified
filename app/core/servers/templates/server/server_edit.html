@@ -20,18 +20,16 @@
 
 {% if g.user.role == 300 %}
 <script type=text/javascript>
-    $("label[for=users]").hide()
-    $('#users').hide();
 
-    $('#organisations').change(function() {
-        var id = $('#organisations option:selected').val()
+    $('[name="organisations"]').change(function() {
+        var id = $('[name="organisations"] option:selected').val()
         var items = [];
         $.getJSON('/organisation/accounts/' + id, function(data) {
             $("label[for=users]").show()
             $.each( data.accounts, function( key, val ) {
                     items.push('<option value="' + val.id + '">' + val.displayname + '</option>');
                 })
-            $('#users').show().html(items);
+            $('#users').html(items);
             })
     });
 </script>

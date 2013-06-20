@@ -21,8 +21,8 @@
     $("label[for=users]").hide()
     $('#users').hide();
 
-    $('#organisations').change(function() {
-        var id = $('#organisations option:selected').val()
+    $('[name="organisations"]').change(function() {
+        var id = $('[name="organisations"] option:selected').val()
         var items = [];
         $.getJSON('/organisation/accounts/' + id, function(data) {
             $("label[for=users]").show()

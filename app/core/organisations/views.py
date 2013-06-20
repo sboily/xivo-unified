@@ -36,12 +36,11 @@ def organisation():
 @root_role.require(403)
 def organisation_add():
     form = OrganisationsForm()
+    del form.users
     if form.validate_on_submit():
         organisation = Organisations(form.name.data)
+        organisation.description = form.description.data
 
-        users = _add_users(form)
-
-        organisation.users = users
         db.session.add(organisation)
         db.session.commit()
         flash(_('Organisation added'))
@@ -73,10 +72,11 @@ def organisation_edit(id):
     form.users.query_factory = lambda: User.query.filter(User.organisation_id == Organisations.id) \
                                                  .filter(Organisations.id == id) \
                                                  .all()
+
     if form.validate_on_submit():
         form.populate_obj(organisation)
 
-        users = _add_users(form)
+        users = _edit_users(form)
 
         organisation.users = users
         db.session.add(organisation)
@@ -102,7 +102,7 @@ def organisation_accounts(id):
 def _get_organisations():
         return Organisations.query.order_by(Organisations.name)
 
-def _add_users(form):
+def _edit_users(form):
     users = []
     for choice in form.users.iter_choices():
         if choice[2]:
@@ -110,4 +110,3 @@ def _add_users(form):
             users.append(user)
 
     return users
-

@@ -73,11 +73,14 @@ def server_edit(id):
     server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
                                              .filter(User.organisation_id==g.user_organisation.id) \
                                              .order_by(Servers.name).first()
-    # XXX Fix only server with the good right
-    #server = Servers.query.filter(Servers.id == id).order_by(Servers.name).first()
 
     form = ServersForm(obj=server)
-    form.users.query_factory = lambda: User.query.filter(Servers.id == id).all()
+    if g.user.role != 300:
+        form.users.query_factory = lambda: User.query.filter(Servers.organisation_id == Organisations.id) \
+                                                     .filter(Servers.organisation_id == User.organisation_id) \
+                                                     .filter(Servers.id == id) \
+                                                     .all()
+
     form.organisations.allow_blank = False
     if form.validate_on_submit():
         form.populate_obj(server)

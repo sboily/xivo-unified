@@ -102,9 +102,12 @@ def server_edit(id):
 @login_required
 @admin_role.require(403)
 def server_save(id):
-    server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
-                                             .filter(Servers.id == id) \
-                                             .order_by(Servers.name).first()
+    if g.user.role == 300:
+        server = Servers.query.order_by(Servers.name).first()
+    else:
+        server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
+                                                 .filter(Servers.id == id) \
+                                                 .order_by(Servers.name).first()
     if server:
         session['server_id'] = id
         session.modified = True

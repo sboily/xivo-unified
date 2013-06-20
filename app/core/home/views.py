@@ -47,6 +47,7 @@ def home_server():
 @login_required
 def wizard():
     form = OrganisationsForm()
+    del form.users
     if form.validate_on_submit():
         organisation = Organisations(form.name.data)
 

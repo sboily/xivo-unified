@@ -17,7 +17,7 @@
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, session, g, jsonify
 from flask.ext.login import login_required, current_user
-from app.models import Organisations, User
+from app.models import Organisations, User, Servers
 from forms import OrganisationsForm
 from app import db, root_role, manager_role, admin_role
 from flask.ext.babel import gettext as _
@@ -90,12 +90,22 @@ def organisation_edit(id):
 @root_role.require(403)
 def organisation_accounts(id):
     users = []
+    if request.referrer:
+        server_id = request.referrer.rsplit('/',1)[1]
+    else:
+        server_id = 0
     lists = User.query.filter(Organisations.id == id) \
                       .filter(User.organisation_id == Organisations.id) \
                       .order_by('displayname')
 
     for user in lists:
-        users.append({'id': user.id, 'displayname': user.displayname})
+        selected = False
+        for server in user.servers:
+            if int(server.id) == int(server_id):
+                for user_in_server in server.users:
+                    if int(user.id) == int(user_in_server.id):
+                        selected = True
+        users.append({'id': user.id, 'displayname': user.displayname, 'selected': selected})
     return jsonify(accounts=users)
 
 

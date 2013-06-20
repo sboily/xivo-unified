@@ -48,3 +48,11 @@ class ServersForm(Form):
     users = QuerySelectMultipleField(_('Users'), get_label='displayname', query_factory=get_servers_list)
 
     submit = SubmitField(_('Submit'))
+
+    #def validate_users(self, field):
+    #    print len(list(field.iter_choices()))
+    #    for choice in field.iter_choices():
+    #        print choice
+
+        #raise ValidationError(_('Missing your self !'))
+

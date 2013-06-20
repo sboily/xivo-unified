@@ -70,14 +70,18 @@ def server_del(id):
 @login_required
 @manager_role.require(403)
 def server_edit(id):
-    server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
-                                             .filter(User.organisation_id==g.user_organisation.id) \
-                                             .order_by(Servers.name).first()
 
-    form = ServersForm(obj=server)
-    if g.user.role != 300:
+    if g.user.role == 300:
+        server = Servers.query.get_or_404(id)
+        form = ServersForm(obj=server)
+    else:
+        server = Servers.query.join(User.servers).filter(User.organisation_id==g.user_organisation.id) \
+                                                 .filter(Servers.id == id) \
+                                                 .order_by(Servers.name).first()
+        form = ServersForm(obj=server)
         form.users.query_factory = lambda: User.query.filter(Servers.organisation_id == Organisations.id) \
                                                      .filter(Servers.organisation_id == User.organisation_id) \
+                                                     .filter(User.organisation_id == g.user.organisation_id) \
                                                      .filter(Servers.id == id) \
                                                      .all()
 

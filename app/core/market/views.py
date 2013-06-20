@@ -17,7 +17,7 @@
 
 from flask import render_template, Blueprint, flash, redirect, url_for, g, flash, current_app
 from flask.ext.login import login_required
-from app import db, root_role, create_app as app
+from app import db, manager_role, create_app as app
 from flask.ext.babel import gettext as _
 from app.models import Plugins
 import json
@@ -29,7 +29,7 @@ market = Blueprint('market', __name__, template_folder='templates/market')
 
 @market.route('/market')
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def themarket():
     modules = _get_modules()
     modules_installed = _get_modules_installed()
@@ -37,7 +37,7 @@ def themarket():
 
 @market.route('/market/del/<module>')
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def market_del(module):
     _remove_module(module)
     flash(_('Module %s has been removed !' % module))
@@ -45,7 +45,7 @@ def market_del(module):
 
 @market.route('/market/get/<module>')
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def market_get(module):
     _install_module(module)
     flash(_('Module %s has been installed !' % module))

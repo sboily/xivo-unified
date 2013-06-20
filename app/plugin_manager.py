@@ -6,7 +6,7 @@ import tarfile
 import urllib2
 import json
 
-from flask import current_app
+from flask import current_app, g
 from app import db
 from models import Plugins
 
@@ -39,11 +39,16 @@ def activate_plugins():
 def get_plugin_list():
     plugin_list = []
     for plugin_info in plugin_manager.getAllPlugins():
-        info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
-                'url': plugin_info.plugin_object.plugin_endpoint(),
-                'module': plugin_info.name,
-                 }
-        plugin_list.append(info)
+        plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
+                              .filter(Plugins.name == plugin_info.name) \
+                              .first()
+        if plugin:
+            info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
+                    'url': plugin_info.plugin_object.plugin_endpoint(),
+                    'module': plugin_info.name,
+                    'parent': plugin_info.details.get('Documentation', 'Parent'),
+                   }
+            plugin_list.append(info)
 
     return plugin_list
 
@@ -83,6 +88,8 @@ def install_plugin(plugin_name):
 
 def _add_to_db(plugin_name):
     plugin = Plugins(plugin_name)
+    plugin.organisation_id = g.user.organisation_id
+    #plugin.server_id = g.server_id
     db.session.add(plugin)
     db.session.commit()
 
@@ -109,7 +116,10 @@ def _move_config_file(plugin_name):
     conffile = "%s.yapsy-plugin" % plugin_name
     source = os.path.join(plugin_directory, plugin_name, 'conf', conffile)
     destination = plugin_directory
-    shutil.move(source, destination)
+    try:
+        shutil.move(source, destination)
+    except:
+        pass
 
 def _load_plugin(plugin_name):
     plugin_manager.collectPlugins()

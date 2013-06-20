@@ -115,8 +115,10 @@ class Organisations(db.Model):
     name = db.Column(db.String(200))
     description = db.Column(db.Text())
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
     users = db.relationship('User', backref='organisations',lazy='dynamic')
     servers = db.relationship('Servers', backref='organisations',lazy='dynamic')
+    plugins = db.relationship('Plugins', backref='organisation',lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
@@ -134,6 +136,7 @@ class Servers(db.Model):
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
     users = db.relationship('User', secondary=users_server, backref='servers')
+    plugins = db.relationship('Plugins', backref='servers',lazy='dynamic')
 
     def __init__(self, name, address, login=None, password=None):
         self.name = name
@@ -149,30 +152,11 @@ class Plugins(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     installed_time = db.Column(db.DateTime, default=datetime.utcnow)
-    #organisation = db.relationship('PluginsOrganisation', backref='organisation', lazy = 'dynamic')
-    #server = db.relationship('PluginsServer', backref='server', lazy = 'dynamic')
+    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
+    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
-        return "<%d : %s (%s)>" % (self.id, self.name, self.address)
-
-#class PluginsServer(db.Model):
-#    __tablename__ = 'plugins_server'
-#    id = db.Column(db.Integer, primary_key=True)
-#    server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
-#    plugin_id = db.Column(db.Integer, db.ForeignKey('plugins.id'))
-#
-#    def __repr__(self):
-#        return "<%d : serv=%d plugin=%d>" % (self.id, self.server_id, self.plugin_id)
-#
-#class PluginsOrganisation(db.Model):
-#    __tablename__ = 'plugins_organisation'
-#    id = db.Column(db.Integer, primary_key=True)
-#    organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
-#    plugin_id = db.Column(db.Integer, db.ForeignKey('plugins.id'))
-#
-#    def __repr__(self):
-#        return "<%d : orga=%d plugin=%d>" % (self.id, self.organisation_id, self.plugin_id)
-
+        return "<%d : name=%s org=%s serv=%s>" % (self.id, self.name, self.organisation_id, self.server_id)

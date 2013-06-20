@@ -12,6 +12,7 @@
         <th>{{ _('Description') }}</th>
         <th>{{ _('Author') }}</th>
         <th>{{ _('Licence') }}</th>
+        <th>{{ _('Parent') }}</th>
         <th class="td-actions"></th>
       </tr>
     </thead>
@@ -22,6 +23,7 @@
       <td>{{ u.informations.description }}</td>
       <td>{{ u.informations.author }}</td>
       <td>{{ u.informations.licence }}</td>
+      <td>{{ u.plugin.parent }}</td>
       <td class="td-actions">
           {% if u.installed %}
             <a href="{{url_for('market.market_del', module=u.name)}}" class="btn btn-small btn-danger"><i class="btn-icon-only icon-remove icon-white"></i></a>

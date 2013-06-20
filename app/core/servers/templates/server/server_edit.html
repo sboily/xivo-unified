@@ -18,20 +18,32 @@
         {{ render_field(form.submit, class="btn btn-primary") }}
       </form>
 
+
 {% if g.user.role == 300 %}
 <script type=text/javascript>
 
-    $('[name="organisations"]').change(function() {
+    function _update_options_users() {
         var id = $('[name="organisations"] option:selected').val()
         var items = [];
         $.getJSON('/organisation/accounts/' + id, function(data) {
-            $("label[for=users]").show()
             $.each( data.accounts, function( key, val ) {
-                    items.push('<option value="' + val.id + '">' + val.displayname + '</option>');
+                    if (val.selected)
+                        items.push('<option value="' + val.id + '" selected="selected">' + val.displayname + '</option>');
+                    else
+                        items.push('<option value="' + val.id + '">' + val.displayname + '</option>');
                 })
-            $('#users').html(items);
+            $('[name="users"]').html(items);
             })
+    }
+
+    $('[name="organisations"]').ready(function() {
+        _update_options_users();
     });
+
+    $('[name="organisations"]').change(function() {
+        _update_options_users();
+    });
+
 </script>
 {% endif %}
 

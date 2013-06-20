@@ -98,7 +98,7 @@ def organisation_accounts(id):
 
     for user in lists:
         selected = False
-        if isinstance( server_id, int):
+        if server_id.isdigit():
             for server in user.servers:
                 if int(server.id) == int(server_id):
                     for user_in_server in server.users:

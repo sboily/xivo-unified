@@ -25,7 +25,6 @@ from models import Servers, User, Organisations
 import plugin_manager
 import os
 
-
 CORE_MODULES = (
     'servers',
     'login',

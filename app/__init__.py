@@ -122,13 +122,6 @@ def configure_hooks(app):
                 g.server_id = ""
                 g.server = ""
 
-        if session.has_key('task') and session['task']:
-            g.task = session['task']
-        else:
-            session['task'] = {}
-            g.task = session['task']
-
-
     @babel.localeselector
     def get_locale():
         if hasattr(g, 'user') and hasattr(g.user, 'language'):
@@ -148,19 +141,6 @@ def configure_logging(app):
 
     import logging
     app.logger.setLevel(logging.INFO)
-
-
-def make_celery(app):
-    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
-    celery.conf.update(app.config)
-    TaskBase = celery.Task
-    class ContextTask(TaskBase):
-        abstract = True
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
-    celery.Task = ContextTask
-    return celery
 
 
 def _get_plugins_info():

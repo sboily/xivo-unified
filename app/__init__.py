@@ -19,7 +19,7 @@ from flask import Flask, render_template, session, g, current_app, flash, redire
 from flask.ext.login import LoginManager, current_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded, AnonymousIdentity, identity_changed
-from app.extensions import db, login_manager, babel, principal
+from app.extensions import db, login_manager, babel, principal, celery
 from models import Servers, User, Organisations
 
 import plugin_manager
@@ -56,6 +56,7 @@ def create_app():
 
 def configure_app(app):
     app.config.from_object('conf')
+    celery.config_from_object(app.config)
 
 
 def configure_core_modules(app, core_modules):
@@ -121,6 +122,12 @@ def configure_hooks(app):
                 g.server_id = ""
                 g.server = ""
 
+        if session.has_key('task') and session['task']:
+            g.task = session['task']
+        else:
+            session['task'] = {}
+            g.task = session['task']
+
 
     @babel.localeselector
     def get_locale():
@@ -141,6 +148,19 @@ def configure_logging(app):
 
     import logging
     app.logger.setLevel(logging.INFO)
+
+
+def make_celery(app):
+    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+    class ContextTask(TaskBase):
+        abstract = True
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
+    return celery
 
 
 def _get_plugins_info():

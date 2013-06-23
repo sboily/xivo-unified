@@ -11,6 +11,7 @@ sudo pip install flask-principal
 sudo pip install Flask-Babel
 sudo pip install Flask-Script
 sudo pip install Yapsy
+sudo pip install Celery
 
 You need to execute the run.py to create the database.
 
@@ -19,5 +20,9 @@ $ python ./run.py init_db
 for launch
 
 $ python ./run.py run
+
+and for launching celery
+
+$ celery -A runcelery worker
 
 Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.

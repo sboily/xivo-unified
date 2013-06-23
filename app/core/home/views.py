@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash
+from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash, jsonify
 from flask.ext.login import login_required
 from app import db
 from app.core.organisations.forms import OrganisationsForm

@@ -26,3 +26,6 @@ babel = Babel()
 
 from flask.ext.principal import Principal
 principal = Principal()
+
+from celery import Celery
+celery = Celery()

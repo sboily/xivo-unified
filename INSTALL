@@ -26,3 +26,5 @@ and for launching celery
 $ python ./runcelery.py worker
 
 Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.
+
+You need a rabbitMQ server.

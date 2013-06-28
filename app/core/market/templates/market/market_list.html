@@ -1,0 +1,14 @@
+      <tr>
+      <td>{{ u.name }}</td>
+      <td>{{ u.informations.description }}</td>
+      <td>{{ u.informations.author }}</td>
+      <td>{{ u.informations.licence }}</td>
+      <td>{{ u.plugin.parent }}</td>
+      <td class="td-actions">
+          {% if u.installed %}
+            <a href="{{url_for('market.market_del', module=u.name)}}" class="btn btn-small btn-danger"><i class="btn-icon-only icon-remove icon-white"></i></a>
+          {% else %}
+            <a href="{{url_for('market.market_get', module=u.name)}}" class="btn btn-small btn-success"><i class="btn-icon-only icon-arrow-down icon-white"></i></a>
+          {% endif %}
+        </td>
+      </tr>

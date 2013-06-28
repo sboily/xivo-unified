@@ -39,16 +39,38 @@ def activate_plugins():
 def get_plugin_list():
     plugin_list = []
     for plugin_info in plugin_manager.getAllPlugins():
-        plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
-                              .filter(Plugins.name == plugin_info.name) \
-                              .first()
+        if hasattr(g, 'server_id'):
+            plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
+                                  .filter(Plugins.server_id == g.server_id) \
+                                  .filter(Plugins.name == plugin_info.name) \
+                                  .first()
+        else:
+            plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
+                                  .filter(Plugins.name == plugin_info.name) \
+                                  .first()
         if plugin:
-            info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
-                    'url': plugin_info.plugin_object.plugin_endpoint(),
-                    'module': plugin_info.name,
-                    'parent': plugin_info.details.get('Documentation', 'Parent'),
-                   }
-            plugin_list.append(info)
+            if plugin_info.details.get('Documentation', 'Parent') == 'organisation':
+                if hasattr(g, 'server_id'):
+                    print 'not a plugin for server'
+                    pass
+                else:
+                    info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
+                            'url': plugin_info.plugin_object.plugin_endpoint(),
+                            'module': plugin_info.name,
+                            'parent': plugin_info.details.get('Documentation', 'Parent'),
+                           }
+                    plugin_list.append(info)
+
+            if plugin_info.details.get('Documentation', 'Parent') == 'server':
+                if hasattr(g, 'server_id'):
+                    info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
+                            'url': plugin_info.plugin_object.plugin_endpoint(),
+                            'module': plugin_info.name,
+                            'parent': plugin_info.details.get('Documentation', 'Parent'),
+                           }
+                    plugin_list.append(info)
+
+                    print plugin_list
 
     return plugin_list
 
@@ -89,7 +111,8 @@ def install_plugin(plugin_name):
 def _add_to_db(plugin_name):
     plugin = Plugins(plugin_name)
     plugin.organisation_id = g.user.organisation_id
-    #plugin.server_id = g.server_id
+    if hasattr(g, 'server_id'):
+        plugin.server_id = g.server_id
     db.session.add(plugin)
     db.session.commit()
 

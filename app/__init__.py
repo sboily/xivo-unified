@@ -114,7 +114,6 @@ def configure_hooks(app):
             else:
                 g.servers_list = Servers.query.join(User.servers).filter(User.id == g.user.id).order_by(Servers.name)
 
-            g.plugins_list = _get_plugins_info()
 
         if session.has_key('server_id') and session['server_id']:
             g.server_id = session['server_id']
@@ -123,6 +122,9 @@ def configure_hooks(app):
                 del session['server_id']
                 g.server_id = ""
                 g.server = ""
+
+        if identity.id:
+            g.plugins_list = _get_plugins_info()
 
     @babel.localeselector
     def get_locale():

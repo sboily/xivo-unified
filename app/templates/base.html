@@ -43,7 +43,7 @@
         {% block content %}
 	<div class="container">
 	  <div class="hero-unit">
-	    <h1>{{ _('Hello, XiVO') }}</h1>
+	    <h1>{{ _('Welcome') }}, {{ current_user.displayname }} !</h1>
 	      <p>{{ _('This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.') }}</p>
 	      <p><a href="http://documentation.xivo.fr" class="btn btn-primary btn-large">{{_('Learn more')}} &raquo;</a></p>
 	  </div>

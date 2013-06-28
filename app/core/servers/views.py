@@ -119,6 +119,17 @@ def server_save(id):
     return redirect(url_for("servers.server"))
 
 
+@servers.route('/server/disconnect')
+@login_required
+@admin_role.require(403)
+def server_disconnect():
+    if session.has_key('server_id') and session['server_id']:
+        del session['server_id']
+        g.server_id = ""
+        g.server = ""
+    return redirect(url_for("servers.server"))
+
+
 def _get_servers():
     if g.user.role == 300:
         servers = Servers.query.order_by(Servers.organisation_id)

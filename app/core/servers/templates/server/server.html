@@ -14,6 +14,7 @@
         <th>{{ _('Address') }}</th>
         <th>{{ _('Login') }}</th>
         <th>{{ _('Password') }}</th>
+        <th>{{ _('Protocol') }}</th>
         <th>{{ _('Organisation') }}</th>
       <th class="td-actions"></th>
       </tr>
@@ -25,6 +26,7 @@
       <td><a href="https://{{ s.address }}" target="_blank">{{ s.address }}</a></td>
       <td>{{ s.login }}</td>
       <td>{{ s.password }}</td>
+      <td>{{ s.protocol }}</td>
       <td>{{ s.organisations.name }}</td>
       <td class="td-actions">
         <a href="{{url_for('servers.server_edit', id=s.id)}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>

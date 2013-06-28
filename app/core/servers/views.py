@@ -104,6 +104,9 @@ def server_edit(id):
 def server_save(id):
     if g.user.role == 300:
         server = Servers.query.order_by(Servers.name).first()
+    elif g.user.role == 200:
+        server = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id) \
+                                                 .order_by(Servers.name)
     else:
         server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
                                                  .filter(Servers.id == id) \

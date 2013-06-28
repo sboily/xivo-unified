@@ -109,6 +109,8 @@ def configure_hooks(app):
 
             if g.user.role == 300:
                 g.servers_list = Servers.query.order_by(Servers.name)
+            elif g.user.role == 200:
+                g.servers_list = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
             else:
                 g.servers_list = Servers.query.join(User.servers).filter(User.id == g.user.id).order_by(Servers.name)
 

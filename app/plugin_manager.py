@@ -55,7 +55,7 @@ def get_plugin_list():
 
 def remove_plugin(plugin_name):
     _remove_from_db(plugin_name)
-    _remove_files(plugin_name)
+    #_remove_files(plugin_name)
     _unload_plugin(plugin_name)
 
 

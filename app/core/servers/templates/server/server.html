@@ -22,7 +22,7 @@
     {% for s in servers %}
       <tr>
       <td>{{ s.name }}</td>
-      <td>{{ s.address }}</td>
+      <td><a href="https://{{ s.address }}" target="_blank">{{ s.address }}</a></td>
       <td>{{ s.login }}</td>
       <td>{{ s.password }}</td>
       <td>{{ s.organisations.name }}</td>

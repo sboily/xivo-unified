@@ -47,6 +47,8 @@ def server_add():
         users = _add_users(form)
         server.users = users
         server.organisation_id = form.organisations.data.id
+        print form.protocol.data
+        server.protocol = form.protocol.data
 
         db.session.add(server)
         db.session.commit()

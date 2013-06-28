@@ -49,7 +49,7 @@ class SignupForm(Form):
         validators.Length(min=3, max=20),
         validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
     ])
-    email = html5.EmailField(_('Email address'), [
+    email = html5.EmailField(_('Email address'), [Required(),
         validators.Length(min=3, max=128),
         validators.Email(message=_("This should be a valid email address."))
     ])
@@ -71,6 +71,15 @@ class SignupForm(Form):
         if user:
             raise ValidationError(_('Username already used'))
 
+    def validate_email(self, field):
+        email = self.get_email()
+
+        if email:
+            raise ValidationError(_('Email already used'))
+
     def get_user(self):
         return User.query.filter_by(username=self.username.data).first()
+
+    def get_email(self):
+        return User.query.filter_by(email=self.email.data).first()
 

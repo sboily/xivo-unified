@@ -17,7 +17,7 @@
 
 
 from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField, SelectMultipleField
-from flask.ext.wtf import Required, IPAddress, Regexp, validators
+from flask.ext.wtf import Required, IPAddress, Regexp, validators, SelectField
 from wtforms import widgets
 from app.models import User, Servers, Organisations
 from app.utils import Form
@@ -41,6 +41,7 @@ class ServersForm(Form):
     login = TextField(_('Login'))
     password = PasswordField(_('Password'), widget=widgets.PasswordInput(hide_value=False))
 
+    protocol = SelectField(_('Protocol'), choices=[('1.0', 'V1.0'),('1.1', 'V1.1')])
 
     organisations = QuerySelectField(_('Organisations'), [Required()], get_label='name', \
                                        query_factory=lambda: Organisations.query, \

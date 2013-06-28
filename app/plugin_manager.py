@@ -51,7 +51,6 @@ def get_plugin_list():
         if plugin:
             if plugin_info.details.get('Documentation', 'Parent') == 'organisation':
                 if hasattr(g, 'server_id'):
-                    print 'not a plugin for server'
                     pass
                 else:
                     info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
@@ -70,19 +69,24 @@ def get_plugin_list():
                            }
                     plugin_list.append(info)
 
-                    print plugin_list
-
     return plugin_list
 
 
 def remove_plugin(plugin_name):
     _remove_from_db(plugin_name)
     #_remove_files(plugin_name)
-    _unload_plugin(plugin_name)
+    #_unload_plugin(plugin_name)
 
 
 def _remove_from_db(plugin_name):
-    plugin = Plugins.query.filter(Plugins.name == plugin_name).first()
+    plugin = Plugins.query.filter(Plugins.name == plugin_name) \
+                          .filter(Plugins.organisation_id == g.user_organisation.id) \
+                          .first()
+    if hasattr(g, 'server_id'):
+        plugin = Plugins.query.filter(Plugins.name == plugin_name) \
+                              .filter(Plugins.organisation_id == g.user_organisation.id) \
+                              .filter(Plugins.server_id == g.server_id) \
+                              .first()
     db.session.delete(plugin)
     db.session.commit()
 

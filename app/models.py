@@ -137,7 +137,7 @@ class Servers(db.Model):
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
     users = db.relationship('User', secondary=users_server, backref='servers')
     plugins = db.relationship('Plugins', backref='servers',lazy='dynamic')
-    protocol = db.Column(db.String(200))
+    protocol = db.Column(db.String(200), default='1.0')
 
     def __init__(self, name, address, login=None, password=None):
         self.name = name

@@ -28,3 +28,9 @@ $ python ./runcelery.py worker
 Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.
 
 You need a rabbitMQ server.
+
+For configuration with nginx, please install uwsgi 1.9 min and supervisor
+
+$ apt-get install supervisor nginx
+
+sudo pip install uwsgi

@@ -128,8 +128,7 @@ def server_disconnect():
         del session['server_id']
         g.server_id = ""
         g.server = ""
-    return redirect(url_for("servers.server"))
-
+    return redirect(url_for("home.homepage"))
 
 def _get_servers():
     if g.user.role == 300:

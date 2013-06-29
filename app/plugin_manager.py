@@ -49,7 +49,7 @@ def get_plugin_list():
                                   .filter(Plugins.name == plugin_info.name) \
                                   .first()
         if plugin:
-            if plugin_info.details.get('Documentation', 'Parent') == 'organisation':
+            if plugin_info.details.get('Documentation', 'Parent') == 'organisation' and g.user.role >= 200:
                 if hasattr(g, 'server_id'):
                     pass
                 else:

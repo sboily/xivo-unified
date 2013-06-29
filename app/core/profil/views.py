@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, flash, redirect, url_for, request
+from flask import render_template, Blueprint, flash, redirect, url_for, request, g
 from werkzeug.security import generate_password_hash
 from flask.ext.login import login_required, current_user
-from app import db, root_role, admin_role
+from app import db, root_role, manager_role, admin_role
 from app.models import User
-from forms import AccountForm, SignupForm
+from forms import AccountForm, AccountFormEdit, SignupForm
 from flask.ext.babel import gettext as _
 
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
@@ -48,16 +48,23 @@ def myprofil():
 
 @profil.route('/accounts')
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def accounts():
-    users = User.query.all()
+    if g.user.role == 300:
+        users = User.query.all()
+    else:
+        users = User.query.filter(User.organisation_id == g.user.organisation_id) \
+                          .filter(User.role <= 200) \
+                          .all()
     return render_template('accounts.html', users=users)
 
 @profil.route('/account/add', methods=['GET', 'POST'])
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def account_add():
     form = AccountForm()
+    if g.user.role == 200:
+        form.role.choices = [('200', 'Manager'),('100', 'Admin')]
     if form.validate_on_submit():
         account = User(form.username.data, form.password.data,
                     form.email.data, form.displayname.data, form.role.data)
@@ -71,20 +78,36 @@ def account_add():
 
 @profil.route('/account/del/<id>')
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def account_del(id):
-    account = User.query.filter_by(id=id).first()
-    db.session.delete(account)
-    db.session.commit()
-    flash(_('Account delete'))
+    if g.user.role == 300:
+        account = User.query.filter_by(id=id).first()
+    else:
+        account = User.query.filter(User.organisation_id == g.user.organisation_id) \
+                            .filter_by(id=id) \
+                            .first()
+    if account:
+        db.session.delete(account)
+        db.session.commit()
+        flash(_('Account delete'))
+    else:
+        flash(_('Sorry you are not authorized !'))
     return redirect(url_for("profil.accounts"))
 
 @profil.route('/account/edit/<id>', methods=['GET', 'POST'])
 @login_required
-@root_role.require(403)
+@manager_role.require(403)
 def account_edit(id):
-    account = User.query.get_or_404(id)
-    form = AccountForm(obj=account)
+    if g.user.role == 300:
+        account = User.query.get_or_404(id)
+    else:
+        account = User.query.filter(User.organisation_id == g.user.organisation_id) \
+                            .filter(User.role <= 200) \
+                            .filter_by(id=id) \
+                            .first()
+    form = AccountFormEdit(obj=account)
+    if g.user.role == 200:
+        form.role.choices = [('200', 'Manager'),('100', 'Admin')]
     if request.method == 'POST':
         form.username.data = User.query.get_or_404(id).username
         if not form.password.data and account.password:

@@ -20,6 +20,13 @@ from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationErro
 from flask.ext.babel import lazy_gettext as _
 from app.models import Organisations, User
 from app.utils import Form
+from flask import g
+
+def get_organisations():
+    if g.user.role == 300:
+        return Organisations.query.all()
+    else:
+        return Organisations.query.filter(Organisations.id == g.user.organisation_id).all()
 
 class AccountForm(Form):
     username = TextField(_('Username'), [Required(),
@@ -39,7 +46,46 @@ class AccountForm(Form):
 
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
 
-    organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=lambda: Organisations.query)
+    organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=get_organisations)
+
+    def validate_username(self, field):
+        print field
+        user = self.get_user()
+
+        if user:
+            raise ValidationError(_('Username already used'))
+
+    def validate_email(self, field):
+        email = self.get_email()
+
+        if email:
+            raise ValidationError(_('Email already used'))
+
+    def get_user(self):
+        return User.query.filter_by(username=self.username.data).first()
+
+    def get_email(self):
+        return User.query.filter_by(email=self.email.data).first()
+
+class AccountFormEdit(Form):
+    username = TextField(_('Username'), [Required(),
+        validators.Length(min=3, max=20),
+        validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
+    ])
+    email = html5.EmailField(_('Email address'), [
+        validators.Length(min=3, max=128),
+        validators.Email(message=_("This should be a valid email address."))
+    ])
+    displayname = TextField(_('Display name'))
+    password = PasswordField(_('Password'), [Required(),
+        validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
+    ])
+    role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
+    submit = SubmitField(_('Save'))
+
+    language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
+
+    organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=get_organisations)
 
 
 class SignupForm(Form):

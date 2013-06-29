@@ -26,10 +26,10 @@
             <ul class="dropdown-menu" role="menu" aria-labelledby="servers">
                 <li role="presentation">{{_('Choosing server ...')}}</li>
               {% if g.server %}
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_disconnect')}}">{{_('Disconnect from') }}</a></li>
+                <li role="server"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_disconnect')}}">{{_('Disconnect from') }}</a></li>
               {% endif %}
               {% for s in g.servers_list %}
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_save', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
+                <li role="server"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_save', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
               {% endfor %}
             </ul>
           </li>

@@ -8,7 +8,7 @@
               {%- endif %}
                 {%- for endpoint, caption, role in [
                                   ('servers.server', 'Servers', 200),
-                                  ('profil.accounts', 'Accounts', 300),
+                                  ('profil.accounts', 'Accounts', 200),
                                   ('market.themarket', 'Market', 200),
                                   ('organisations.organisation', 'Organisation', 300),
                 ] %}
@@ -16,10 +16,12 @@
                   <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
                 {%- endif %}
                 {%- endfor %}
+              {% if g.plugins_list %}
               <li class="nav-header">{{ _('Plugins') }}</li>
               {% for p in g.plugins_list %}
                 <li {% if  p.url == request.endpoint %} class="active" {% endif %}><a href="{{url_for(p.url)}}">{{ p.name }}</a></li>
               {% endfor %}
+              {% endif %}
             </ul>
           </div>
         </div>

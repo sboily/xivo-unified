@@ -31,7 +31,7 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 @admin_role.require(403)
 def myprofil():
     account = User.query.get_or_404(current_user.id)
-    form = AccountForm(obj=account)
+    form = AccountFormEdit(obj=account)
     if request.method == 'POST':
         form.username.data = User.query.get_or_404(current_user.id).username
         if not form.password.data and account.password:

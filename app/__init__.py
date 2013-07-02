@@ -102,6 +102,9 @@ def configure_hooks(app):
 
         if identity.id:
             g.user = User.query.from_identity(identity)
+            if g.user is  None:
+                _delete_session()
+                return
             if g.user.organisation_id is None:
                 g.wizard = True
             else:
@@ -120,8 +123,7 @@ def configure_hooks(app):
             g.server = Servers.query.get(session['server_id'])
             if g.server is None:
                 del session['server_id']
-                g.server_id = ""
-                g.server = ""
+                _delete_session()
 
         if identity.id:
             g.plugins_list = _get_plugins_info()
@@ -132,6 +134,11 @@ def configure_hooks(app):
             return g.user.language
         else:
             return request.accept_languages.best_match(LANGUAGES.keys())
+
+def _delete_session():
+    g.server_id = None
+    g.server = None
+    g.user = None
 
 def configure_error_handlers(app):
     @app.errorhandler(403)

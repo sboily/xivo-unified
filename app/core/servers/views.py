@@ -59,9 +59,12 @@ def server_add():
 @login_required
 @manager_role.require(403)
 def server_del(id):
-    server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
-                                             .filter(Servers.id == id) \
-                                             .order_by(Servers.name).first()
+    if g.user.role == 300:
+        server = Servers.query.get_or_404(id)
+    else:
+        server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
+                                                 .filter(Servers.id == id) \
+                                                 .order_by(Servers.name).first()
     if server:
         db.session.delete(server)
         db.session.commit()
@@ -71,7 +74,6 @@ def server_del(id):
 @login_required
 @manager_role.require(403)
 def server_edit(id):
-
     if g.user.role == 300:
         server = Servers.query.get_or_404(id)
         form = ServersForm(obj=server)

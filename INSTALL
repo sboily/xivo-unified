@@ -1,21 +1,11 @@
 Installation of the dependance
 
-sudo apt-get install python-flup python-pip
-sudo pip install flask
-sudo pip install flask-login
-sudo pip install flask-wtf
-sudo pip install flask-sqlalchemy
-sudo pip install restclient
-sudo pip install wtforms-json
-sudo pip install flask-principal
-sudo pip install Flask-Babel
-sudo pip install Flask-Script
-sudo pip install Yapsy
-sudo pip install Celery
+$ apt-get install python-flup python-pip rabbitmq-server
+$ pip install flask flask-login flask-wtf flask-sqlalchemy restclient wtforms-json flask-principal Flask-Babel Flask-Script Yapsy Celery
 
 You need to execute the run.py to create the database.
 
-$ python ./run.py init_db
+$ python ./run.py initdb
 
 for launch
 
@@ -27,10 +17,8 @@ $ python ./runcelery.py worker
 
 Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.
 
-You need a rabbitMQ server.
-
 For configuration with nginx, please install uwsgi 1.9 min and supervisor
 
 $ apt-get install supervisor nginx
+$ pip install uwsgi
 
-sudo pip install uwsgi

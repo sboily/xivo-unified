@@ -12,10 +12,11 @@
         {{ render_field(form.password, class="input-xlarge") }}
         {{ render_field(form.confirm, class="input-xlarge") }}
         {{ render_field(form.captcha, class="input-xlarge") }}
+        <a href="#license" role="button" class="btn-text" data-toggle="modal">{{_('Reading license')}}</a>
         {{ render_field(form.agree) }}
         {{ render_field(form.submit, class="btn btn-primary") }}
       </form>
     </div>
 
+{% include "license.html" %}
 {% endblock %}
-

@@ -20,5 +20,37 @@ Important note, the DEBUG settings in conf.py need to be true for the moment bec
 For configuration with nginx, please install uwsgi 1.9 min and supervisor
 
 $ apt-get install supervisor nginx
+
+To compile uwsgi you need
+
+$ apt-get install libc-dev gcc python-dev
+
 $ pip install uwsgi
 
+
+Clean 
+
+$ apt-get remove --purge libc-dev-bin libc6-dev linux-libc-dev gcc libexpat1-dev libssl-dev python-dev python2.7-dev zlib1g-dev
+
+Config file
+
+Copy sources into /usr/share/nginx/www/xivo-webi
+
+$ cp SOURCES /usr/share/nginx/www/
+$ chown www-data.www-data /usr/share/nginx/www/xivo-webi -R
+
+Nginx :
+
+$ cd SOURCES/conf/nginx
+$ cp xivo /etc/nginx/sites-available/
+$ mkdir /etc/nginx/ssl
+$ cp server* /etc/nginx/ssl
+$ ln -s /etc/nginx/sites-available/xivo /etc/nginx/sites-enabled/xivo
+$ service nginx restart
+
+Supervisor :
+
+$ cd SOURCES/conf/supervisor
+$ cp * /etc/supervisor/conf.d/
+$ service supervisor stop
+$ service supervisor start

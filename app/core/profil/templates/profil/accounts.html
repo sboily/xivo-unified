@@ -30,7 +30,7 @@
       <td>{{ u.organisations.name }}</td>
       <td class="td-actions">
         <a href="{{url_for('profil.account_edit', id=u.id)}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>
-        <a href="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-small"><i class="btn-icon-only icon-remove"></i></a>
+        <a data-url="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-small confirm" id="{{u.id}}" data-toggle="modal" data-target="#confirm-dialog"><i class="btn-icon-only icon-remove"></i></a>
         </td>
       </tr>
     {% endfor %}
@@ -40,4 +40,6 @@
 
 </div>
 
+
+{% include "confirm.html" %}
 {% endblock %}

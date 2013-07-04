@@ -107,7 +107,7 @@ class SignupForm(Form):
     confirm = PasswordField(_('Confirm password'))
     captcha = RecaptchaField(_('Captcha'))
 
-    agree = BooleanField(_('I agree with the Terms and Conditions'), [Required()])
+    agree = BooleanField(_('Agree to the <a href="#license" role="button" class="btn-text" data-toggle="modal">terms and conditions</a>'), [Required()])
 
     submit = SubmitField(_('Signup'))
 

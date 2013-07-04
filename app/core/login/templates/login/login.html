@@ -2,19 +2,36 @@
 {% block content %}
     {% from "forms/macros.html" import render_field %}
 
-    <div class="container">
-      <form class="form-signin" method="post" name="login">
+<div class="account-container stacked">
+    <div class="content clearfix">
+        <form class="form-signin" method="post" name="login">
         {{ form.csrf_token }}
-        <h2 class="form-signin-heading">{{ _('Please sign in') }}</h2>
-        {{ render_field(form.username, class="input-block-level") }}
-        {{ render_field(form.password, class="input-block-level") }}
-        {{ render_field(form.remember_me, class="checkbox") }} 
-        <button class="btn btn-large btn-primary" type="submit">{{ _('Sign in') }}</button>
-        <br><br>
-        <p>{{ _('New account ?') }} <a href="{{url_for('profil.signup')}}" class="btn btn-small">{{ _('Sign up') }}</a></p>
-      </form>
+            <h2>{{ _('Please sign in') }}</h2>
+            {{ render_field(form.username, class="input-block-level") }}
+            {{ render_field(form.password, class="input-block-level") }}
 
-    </div>
+            <div class="row">
+                <div class="span6 offset1">
+                {{ render_field(form.remember_me, class="checkbox field login-checkbox") }} 
+                </div>
+                <div class="span2">
+                {{ render_field(form.submit, class="btn btn-primary") }} 
+                </div>
+            </div> 
+
+        </form>
+
+        <div class="login-extra">
+            {{ _('Don\'t have an account ?') }} <a href="{{url_for('profil.signup')}}">{{ _('Sign up') }}</a>
+        </div>
+
+    </div> 
+</div> 
+
+<script>
+$('body').css("background-image", "url('../../static/img/background.jpg'");
+</script>
+
 
 {% endblock %}
 

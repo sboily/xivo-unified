@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField
+from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField, SubmitField
 from flask.ext.wtf import Required
 from flask.ext.babel import lazy_gettext as _
 from app.models import User
@@ -28,6 +28,8 @@ class LoginForm(Form):
     remember_me = BooleanField(_('Remember me'), default=False)
 
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
+
+    submit = SubmitField(_('Sign in'))
 
     def validate_login(self, field):
         user = self.get_user()

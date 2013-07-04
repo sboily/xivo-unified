@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-07-04 15:39-0400\n"
-"PO-Revision-Date: 2013-07-04 15:41-0500\n"
+"POT-Creation-Date: 2013-07-04 16:53-0400\n"
+"PO-Revision-Date: 2013-07-04 16:55-0500\n"
 "Last-Translator: Sylvain Boily <sboily@proformatique.com>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -54,30 +54,30 @@ msgstr "Anglais"
 msgid "French"
 msgstr "Français"
 
-#: app/core/login/forms.py:36 app/core/login/forms.py:42
-msgid "Invalid user"
-msgstr "Utilisateur invalide"
-
-#: app/core/login/forms.py:45
-msgid "Invalid password"
-msgstr "Mot de passe invalide"
-
-#: app/core/login/templates/login/login.html:8
-msgid "Please sign in"
-msgstr "S'authentifier"
-
-#: app/core/login/templates/login/login.html:12
+#: app/core/login/forms.py:32
 msgid "Sign in"
 msgstr "Authentification"
 
-#: app/core/login/templates/login/login.html:14
-msgid "New account ?"
-msgstr "Nouveau compte ?"
+#: app/core/login/forms.py:38 app/core/login/forms.py:44
+msgid "Invalid user"
+msgstr "Utilisateur invalide"
 
-#: app/core/login/templates/login/login.html:14
+#: app/core/login/forms.py:47
+msgid "Invalid password"
+msgstr "Mot de passe invalide"
+
+#: app/core/login/templates/login/login.html:9
+msgid "Please sign in"
+msgstr "Connexion"
+
+#: app/core/login/templates/login/login.html:25
+msgid "Don't have an account ?"
+msgstr "Créer un nouveau compte ?"
+
+#: app/core/login/templates/login/login.html:25
 #: app/core/profil/templates/profil/signup.html:8
 msgid "Sign up"
-msgstr "S'inscrire"
+msgstr "Inscription"
 
 #: app/core/market/views.py:43
 #, python-format

@@ -54,3 +54,7 @@ $ cd SOURCES/conf/supervisor
 $ cp * /etc/supervisor/conf.d/
 $ service supervisor stop
 $ service supervisor start
+
+For deploy plugin please install fabric, boto
+
+$ pip install fabric boto

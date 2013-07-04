@@ -1,10 +1,23 @@
 server {
-    listen       80;
-    server_name  _;
+    listen 80;
+    server_name CHANGE_IT;
+
+    rewrite ^ https://$server_name$request_uri? permanent;
+}
+
+server {
+    listen 443;
+    server_name CHANGE_IT;
+
+    root /usr/share/nginx/www/xivo-webi/;
+
+    ssl on;
+    ssl_certificate ssl/server.crt;
+    ssl_certificate_key ssl/server.key;
+
     location / { try_files $uri @yourapplication; }
     location @yourapplication {
       include uwsgi_params;
       uwsgi_pass unix:/tmp/xivo-uwsgi.sock;
     }
 }
-

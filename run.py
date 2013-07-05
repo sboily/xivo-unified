@@ -20,7 +20,6 @@
 from flask.ext.script import Manager, prompt_bool, Server
 from app.extensions import db
 from app import create_app
-from app.models import Servers, Organisations, User
 
 app = create_app()
 manager = Manager(app)

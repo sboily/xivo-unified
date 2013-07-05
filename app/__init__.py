@@ -24,6 +24,7 @@ from models import Servers, User, Organisations
 
 import plugin_manager
 import os
+import logging
 
 CORE_MODULES = (
     'servers',
@@ -98,7 +99,6 @@ def configure_hooks(app):
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
         g.user = None
-        g.wizard = None
 
         if identity.id:
             g.user = User.query.from_identity(identity)
@@ -143,16 +143,11 @@ def _delete_session():
 def configure_error_handlers(app):
     @app.errorhandler(403)
     def page_not_found(e):
-        flash('Sorry you are not authorized !')
+        flash(_('Sorry you are not authorized !'))
         return redirect(url_for('home.homepage'))
 
 def configure_logging(app):
-    if app.debug or app.testing:
-        return
-
-    import logging
     app.logger.setLevel(logging.INFO)
-
 
 def _get_plugins_info():
     return plugin_manager.get_plugin_list()

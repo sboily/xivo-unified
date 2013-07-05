@@ -35,24 +35,7 @@ def initdb():
 
     db.drop_all()
     db.create_all()
-
-    ua = User('quintana','superpass','sboily@proformatique.com','Sylvain Boily',300)
-    ua.language = 'en'
-    ca = User('chloe','superpass','chloe@proformatique.com','Chloe Mourat',200)
-    ca.language = 'fr'
-
-    sa = Servers('Sylvain','192.168.100.3','test','test')
-    sb = Servers('Chloe','192.168.100.4','toto','toto')
-    sa.users = [ua,ca]
-    sb.users = [ca]
-
-    org = Organisations('Proformatique Inc')
-    org.users = [ua,ca]
-    org.servers = [sa,sb]
-
-    db.session.add_all([ua,ca,sa,org])
     db.session.commit()
-
 
 if __name__ == "__main__":
     manager.run()

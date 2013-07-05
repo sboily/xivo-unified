@@ -49,7 +49,6 @@ class AccountForm(Form):
     organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=get_organisations)
 
     def validate_username(self, field):
-        print field
         user = self.get_user()
 
         if user:

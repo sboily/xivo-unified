@@ -9,6 +9,9 @@ import json
 from flask import current_app, g
 from app import db
 from models import Plugins
+import logging 
+
+#logging.basicConfig(level=logging.DEBUG)
 
 plugin_manager = None
 plugin_directory = None

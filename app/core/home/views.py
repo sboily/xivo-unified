@@ -19,16 +19,17 @@ from flask import render_template, Blueprint, current_app, g, redirect, url_for,
 from flask.ext.login import login_required
 from app import db
 from app.core.organisations.forms import OrganisationsForm
+from app.core.profil.forms import AccountForm
 from app.models import User, Organisations
 from flask.ext.babel import gettext as _
 import os
 
-home = Blueprint('home', __name__, template_folder='templates/login')
+home = Blueprint('home', __name__, template_folder='templates/home')
 
 @home.route('/')
 @login_required
 def homepage():
-    if g.wizard:
+    if hasattr(g,'wizard'):
         return redirect(url_for('home.wizard'))
     return render_template('base.html')
 
@@ -59,3 +60,24 @@ def wizard():
         flash(_('Organisation added'))
         return redirect(url_for("home.homepage"))
     return render_template('wizard.html', form=form)
+
+@home.route('/first', methods=['GET', 'POST'])
+def first():
+    if _check_first():
+        return redirect(url_for("home.homepage"))
+
+    form = AccountForm()
+    del form.organisations
+    del form.role
+    del form.language
+    if form.validate_on_submit():
+        account = User(form.username.data, form.password.data,
+                       form.email.data, form.displayname.data, '300')
+        db.session.add(account)
+        db.session.commit()
+        flash(_('Account added'))
+        return redirect(url_for("home.homepage"))
+    return render_template('first.html', form=form)
+
+def _check_first():
+    return User.query.filter(User.role == '300').first()

@@ -11,7 +11,7 @@ from app import db
 from models import Plugins
 import logging 
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 plugin_manager = None
 plugin_directory = None
@@ -33,7 +33,6 @@ def setup_plugins():
     for plugin_info in plugin_manager.getAllPlugins():
         plugin_info.plugin_object.setup(app)
 
-
 def activate_plugins():
     for plugin_info in plugin_manager.getAllPlugins():
         plugin_manager.activatePluginByName(plugin_info.name)
@@ -42,6 +41,8 @@ def activate_plugins():
 def get_plugin_list():
     plugin_list = []
     for plugin_info in plugin_manager.getAllPlugins():
+        if hasattr(plugin_info.plugin_object, 'activated'):
+            plugin_info.plugin_object.activated(plugin_info.name)
         if hasattr(g, 'server_id'):
             plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
                                   .filter(Plugins.server_id == g.server_id) \
@@ -61,6 +62,8 @@ def get_plugin_list():
                             'module': plugin_info.name,
                             'parent': plugin_info.details.get('Documentation', 'Parent'),
                            }
+                    if plugin_info.details.has_option('Documentation', 'Dependance'):
+                         info['dep'] = plugin_info.details.get('Documentation', 'Dependance')
                     plugin_list.append(info)
 
             if plugin_info.details.get('Documentation', 'Parent') == 'server':
@@ -113,7 +116,6 @@ def install_plugin(plugin_name):
     _download_and_extract(plugin_name)
     _move_config_file(plugin_name)
     #_load_plugin(plugin_name)
-
 
 def _add_to_db(plugin_name):
     plugin = Plugins(plugin_name)

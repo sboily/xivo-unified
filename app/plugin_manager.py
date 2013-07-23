@@ -87,7 +87,7 @@ def remove_plugin(plugin_name):
 
 def _deactivated_plugin(plugin_name):
     plugin = plugin_manager.getPluginByName(plugin_name)
-    if hasattr(plugin_info.plugin_object, 'deactivated'):
+    if hasattr(plugin.plugin_object, 'deactivated'):
         plugin.plugin_object.deactivated(plugin.name)
 
 def _remove_from_db(plugin_name):

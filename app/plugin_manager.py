@@ -41,8 +41,6 @@ def activate_plugins():
 def get_plugin_list():
     plugin_list = []
     for plugin_info in plugin_manager.getAllPlugins():
-        if hasattr(plugin_info.plugin_object, 'activated'):
-            plugin_info.plugin_object.activated(plugin_info.name)
         if hasattr(g, 'server_id'):
             plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
                                   .filter(Plugins.server_id == g.server_id) \
@@ -53,6 +51,9 @@ def get_plugin_list():
                                   .filter(Plugins.name == plugin_info.name) \
                                   .first()
         if plugin:
+            if hasattr(plugin_info.plugin_object, 'activated'):
+                plugin_info.plugin_object.activated(plugin_info.name)
+
             if plugin_info.details.get('Documentation', 'Parent') == 'organisation' and g.user.role >= 200:
                 if hasattr(g, 'server_id'):
                     pass
@@ -79,10 +80,14 @@ def get_plugin_list():
 
 
 def remove_plugin(plugin_name):
+    _deactivated_plugin(plugin_name)
     _remove_from_db(plugin_name)
     #_remove_files(plugin_name)
     #_unload_plugin(plugin_name)
 
+def _deactivated_plugin(plugin_name):
+    plugin = plugin_manager.getPluginByName(plugin_name)
+    plugin.plugin_object.deactivated(plugin.name)
 
 def _remove_from_db(plugin_name):
     plugin = Plugins.query.filter(Plugins.name == plugin_name) \

@@ -19,7 +19,20 @@
               {% if g.plugins_list %}
               <li class="nav-header">{{ _('Plugins') }}</li>
               {% for p in g.plugins_list %}
-                <li {% if  p.url == request.endpoint %} class="active" {% endif %}><a href="{{url_for(p.url)}}">{{ p.name }}</a></li>
+                {% if not p.dep %}
+                <li {% if  p.url == request.endpoint %} class="active" {% endif %}>
+                    <a href="{{url_for(p.url)}}">{{ p.name }}</a>
+                </li>
+                    {% for pm in g.plugins_list %}
+                        {% if pm.dep == p.module %}
+                            <ul class="nav nav-list">
+                                <li {% if  pm.url == request.endpoint %} class="active" {% endif %}>
+                                    <a href="{{url_for(pm.url)}}">{{pm.name}}</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
               {% endfor %}
               {% endif %}
             </ul>

@@ -10,6 +10,8 @@
     <link rel="alternate stylesheet" media="screen" title="original" href="{{ url_for('static', filename='css/bootstrap-classic.css') }}">
     <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/bootstrap-progressbar.css') }}">
     <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/custom.css') }}">
+    {% block header %}
+    {% endblock %}
 </head>
 
 <body>

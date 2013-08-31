@@ -39,31 +39,35 @@
     </div>
 
 
-    <div class="container-fluid">
-      <div class="row-fluid">
 
-        {% if g.wizard != True %}
-            {% include "menu_left.html" %}
-        {% endif %}
+   <div class="row-fluid">
+       <div class="span1">
+            {% if g.wizard != True %}
+                 {% include "menu_left.html" %} 
+            {% endif %}
 
-        {% block content %}
-	<div class="container">
-	  <div class="hero-unit">
-	    <h1>{{ _('Welcome') }}, {{ current_user.displayname }} !</h1>
-	      <p>{{ _('This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.') }}</p>
-	      <p><a href="http://documentation.xivo.fr" class="btn btn-primary btn-large">{{_('Learn more')}} &raquo;</a></p>
-	  </div>
-	</div>
-        {% endblock %}
+       </div>
 
-        </div>
-      </div>
+       <div class="span10">
+           {% block content %}
+	   <div class="container">
+	       <div class="hero-unit">
+	           <h1>{{ _('Welcome') }}, {{ current_user.displayname }} !</h1>
+	           <p>{{ _('This is the new webi interfaces for XiVO, developp with flask for better performance and better experiences.') }}</p>
+	           <p><a href="http://documentation.xivo.fr" class="btn btn-primary btn-large">{{_('Learn more')}} &raquo;</a></p>
+	       </div>
+	   </div>
+           {% endblock %}
 
-      <div id="footer"> 
+       </div>
+    </div>
+
+    <div id="footer"> 
         {% block footer %}
-          {% include "footer.html" %}
+            {% include "footer.html" %}
         {% endblock %}
-      </div>
+    </div>
 
 </body>
+
 </html>

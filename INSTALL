@@ -1,7 +1,7 @@
 Installation of the dependance
 
 $ apt-get install python-flup python-pip rabbitmq-server
-$ pip install flask flask-login flask-wtf flask-sqlalchemy restclient wtforms-json flask-principal Flask-Babel Flask-Script Yapsy Celery
+$ pip install flask flask-login flask-wtf flask-sqlalchemy restclient wtforms-json flask-principal Flask-Babel Flask-Script Yapsy Celery alembic
 
 You need to execute the run.py to create the database.
 

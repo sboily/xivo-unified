@@ -12,7 +12,7 @@
       <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
           {% if g.server %}
-              {{_('on') }} {{ g.server.address }}&nbsp;&nbsp;
+              <span id="servers_list" title="ID server : {{ g.server.id }}">{{_('on') }} {{ g.server.address }}&nbsp;&nbsp;</span>
           {% endif %}
               {{ _('Welcome') }} <a href="{{url_for('profil.myprofil')}}" class="navbar-link">{{current_user.displayname}}</a>&nbsp;&nbsp;
               <a href="{{ url_for('login.logout') }}"><i class="icon-off icon-white"></i></a>

@@ -3,8 +3,6 @@
 
 {% set real_role = {100 : 'Admin', 200 : 'Manager', 300 : 'Root' } %}
 
-<div class="container">
-
 <div class="widget stacked widget-table action-table">
   <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('profil.account_add')}}"><i class="icon-plus icon-white"></i> {{ _('Add') }}</a></p>
   <table class="table table-bordered">
@@ -37,9 +35,6 @@
     </tbody>
   </table>
 </div>
-
-</div>
-
 
 {% include "confirm.html" %}
 {% endblock %}

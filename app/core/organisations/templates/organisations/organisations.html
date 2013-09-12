@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="widget stacked widget-table action-table">
-  <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('organisations.organisation_add')}}"><i class="glyphicon glyphicon-plus"></i> {{_('Add') }}</a></p>
+  <p class="text-right"><a class="btn btn-primary btn-xs" href="{{url_for('organisations.organisation_add')}}"><i class="glyphicon glyphicon-plus"></i> {{_('Add') }}</a></p>
   <table class="table table-bordered">
 <div class="widget-content">
   <table class="table table-bordered table-striped table-highlight">
@@ -20,7 +20,9 @@
       <td>{{ o.created_time }}</td>
       <td>
         <a href="{{url_for('organisations.organisation_edit', id=o.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-        <a data-url="{{url_for('organisations.organisation_del', id=o.id)}}" class="btn btn-default btn-xs confirm" id="{{o.id}}" data-toggle="modal" data-target="#confirm-dialog"><i class="glyphicon glyphicon-remove"></i></a>
+        <a data-url="{{url_for('organisations.organisation_del', id=o.id)}}" class="btn btn-default btn-xs confirm" data-toggle="modal" data-target="#confirm-dialog">
+            <i class="glyphicon glyphicon-remove"></i>
+        </a>
         </td>
       </tr>
     {% endfor %}

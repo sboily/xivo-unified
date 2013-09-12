@@ -1,30 +1,31 @@
 {% if current_user.is_authenticated() %}
 
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              {% if g.user.role >= 200 %}
-              <li class="nav-header">{{ _('Configuration') }}</li>
-              {%- endif %}
-                {%- for endpoint, caption, role in [
+<div class="container">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-stacked nav-list">
+        {% if g.user.role >= 200 %}
+            <li class="nav-header">{{ _('Configuration') }}</li>
+        {%- endif %}
+        {%- for endpoint, caption, role in [
                                   ('servers.server', 'Servers', 200),
                                   ('profil.accounts', 'Accounts', 200),
-                                  ('market.themarket', 'Market', 200),
                                   ('organisations.organisation', 'Organisation', 300),
-                ] %}
-                {% if g.user.role >= role %}
-                  <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
-                {%- endif %}
-                {%- endfor %}
-              {% if g.plugins_list %}
-              <li class="nav-header">{{ _('Plugins') }}</li>
-              {% for p in g.plugins_list %}
+                                  ('market.themarket', 'Market', 200),
+        ] %}
+            {% if g.user.role >= role %}
+                <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
+            {%- endif %}
+        {%- endfor %}
+        {% if g.plugins_list %}
+            <li class="nav-header">{{ _('Plugins') }}</li>
+            {% for p in g.plugins_list %}
                 {% if not p.dep %}
-                <li {% if  p.url == request.endpoint %} class="active" {% endif %}>
+                    <li {% if  p.url == request.endpoint %} class="active" {% endif %}>
                     <a href="{{url_for(p.url)}}">{{ p.name }}</a>
-                </li>
+                    </li>
                     {% for pm in g.plugins_list %}
                         {% if pm.dep == p.module %}
-                            <ul class="nav nav-list">
+                            <ul class="nav">
                                 <li {% if  pm.url == request.endpoint %} class="active" {% endif %}>
                                     <a href="{{url_for(pm.url)}}">{{pm.name}}</a>
                                 </li>
@@ -32,9 +33,10 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-              {% endfor %}
-              {% endif %}
-            </ul>
-          </div>
+            {% endfor %}
+        {% endif %}
+        </ul>
+    </div>
+</div>
 
 {% endif %}

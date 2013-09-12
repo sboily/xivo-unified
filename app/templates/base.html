@@ -23,49 +23,45 @@
 <body>
 
 {% include "menu_top.html" %}
-    <div class="container">
-        <div class="row">
-            <div class="span12">
-                {% for category, msg in get_flashed_messages(with_categories=true) %}
-                <div class="alert fade in" data-dismiss="alert">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
+
+    <div class="row">
+        <div class="container">
+            {% for category, msg in get_flashed_messages(with_categories=true) %}
+                <div class="alert alert-warning alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     {{ msg }}
                 </div>
-                {% endfor %}
-            </div>
+            {% endfor %}
         </div>
     </div>
 
-   <div class="container-fluid">
-     <div class="row-fluid">
-       <div class="span2">
+    <div class="row">
+       <div class="col-md-2">
             {% if g.wizard != True %}
                  {% include "menu_left.html" %} 
             {% endif %}
        </div>
 
-       <div class="span10">
-	   <div class="container-fluid">
+       <div class="col-md-10">
            {% block content %}
-	       <h1>{{ _('Welcome') }}, {{ current_user.displayname }} !</h1>
-               <p>{{ _('This web interface is a new GUI for XiVO based on flask.')}}</p>
-               <span class="label label-warning">{{_('Step 1')}}</span> {{_('Please configure your profil.')}}<br>
-               <span class="label label-warning">{{_('Step 2')}}</span> {{_('Go to the market place and install the module you need for your organisation')}}<br>
-               <span class="label label-warning">{{_('Step 3')}}</span> {{_('Add XiVO server on servers menu.')}}<br>
-               <span class="label label-warning">{{_('Step 4')}}</span> {{_('Connecting to the server and get module on market place')}}<br>
-               <span class="label label-warning">{{_('Step 5')}}</span> {{_('Enjoy :)')}}<br><br>
+               <div class="well jumbotron">
+	           <h2>{{ _('Welcome') }}, {{ current_user.displayname }} !</h2>
+                   <p>{{ _('This web interface is a new GUI for XiVO based on flask.')}}</p>
+                   <span class="label label-warning">{{_('Step 1')}}</span> {{_('Please configure your profil.')}}<br>
+                   <span class="label label-warning">{{_('Step 2')}}</span> {{_('Go to the market place and install the module you need for your organisation.')}}<br>
+                   <span class="label label-warning">{{_('Step 3')}}</span> {{_('Add your XiVO server on Servers menu.')}}<br>
+                   <span class="label label-warning">{{_('Step 4')}}</span> {{_('Connect to the server and get module on market place.')}}<br>
+                   <span class="label label-warning">{{_('Step 5')}}</span> {{_('Enjoy :)')}}<br><br>
 
-               <div class="alert alert-info">
-                   <p>{{_('Information : If you need more information please contact me !')}}</p>
-               </div>
+                   <div class="alert alert-info">
+                       <p>{{_('Information : If you need more information please contact me !')}}</p>
+                   </div>
 
-               <div class="alert alert-error">
-                   <p>{{_('Important')}} : {{_('This web interface is still beta test, please do not consider it for production !')}}</p>
+                   <div class="alert alert-danger">
+                       <p>{{_('Important')}} : {{_('This web interface is still in beta test, please do not consider it for production !')}}</p>
+                   </div>
                </div>
            {% endblock %}
-           </div>
-       </div>
-
       </div>
     </div>
 

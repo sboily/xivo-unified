@@ -6,23 +6,22 @@
         {% set placeholder = field.label.text %}
     {% endif %}
 
-    <div class="control-group {% if field.errors %}error{% endif %}">
-        {% if with_label %}
-            <label for="{{ field.id }}" class="control-label">
-                {{ field.label.text }}{% if field.flags.required %} *{% endif %}:
-            </label>
-        {% endif %}
+<div class="form-group">
+            {% if with_label %}
+                <label for="{{ field.id }}">
+                    {{ field.label.text }}{% if field.flags.required %} *{% endif %}:
+                </label>
+            {% endif %}
+            {% if with_icon %}
+              <div class="input-group">
+                  <span class="input-group-addon"><i class="{{ with_icon }}"></i></span>
+            {% endif %}
 
-        <div class="controls">
-          {% if with_icon %}
-            <div class="input-prepend">
-            <span class="add-on"><i class="{{ with_icon }}"></i></span>
-          {% endif %}
-
-            {% set class_ = kwargs.pop('class_', '') %}
+            {% set class_ = kwargs.pop('class_', 'form-control') %}
             {% if field.flags.required %}
                 {% set class_ = class_ + ' required' %}
             {% endif %}
+
             {% if field.type == 'BooleanField' %}
                 <label class="checkbox">
                     {{ field(class_=class_, **kwargs) }}
@@ -30,22 +29,21 @@
                 </label>
             {% else %}
                 {% if field.type in ('TextField', 'TextAreaField', 'PasswordField') %}
-                    {% set class_ = class_ + ' input-xlarge' %}
-                {% elif field.type == 'FileField' %}
-                    {% set class_ = class_ + ' input-file' %}
+                    {% set class_ = class_ + ' form-control' %}
                 {% endif %}
                 {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
             {% endif %}
+
             {% if field.errors %}
                 <span class="error help-inline">{{ field.errors|join(', ') }}</span>
             {% endif %}
+
             {% if field.description %}
                 <p class="help-block">{{ field.description|safe }}</p>
             {% endif %}
 
-          {% if with_icon %}
-              </div>
-          {% endif %}
-        </div>
-    </div>
+            {% if with_icon %}
+                </div>
+            {% endif %}
+</div>
 {%- endmacro %}

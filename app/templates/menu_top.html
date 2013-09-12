@@ -1,25 +1,27 @@
 {% if current_user.is_authenticated() %}
 
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner" style="width: auto; height: 0px;">
-    <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="{{ url_for('home.homepage') }}">XiVO</a>
-      <div class="nav-collapse">
-        <ul class="nav">
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home.homepage') }}">XiVO</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
           <li><a href="{{ url_for('home.homepage') }}">{{ _('Home') }}</a></li>
         </ul>
-        <ul class="nav pull-right">
-          <li id="fat-menu" class="dropdown">
-          <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ _('Servers') }}<b class="caret"></b></a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="servers">
-                <li role="presentation">{{_('Choosing server ...')}}</li>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ _('Servers') }}&nbsp;<b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu">
+                <li role="server">{{_('Choosing server ...')}}</li>
+                <li role="server" class="divider"></li>
               {% if g.server %}
                 <li role="server"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_disconnect')}}">{{_('Disconnect from') }}</a></li>
+                <li role="server" class="divider"></li>
               {% endif %}
               {% for s in g.servers_list %}
                 <li role="server"><a role="menuitem" tabindex="-1" href="{{url_for('servers.server_save', id=s.id)}}">{{ s.name }} ({{ s.address }})</a></li>
@@ -30,11 +32,9 @@
               <li class="navbar-link" id="servers_list" title="ID server : {{ g.server.id }}"><a>{{_('on') }} {{ g.server.address }}</a></li>
           {% endif %}
               <li class="navbar-link"><a href="{{url_for('profil.myprofil')}}">{{ _('Welcome') }}  {{current_user.displayname}}</a>&nbsp;&nbsp;</li>
-              <li class="logout" title="{{_('Logout')}}"><a href="{{ url_for('login.logout') }}" class="logout"><i class="icon-off icon-white"></i></a></li>
+              <li class="navbar-link" title="{{_('Logout')}}"><a href="{{ url_for('login.logout') }}" class="logout"><i class="glyphicon glyphicon-off"></i></a></li>
         </ul>
       </div>
-    </div>
-  </div>
 </div>
 
 {% endif %}

@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="alert alert-info">
-    <p>{{ _('Hello you\'re connected to') }} {{ g.server.name }} ({{ g.server.address }}), {{ _('have fun ! :)') }}</p>
 <div>
+    <div class="alert alert-info">
+        <p>{{ _('Hello you\'re connected to') }} {{ g.server.name }} ({{ g.server.address }}), {{ _('have fun ! :)') }}</p>
+    </div>
+
+    <center><img class="img-rounded" style="width: 350px;" src="{{ url_for('static', filename='img/ilove.png') }}" /></center>
+
+</div>
 
 {% endblock %}

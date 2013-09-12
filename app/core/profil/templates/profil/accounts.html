@@ -4,7 +4,7 @@
 {% set real_role = {100 : 'Admin', 200 : 'Manager', 300 : 'Root' } %}
 
 <div class="widget stacked widget-table action-table">
-  <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('profil.account_add')}}"><i class="icon-plus icon-white"></i> {{ _('Add') }}</a></p>
+  <p class="text-right"><a class="btn btn-primary btn-small" href="{{url_for('profil.account_add')}}"><i class="glyphicon glyphicon-plus"></i> {{ _('Add') }}</a></p>
   <table class="table table-bordered">
 <div class="widget-content">
   <table class="table table-bordered table-striped table-highlight">
@@ -15,7 +15,7 @@
         <th>{{ _('Display name') }}</th>
         <th>{{ _('Role') }}</th>
         <th>{{ _('Organisation') }}</th>
-      <th class="td-actions"></th>
+        <th style="width: 70px"></th>
       </tr>
     </thead>
     <tbody>
@@ -26,9 +26,9 @@
       <td>{{ u.displayname }}</td>
       <td>{{ real_role[u.role] }}</td>
       <td>{{ u.organisations.name }}</td>
-      <td class="td-actions">
-        <a href="{{url_for('profil.account_edit', id=u.id)}}" class="btn btn-small"><i class="btn-icon-only icon-edit"></i></a>
-        <a data-url="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-small confirm" id="{{u.id}}" data-toggle="modal" data-target="#confirm-dialog"><i class="btn-icon-only icon-remove"></i></a>
+      <td>
+        <a href="{{url_for('profil.account_edit', id=u.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+        <a data-url="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-default btn-xs confirm" data-toggle="modal" data-target="#confirm-dialog"><i class="glyphicon glyphicon-remove"></i></a>
         </td>
       </tr>
     {% endfor %}

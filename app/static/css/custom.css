@@ -5,6 +5,7 @@
   position:fixed;
   bottom:0px;
 }
+
 body {
   padding-top: 60px;
   padding-bottom: 40px;
@@ -22,14 +23,6 @@ body {
     background-color: #fff;
     border: 1px solid #e5e5e5;
     border-radius: 10px;
-}
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-    margin-bottom: 10px;
-}
-.form-signin input[type="text"],
-.form-signin input[type="password"] {
-    padding: 7px 9px;
 }
 
 .login-extra {

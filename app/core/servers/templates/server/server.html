@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="widget stacked widget-table action-table">
+<div class="table-responsive">
   <p class="text-right"><a class="btn btn-primary btn-xs" href="{{url_for('servers.server_add')}}"><i class="glyphicon glyphicon-plus"></i> {{_('Add') }}</a></p>
-  <table class="table table-bordered">
-<div class="widget-content">
   <table class="table table-bordered table-striped table-highlight">
     <thead>
       <tr>
@@ -20,17 +18,17 @@
     <tbody>
     {% for s in servers %}
       <tr>
-      <td>{{ s.name }}</td>
-      <td><a href="https://{{ s.address }}" target="_blank">{{ s.address }}</a></td>
-      <td>{{ s.login }}</td>
-      <td>{{ s.password }}</td>
-      <td>{{ s.protocol }}</td>
-      <td>{{ s.organisations.name }}</td>
-      <td class="td-actions">
-        <a href="{{url_for('servers.server_edit', id=s.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-        <a data-url="{{url_for('servers.server_del', id=s.id)}}" class="btn btn-default btn-xs confirm" data-toggle="modal" data-target="#confirm-dialog">
+        <td>{{ s.name }}</td>
+        <td><a href="https://{{ s.address }}" target="_blank">{{ s.address }}</a></td>
+        <td>{{ s.login }}</td>
+        <td>{{ s.password }}</td>
+        <td>{{ s.protocol }}</td>
+        <td>{{ s.organisations.name }}</td>
+        <td>
+          <a href="{{url_for('servers.server_edit', id=s.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+          <a data-url="{{url_for('servers.server_del', id=s.id)}}" class="btn btn-default btn-xs confirm" data-toggle="modal" data-target="#confirm-dialog">
             <i class="glyphicon glyphicon-remove"></i>
-        </a>
+          </a>
         </td>
       </tr>
     {% endfor %}

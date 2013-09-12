@@ -3,10 +3,8 @@
 
 {% set real_role = {100 : 'Admin', 200 : 'Manager', 300 : 'Root' } %}
 
-<div class="widget stacked widget-table action-table">
+<div class="table-responsive">
   <p class="text-right"><a class="btn btn-primary btn-xs" href="{{url_for('profil.account_add')}}"><i class="glyphicon glyphicon-plus"></i> {{ _('Add') }}</a></p>
-  <table class="table table-bordered">
-<div class="widget-content">
   <table class="table table-bordered table-striped table-highlight">
     <thead>
       <tr>
@@ -21,14 +19,14 @@
     <tbody>
     {% for u in users %}
       <tr>
-      <td>{{ u.username }}</td>
-      <td>{{ u.email }}</td>
-      <td>{{ u.displayname }}</td>
-      <td>{{ real_role[u.role] }}</td>
-      <td>{{ u.organisations.name }}</td>
-      <td>
-        <a href="{{url_for('profil.account_edit', id=u.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-        <a data-url="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-default btn-xs confirm" data-toggle="modal" data-target="#confirm-dialog"><i class="glyphicon glyphicon-remove"></i></a>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.displayname }}</td>
+        <td>{{ real_role[u.role] }}</td>
+        <td>{{ u.organisations.name }}</td>
+        <td>
+          <a href="{{url_for('profil.account_edit', id=u.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+          <a data-url="{{url_for('profil.account_del', id=u.id)}}" class="btn btn-default btn-xs confirm" data-toggle="modal" data-target="#confirm-dialog"><i class="glyphicon glyphicon-remove"></i></a>
         </td>
       </tr>
     {% endfor %}

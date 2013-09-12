@@ -1,21 +1,18 @@
 {% extends "base.html" %}
-{% block content %}
+{% block login %}
     {% from "forms/macros.html" import render_field %}
 
-<div class="account-container stacked">
-    <div class="content clearfix">
+<div class="col-md-12">
         <form class="form-signin" method="post" name="login">
         {{ form.csrf_token }}
-            <h2>{{ _('Please sign in') }}</h2>
-            {{ render_field(form.username, with_icon="icon-user", class="input-block-level input-xlarge") }}
-            {{ render_field(form.password, with_icon="icon-lock", class="input-block-level input-xlarge") }}
+            <h2 class="form-signin-heading">{{ _('Please sign in') }}</h2>
+            {{ render_field(form.username, with_icon="user") }}
+            {{ render_field(form.password, with_icon="lock") }}
 
             <div class="row">
-                <div class="span6 offset">
-                {{ render_field(form.remember_me, class="checkbox field login-checkbox") }} 
-                </div>
-                <div class="span2">
-                {{ render_field(form.submit, class="btn btn-primary") }} 
+                <div>
+                {{ render_field(form.remember_me, class="checkbox") }} 
+                {{ render_field(form.submit, class="btn btn-default btn-primary") }} 
                 </div>
             </div> 
         </form>
@@ -23,13 +20,10 @@
         <div class="login-extra">
             {{ _('Don\'t have an account ?') }} <a href="{{url_for('profil.signup')}}">{{ _('Sign up') }}</a>
         </div>
-
-    </div> 
-</div> 
+</div>
 
 <script>
 $('body').css("background-image", "url('../../static/img/background.jpg'");
 </script>
-
 
 {% endblock %}

@@ -22,7 +22,12 @@
 </head>
 <body>
 
-{% include "menu_top.html" %}
+{% block login %}
+{% endblock %}
+
+{% if current_user.is_authenticated() %}
+
+   {% include "menu_top.html" %}
 
     <div class="row">
         <div class="container">
@@ -70,6 +75,8 @@
             {% include "footer.html" %}
         {% endblock %}
     </div>
+
+{% endif %}
 
 </body>
 </html>

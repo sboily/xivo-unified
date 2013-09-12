@@ -1,8 +1,8 @@
 {% if current_user.is_authenticated() %}
 
 <div class="container">
-    <div class="well sidebar-nav">
-        <ul class="nav nav-stacked nav-list">
+    <div class="well">
+        <ul class="nav nav-pills nav-stacked">
         {% if g.user.role >= 200 %}
             <li class="nav-header">{{ _('Configuration') }}</li>
         {%- endif %}
@@ -25,9 +25,9 @@
                     </li>
                     {% for pm in g.plugins_list %}
                         {% if pm.dep == p.module %}
-                            <ul class="nav">
+                            <ul class="nav nav-pills nav-stacked">
                                 <li {% if  pm.url == request.endpoint %} class="active" {% endif %}>
-                                    <a href="{{url_for(pm.url)}}">{{pm.name}}</a>
+                                    <a href="{{url_for(pm.url)}}" class="col-md-offset-1">{{pm.name}}</a>
                                 </li>
                             </ul>
                         {% endif %}

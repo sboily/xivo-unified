@@ -7,18 +7,17 @@
         <form class="form-signin" method="post" name="login">
         {{ form.csrf_token }}
             <h2>{{ _('Please sign in') }}</h2>
-            {{ render_field(form.username, class="input-block-level") }}
-            {{ render_field(form.password, class="input-block-level") }}
+            {{ render_field(form.username, with_icon="icon-user", class="input-block-level input-xlarge") }}
+            {{ render_field(form.password, with_icon="icon-lock", class="input-block-level input-xlarge") }}
 
             <div class="row">
-                <div class="span6 offset1">
+                <div class="span6 offset">
                 {{ render_field(form.remember_me, class="checkbox field login-checkbox") }} 
                 </div>
                 <div class="span2">
                 {{ render_field(form.submit, class="btn btn-primary") }} 
                 </div>
             </div> 
-
         </form>
 
         <div class="login-extra">

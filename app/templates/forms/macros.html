@@ -1,5 +1,6 @@
 {% macro render_field(field) -%}
     {% set with_label = kwargs.pop('with_label', False) %}
+    {% set with_icon = kwargs.pop('with_icon', False) %}
     {% set placeholder = '' %}
     {% if not with_label %}
         {% set placeholder = field.label.text %}
@@ -13,6 +14,11 @@
         {% endif %}
 
         <div class="controls">
+          {% if with_icon %}
+            <div class="input-prepend">
+            <span class="add-on"><i class="{{ with_icon }}"></i></span>
+          {% endif %}
+
             {% set class_ = kwargs.pop('class_', '') %}
             {% if field.flags.required %}
                 {% set class_ = class_ + ' required' %}
@@ -36,6 +42,10 @@
             {% if field.description %}
                 <p class="help-block">{{ field.description|safe }}</p>
             {% endif %}
+
+          {% if with_icon %}
+              </div>
+          {% endif %}
         </div>
     </div>
 {%- endmacro %}

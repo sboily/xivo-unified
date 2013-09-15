@@ -1,0 +1,12 @@
+flask
+flask-login
+flask-wtf
+flask-sqlalchemy
+restclient
+wtforms-json
+flask-principal
+Flask-Babel
+Flask-Script
+Yapsy
+Celery
+alembic

@@ -26,6 +26,7 @@ def init_plugin_manager(directory, created_app):
 
     plugin_manager = PluginManager()
     plugin_manager.setPluginPlaces([plugin_directory])
+    plugin_manager.setPluginInfoExtension('plugin')
     plugin_manager.collectPlugins()
 
 
@@ -120,7 +121,6 @@ def install_plugin(plugin_name):
     print "Installing plugin %s" % plugin_name
     _add_to_db(plugin_name)
     _download_and_extract(plugin_name)
-    _move_config_file(plugin_name)
     #_load_plugin(plugin_name)
 
 def _add_to_db(plugin_name):
@@ -149,15 +149,6 @@ def _download_and_extract(plugin_name):
     tar.close()
 
     shutil.rmtree(src)
-
-def _move_config_file(plugin_name):
-    conffile = "%s.yapsy-plugin" % plugin_name
-    source = os.path.join(plugin_directory, plugin_name, 'conf', conffile)
-    destination = plugin_directory
-    try:
-        shutil.move(source, destination)
-    except:
-        pass
 
 def _load_plugin(plugin_name):
     plugin_manager.collectPlugins()

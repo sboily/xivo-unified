@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField, RecaptchaField, html5, fields, validators, SubmitField, Required, QuerySelectField
+from wtforms.fields import TextField, BooleanField, PasswordField, SelectField, SubmitField
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import ValidationError, Required, Length, Regexp, EqualTo, Email
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from flask.ext.wtf import RecaptchaField
 from flask.ext.babel import lazy_gettext as _
 from app.models import Organisations, User
 from app.utils import Form
@@ -30,16 +34,16 @@ def get_organisations():
 
 class AccountForm(Form):
     username = TextField(_('Username'), [Required(),
-        validators.Length(min=3, max=20),
-        validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
-    ])
-    email = html5.EmailField(_('Email address'), [
-        validators.Length(min=3, max=128),
-        validators.Email(message=_("This should be a valid email address."))
+                                         Length(min=3, max=20),
+                                         Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
+                                        ])
+    email = EmailField(_('Email address'), [
+        Length(min=3, max=128),
+        Email(message=_("This should be a valid email address."))
     ])
     displayname = TextField(_('Display name'))
     password = PasswordField(_('Password'), [Required(),
-        validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
+        Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
     role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
     submit = SubmitField(_('Save'))
@@ -68,16 +72,16 @@ class AccountForm(Form):
 
 class AccountFormEdit(Form):
     username = TextField(_('Username'), [Required(),
-        validators.Length(min=3, max=20),
-        validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
+        Length(min=3, max=20),
+        Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
     ])
-    email = html5.EmailField(_('Email address'), [
-        validators.Length(min=3, max=128),
-        validators.Email(message=_("This should be a valid email address."))
+    email = EmailField(_('Email address'), [
+        Length(min=3, max=128),
+        Email(message=_("This should be a valid email address."))
     ])
     displayname = TextField(_('Display name'))
     password = PasswordField(_('Password'), [Required(),
-        validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
+        Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
     role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
     submit = SubmitField(_('Save'))
@@ -91,17 +95,17 @@ class SignupForm(Form):
     displayname = TextField(_('Display name'))
 
     username = TextField(_('Username'), [Required(),
-        validators.Length(min=3, max=20),
-        validators.Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
+        Length(min=3, max=20),
+        Regexp(r'^[^@:]*$', message=_("Username shouldn't contain '@' or ':'"))
     ])
-    email = html5.EmailField(_('Email address'), [Required(),
-        validators.Length(min=3, max=128),
-        validators.Email(message=_("This should be a valid email address."))
+    email = EmailField(_('Email address'), [Required(),
+        Length(min=3, max=128),
+        Email(message=_("This should be a valid email address."))
     ])
     password = PasswordField(_('Password'), [
         Required(),
-        validators.Length(min=8, message=_("It's probably best if your password is longer than 8 characters.")),
-        validators.EqualTo('confirm', message=_("Passwords must match."))
+        Length(min=8, message=_("It's probably best if your password is longer than 8 characters.")),
+        EqualTo('confirm', message=_("Passwords must match."))
     ])
     confirm = PasswordField(_('Confirm password'))
     captcha = RecaptchaField(_('Captcha'))

@@ -15,13 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, flash, redirect, url_for, request, g
+from flask import render_template, Blueprint, flash, redirect, url_for, request, g, current_app
 from werkzeug.security import generate_password_hash
 from flask.ext.login import login_required, current_user
 from app import db, root_role, manager_role, admin_role
 from app.models import User
 from forms import AccountForm, AccountFormEdit, SignupForm
 from flask.ext.babel import gettext as _
+from flask.ext.gravatar import Gravatar
 
 profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
@@ -31,6 +32,13 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 @admin_role.require(403)
 def myprofil():
     account = User.query.get_or_404(current_user.id)
+    gravatar = Gravatar(current_app,
+                    size=100,
+                    rating='g',
+                    default='retro',
+                    force_default=False,
+                    use_ssl=False,
+                    base_url=None)
     form = AccountFormEdit(obj=account)
     if request.method == 'POST':
         form.username.data = User.query.get_or_404(current_user.id).username
@@ -44,7 +52,7 @@ def myprofil():
         db.session.commit()
         flash(_('Profil edit'))
         return redirect(url_for("profil.myprofil"))
-    return render_template('profil.html', form=form)
+    return render_template('profil.html', form=form, account=account)
 
 @profil.route('/accounts')
 @login_required

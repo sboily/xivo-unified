@@ -86,15 +86,23 @@ def configure_extensions(app):
 
     # Plugins list global
     path = os.path.join(app.config['BASEDIR'], 'app/plugins')
+    #path = "/home/quintana/dev/xivo-webi-modules/"
     plugin_manager.init_plugin_manager(path, app)
     plugin_manager.activate_plugins()
     plugin_manager.setup_plugins()
 
 
+def whoami(id):
+    me = User.query.filter(User.id == id).first()
+
+    print me.id
+
+
 def configure_hooks(app):
     @app.before_request
     def before_request():
-        pass
+        if current_user.is_authenticated():
+            whoami(current_user.id)
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):

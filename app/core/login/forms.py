@@ -16,8 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, SelectField, SubmitField
-from flask.ext.wtf import Required
+from wtforms.fields import TextField, BooleanField, PasswordField, SelectField, SubmitField
+from wtforms.validators import Required, ValidationError
 from flask.ext.babel import lazy_gettext as _
 from app.models import User
 from app.utils import Form

@@ -84,7 +84,7 @@ def remove_plugin(plugin_name):
     _deactivated_plugin(plugin_name)
     _remove_from_db(plugin_name)
     #_remove_files(plugin_name)
-    #_unload_plugin(plugin_name)
+    _unload_plugin(plugin_name)
 
 def _deactivated_plugin(plugin_name):
     plugin = plugin_manager.getPluginByName(plugin_name)
@@ -107,10 +107,6 @@ def _remove_from_db(plugin_name):
 def _remove_files(plugin_name):
     plugin_path = os.path.join(plugin_directory, plugin_name)
     shutil.rmtree(plugin_path)
-
-    filename = "%s.yapsy-plugin" % plugin_name
-    os.remove(os.path.join(plugin_directory, filename))
-
 
 def _unload_plugin(plugin_name):
     plugin = plugin_manager.getPluginByName(plugin_name)

@@ -50,6 +50,7 @@ def market_get(module):
     _install_module(module)
     flash(_('Module %s has been installed !' % module))
     return redirect(url_for('home.reload_app'))
+    #return redirect(url_for('market.themarket'))
 
 def _get_modules():
     url = "http://market.xivo.fr/market.json"

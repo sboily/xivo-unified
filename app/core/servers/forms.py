@@ -16,9 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask.ext.wtf import TextField, BooleanField, PasswordField, ValidationError, QuerySelectField, SubmitField, QuerySelectMultipleField, SelectMultipleField
-from flask.ext.wtf import Required, IPAddress, Regexp, validators, SelectField
 from wtforms import widgets
+from wtforms.fields import TextField, BooleanField, PasswordField, SubmitField, SelectMultipleField, SelectField
+from wtforms.validators import Required, IPAddress, Regexp, Length, Regexp
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from app.models import User, Servers, Organisations
 from app.utils import Form
 from flask.ext.babel import lazy_gettext as _
@@ -33,9 +34,9 @@ def get_servers_list():
 
 class ServersForm(Form):
     name = TextField(_('Name'), [Required(),
-        validators.Length(min=3, max=30),
-        validators.Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
-    ])
+                                Length(min=3, max=30),
+                                Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
+           ])
 
     address = TextField(_('Address'), [Required(), IPAddress()])
     login = TextField(_('Login'))
@@ -49,11 +50,3 @@ class ServersForm(Form):
     users = QuerySelectMultipleField(_('Users'), get_label='displayname', query_factory=get_servers_list)
 
     submit = SubmitField(_('Submit'))
-
-    #def validate_users(self, field):
-    #    print len(list(field.iter_choices()))
-    #    for choice in field.iter_choices():
-    #        print choice
-
-        #raise ValidationError(_('Missing your self !'))
-

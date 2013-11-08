@@ -20,6 +20,7 @@
                         <form class="form" method="post">
                             <fieldset>
                             {{ form.csrf_token }}
+                            <img src="{{ account.email | gravatar }}"></img>
                             {{ render_field(form.username, with_label=1, disabled="disabled") }}
                             {{ render_field(form.displayname, with_label=1) }}
                             {{ render_field(form.email, with_label=1) }}

@@ -8,6 +8,6 @@ flask-principal
 Flask-Babel
 Flask-Script
 Yapsy
-Celery
+Celery==3.0.24
 alembic
 Flask-Gravatar

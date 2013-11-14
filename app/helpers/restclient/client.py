@@ -38,34 +38,39 @@ class RestClient(object):
             print "No json information"
         
 
-    def actions(self, url, method, data=None):
-        if (method == 'GET'):
-            data = GET(url, credentials=(self.username, self.password),
+    def get(self, url):
+        data = GET(url, credentials=(self.username, self.password),
                                 headers=self.headers,
                                 httplib_params=self.httplib_params,
                                 resp=True)
-        elif (method == 'DELETE'):
-            data = DELETE(url, credentials=(self.username, self.password),
+
+        return self._check_response(data)
+
+    def delete(self, url):
+        data = DELETE(url, credentials=(self.username, self.password),
                                    headers=self.headers,
                                    httplib_params=self.httplib_params,
                                    async=False,
                                    resp=True)
-        elif (method == 'POST'):
-            data = POST(url, credentials=(self.username, self.password),
+
+        return self._check_response(data)
+
+    def post(self, url, data):
+        data = POST(url, credentials=(self.username, self.password),
                                  headers=self.headers,
                                  httplib_params=self.httplib_params,
                                  params=data,
                                  async=False,
                                  resp=True)
-        elif (method == 'PUT'):
-            data = PUT(url, credentials=(self.username, self.password),
-                                 headers=self.headers,
-                                 httplib_params=self.httplib_params,
-                                 params=data,
-                                 async=False,
-                                 resp=True)
-        else:
-            print "Error this method is not supported"
-            return False
+
+        return self._check_response(data)
+
+    def put(self, url, data):
+        data = PUT(url, credentials=(self.username, self.password),
+                        headers=self.headers,
+                        httplib_params=self.httplib_params,
+                        params=data,
+                        async=False,
+                        resp=True)
 
         return self._check_response(data)

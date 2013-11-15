@@ -29,6 +29,8 @@
 
    {% include "menu_top.html" %}
 
+{% endif %}
+
     <div class="row">
         <div class="container">
             {% for category, msg in get_flashed_messages(with_categories=true) %}
@@ -47,8 +49,10 @@
             {% endif %}
        </div>
 
+
        <div class="col-md-10">
            {% block content %}
+               {% if current_user.is_authenticated() %}
                <div class="well jumbotron">
 	           <h2>{{ _('Welcome') }}, {{ current_user.displayname }} !</h2>
                    <p>{{ _('This web interface is a new GUI for XiVO based on flask.')}}</p>
@@ -66,6 +70,7 @@
                        <p>{{_('Important')}} : {{_('This web interface is still in beta test, please do not consider it for production !')}}</p>
                    </div>
                </div>
+               {% endif %}
            {% endblock %}
       </div>
     </div>
@@ -76,7 +81,6 @@
         {% endblock %}
     </div>
 
-{% endif %}
 
 </body>
 </html>

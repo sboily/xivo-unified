@@ -1,10 +1,11 @@
 flask==0.10.1
+Werkzeug==0.8.3
 flask-login==0.2.7
 flask-wtf==0.9.3
 wtforms==1.0.5
 flask-sqlalchemy==1.0
 restclient==0.11.0
-wtforms-json==0.2.3
+wtforms-json==0.2.2
 flask-principal==0.4.0
 Flask-Babel==0.9
 Babel==1.3

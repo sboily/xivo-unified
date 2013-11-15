@@ -22,9 +22,6 @@
 </head>
 <body>
 
-{% block login %}
-{% endblock %}
-
 {% if current_user.is_authenticated() %}
 
    {% include "menu_top.html" %}
@@ -41,6 +38,9 @@
             {% endfor %}
         </div>
     </div>
+
+    {% block login %}
+    {% endblock %}
 
     <div class="row">
        <div class="col-md-2">

@@ -20,7 +20,10 @@
     {% block header %}
     {% endblock %}
 </head>
+
+{% block body %}
 <body>
+{% endblock %}
 
 {% if current_user.is_authenticated() %}
 

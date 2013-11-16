@@ -7,31 +7,63 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-07-04 16:53-0400\n"
-"PO-Revision-Date: 2013-07-04 16:55-0500\n"
+"POT-Creation-Date: 2013-11-15 20:19-0500\n"
+"PO-Revision-Date: 2013-11-15 20:49-0500\n"
 "Last-Translator: Sylvain Boily <sboily@proformatique.com>\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 0.9.6\n"
-"X-Generator: Poedit 1.5.4\n"
+"Generated-By: Babel 1.3\n"
 
-#: app/core/home/views.py:59 app/core/organisations/views.py:46
+#: app/__init__.py:154
+#: app/core/profil/views.py:102
+msgid "Sorry you are not authorized !"
+msgstr "Désolé vous n'êtes pas autorisé !"
+
+#: app/core/home/views.py:60
+#: app/core/organisations/views.py:46
 msgid "Organisation added"
 msgstr "Organisation ajoutée"
 
-#: app/core/login/forms.py:26 app/core/profil/forms.py:32
-#: app/core/profil/forms.py:71 app/core/profil/forms.py:94
-#: app/core/profil/templates/profil/accounts.html:15
+#: app/core/home/views.py:78
+#: app/core/profil/views.py:83
+#: app/core/profil/views.py:142
+msgid "Account added"
+msgstr "Compte ajouté"
+
+#: app/core/home/templates/home/first.html:7
+msgid "Add root user"
+msgstr "Ajout de l'utilisateur root"
+
+#: app/core/home/templates/home/home_server.html:6
+msgid "Hello you're connected to"
+msgstr "Bonjour, vous êtes connecté sur"
+
+#: app/core/home/templates/home/home_server.html:6
+msgid "have fun ! :)"
+msgstr "amusez vous bien ! :)"
+
+#: app/core/home/templates/home/wizard.html:7
+#: app/core/organisations/templates/organisations/organisation_add.html:7
+msgid "Add organisation"
+msgstr "Ajouter une organisation"
+
+#: app/core/login/forms.py:26
+#: app/core/profil/forms.py:36
+#: app/core/profil/forms.py:74
+#: app/core/profil/forms.py:97
+#: app/core/profil/templates/profil/accounts.html:11
 msgid "Username"
 msgstr "Utilisateur"
 
-#: app/core/login/forms.py:27 app/core/profil/forms.py:41
-#: app/core/profil/forms.py:80 app/core/profil/forms.py:102
-#: app/core/servers/forms.py:42
-#: app/core/servers/templates/server/server.html:16
+#: app/core/login/forms.py:27
+#: app/core/profil/forms.py:45
+#: app/core/profil/forms.py:83
+#: app/core/profil/forms.py:105
+#: app/core/servers/forms.py:43
+#: app/core/servers/templates/server/server.html:12
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -39,96 +71,103 @@ msgstr "Mot de passe"
 msgid "Remember me"
 msgstr "Se rappeler de moi"
 
-#: app/core/login/forms.py:30 app/core/profil/forms.py:47
-#: app/core/profil/forms.py:86
+#: app/core/login/forms.py:30
+#: app/core/profil/forms.py:51
+#: app/core/profil/forms.py:89
 msgid "Language"
 msgstr "Langue"
 
-#: app/core/login/forms.py:30 app/core/profil/forms.py:47
-#: app/core/profil/forms.py:86
+#: app/core/login/forms.py:30
+#: app/core/profil/forms.py:51
+#: app/core/profil/forms.py:89
 msgid "English"
 msgstr "Anglais"
 
-#: app/core/login/forms.py:30 app/core/profil/forms.py:47
-#: app/core/profil/forms.py:86
+#: app/core/login/forms.py:30
+#: app/core/profil/forms.py:51
+#: app/core/profil/forms.py:89
 msgid "French"
 msgstr "Français"
 
 #: app/core/login/forms.py:32
 msgid "Sign in"
-msgstr "Authentification"
+msgstr "Se connecter"
 
-#: app/core/login/forms.py:38 app/core/login/forms.py:44
+#: app/core/login/forms.py:38
+#: app/core/login/forms.py:44
 msgid "Invalid user"
 msgstr "Utilisateur invalide"
 
 #: app/core/login/forms.py:47
 msgid "Invalid password"
-msgstr "Mot de passe invalide"
+msgstr "Mot de passe incorrect"
 
-#: app/core/login/templates/login/login.html:9
+#: app/core/login/templates/login/login.html:13
 msgid "Please sign in"
 msgstr "Connexion"
 
-#: app/core/login/templates/login/login.html:25
+#: app/core/login/templates/login/login.html:26
 msgid "Don't have an account ?"
-msgstr "Créer un nouveau compte ?"
+msgstr "Vous n'avez pas de compte?"
 
-#: app/core/login/templates/login/login.html:25
-#: app/core/profil/templates/profil/signup.html:8
+#: app/core/login/templates/login/login.html:26
+#: app/core/profil/templates/profil/signup.html:13
 msgid "Sign up"
-msgstr "Inscription"
+msgstr "Nouveau compte"
 
 #: app/core/market/views.py:43
 #, python-format
 msgid "Module %s has been removed !"
-msgstr "Greffons %s a été supprimé !"
+msgstr "Greffon %s a été supprimé !"
 
 #: app/core/market/views.py:51
 #, python-format
 msgid "Module %s has been installed !"
-msgstr "Modules %s a été installé !"
+msgstr "Greffon %s a été installé !"
 
-#: app/core/market/templates/market/market.html:11
-#: app/core/organisations/forms.py:28
-#: app/core/organisations/templates/organisations/organisations.html:13
-#: app/core/servers/forms.py:35
-#: app/core/servers/templates/server/server.html:13
+#: app/core/market/templates/market/market.html:8
+#: app/core/organisations/forms.py:29
+#: app/core/organisations/templates/organisations/organisations.html:9
+#: app/core/servers/forms.py:36
+#: app/core/servers/templates/server/server.html:9
 msgid "Name"
 msgstr "Nom"
 
-#: app/core/market/templates/market/market.html:12
-#: app/core/organisations/forms.py:33
+#: app/core/market/templates/market/market.html:9
+#: app/core/organisations/forms.py:34
 msgid "Description"
 msgstr "Description"
 
-#: app/core/market/templates/market/market.html:13
+#: app/core/market/templates/market/market.html:10
 msgid "Author"
 msgstr "Auteur"
 
-#: app/core/market/templates/market/market.html:14
+#: app/core/market/templates/market/market.html:11
 msgid "Licence"
 msgstr "License"
 
-#: app/core/market/templates/market/market.html:15
+#: app/core/market/templates/market/market.html:12
 msgid "Parent"
-msgstr "Parent"
+msgstr "Dépend"
 
-#: app/core/organisations/forms.py:30 app/core/servers/forms.py:37
+#: app/core/organisations/forms.py:31
+#: app/core/servers/forms.py:38
 msgid "Name shouldn't contain '@' or ':'"
-msgstr "Le nom ne doit pas contenir '@' ou ':'"
+msgstr "Le nom ne peut contenir '@' ou ':'"
 
-#: app/core/organisations/forms.py:35 app/core/servers/forms.py:49
+#: app/core/organisations/forms.py:36
+#: app/core/servers/forms.py:50
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: app/core/organisations/forms.py:37 app/core/servers/forms.py:51
+#: app/core/organisations/forms.py:38
+#: app/core/servers/forms.py:52
 msgid "Submit"
 msgstr "Envoyer"
 
-#: app/core/organisations/forms.py:47
+#: app/core/organisations/forms.py:48
 msgid "Missing your self !"
-msgstr "Manque vous même !"
+msgstr "Tu es manquant !"
 
 #: app/core/organisations/views.py:61
 msgid "Organisation deleted"
@@ -138,170 +177,171 @@ msgstr "Organisation supprimée"
 msgid "Organisation edit"
 msgstr "Organisation modifiée"
 
-#: app/core/organisations/templates/organisations/organisation_add.html:9
-#: app/templates/wizard.html:9
-msgid "Add organisation"
-msgstr "Ajouter une organisation"
-
-#: app/core/organisations/templates/organisations/organisation_edit.html:9
+#: app/core/organisations/templates/organisations/organisation_edit.html:7
 msgid "Edit organisation"
 msgstr "Modifier une organisation"
 
-#: app/core/organisations/templates/organisations/organisations.html:7
-#: app/core/profil/templates/profil/accounts.html:9
-#: app/core/servers/templates/server/server.html:7
+#: app/core/organisations/templates/organisations/organisations.html:5
+#: app/core/profil/templates/profil/accounts.html:7
+#: app/core/servers/templates/server/server.html:5
 msgid "Add"
 msgstr "Ajouter"
 
-#: app/core/organisations/templates/organisations/organisations.html:14
+#: app/core/organisations/templates/organisations/organisations.html:10
 msgid "Created at"
-msgstr "Créé le"
+msgstr "Créer le"
 
-#: app/core/profil/forms.py:34 app/core/profil/forms.py:73
-#: app/core/profil/forms.py:96
+#: app/core/profil/forms.py:38
+#: app/core/profil/forms.py:76
+#: app/core/profil/forms.py:99
 msgid "Username shouldn't contain '@' or ':'"
-msgstr "L'utilisateur ne doit pas contenir '@' ou  ':'"
+msgstr "L'utilisateur ne peut contenir '@' ou ':'"
 
-#: app/core/profil/forms.py:36 app/core/profil/forms.py:75
-#: app/core/profil/forms.py:98
+#: app/core/profil/forms.py:40
+#: app/core/profil/forms.py:78
+#: app/core/profil/forms.py:101
 msgid "Email address"
-msgstr "Courriel"
+msgstr "Adresse courriel"
 
-#: app/core/profil/forms.py:38 app/core/profil/forms.py:77
-#: app/core/profil/forms.py:100
+#: app/core/profil/forms.py:42
+#: app/core/profil/forms.py:80
+#: app/core/profil/forms.py:103
 msgid "This should be a valid email address."
-msgstr "Il faut une adresse email valide"
+msgstr "Une adresse couriel doit être valide."
 
-#: app/core/profil/forms.py:40 app/core/profil/forms.py:79
-#: app/core/profil/forms.py:92
-#: app/core/profil/templates/profil/accounts.html:17
+#: app/core/profil/forms.py:44
+#: app/core/profil/forms.py:82
+#: app/core/profil/forms.py:95
+#: app/core/profil/templates/profil/accounts.html:13
 msgid "Display name"
 msgstr "Nom affiché"
 
-#: app/core/profil/forms.py:42 app/core/profil/forms.py:81
-#: app/core/profil/forms.py:104
+#: app/core/profil/forms.py:46
+#: app/core/profil/forms.py:84
+#: app/core/profil/forms.py:107
 msgid "It's probably best if your password is longer than 8 characters."
-msgstr "Il serait mieux d'avoir un mot de passe plus long que 8 caractères."
+msgstr "Il serait mieux que votre mot de passe soit plus long que 8 caractères."
 
-#: app/core/profil/forms.py:44 app/core/profil/forms.py:83
-#: app/core/profil/templates/profil/accounts.html:18
+#: app/core/profil/forms.py:48
+#: app/core/profil/forms.py:86
+#: app/core/profil/templates/profil/accounts.html:14
 msgid "Role"
 msgstr "Rôle"
 
-#: app/core/profil/forms.py:45 app/core/profil/forms.py:84
+#: app/core/profil/forms.py:49
+#: app/core/profil/forms.py:87
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Sauver"
 
-#: app/core/profil/forms.py:49 app/core/profil/forms.py:88
-#: app/core/profil/templates/profil/accounts.html:19
-#: app/core/servers/templates/server/server.html:18
+#: app/core/profil/forms.py:53
+#: app/core/profil/forms.py:91
+#: app/core/profil/templates/profil/accounts.html:15
+#: app/core/servers/templates/server/server.html:14
 msgid "Organisation"
 msgstr "Organisation"
 
-#: app/core/profil/forms.py:56 app/core/profil/forms.py:118
+#: app/core/profil/forms.py:59
+#: app/core/profil/forms.py:121
 msgid "Username already used"
-msgstr "L'utilisateur existe déjà"
+msgstr "Utilisateur déjà utilisé"
 
-#: app/core/profil/forms.py:62 app/core/profil/forms.py:124
+#: app/core/profil/forms.py:65
+#: app/core/profil/forms.py:127
 msgid "Email already used"
-msgstr "Le courriel existe déjà"
+msgstr "Couriel déjà utilisé"
 
-#: app/core/profil/forms.py:105
+#: app/core/profil/forms.py:108
 msgid "Passwords must match."
-msgstr "Les mots de passe doivent être identique"
+msgstr "Les mots de passe doivent concorder."
 
-#: app/core/profil/forms.py:107
+#: app/core/profil/forms.py:110
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: app/core/profil/forms.py:108
+#: app/core/profil/forms.py:111
 msgid "Captcha"
 msgstr "Captcha"
 
-#: app/core/profil/forms.py:110
-msgid ""
-"Agree to the <a href=\"#license\" role=\"button\" class=\"btn-text\" data-"
-"toggle=\"modal\">terms and conditions</a>"
-msgstr ""
-"J'accepte les <a href=\"#license\" role=\"button\" class=\"btn-text\" data-"
-"toggle=\"modal\">termes et conditions</a>"
+#: app/core/profil/forms.py:113
+msgid "Agree to the <a href=\"#license\" role=\"button\" class=\"btn-text\" data-toggle=\"modal\">terms and conditions</a>"
+msgstr "J'accepte les <a href=\"#license\" role=\"button\" class=\"btn-text\" data-toggle=\"modal\">termes et conditions</a>"
 
-#: app/core/profil/forms.py:112
+#: app/core/profil/forms.py:115
 msgid "Signup"
-msgstr "Se connecter"
+msgstr "Créer un compte"
 
-#: app/core/profil/views.py:45
+#: app/core/profil/views.py:53
 msgid "Profil edit"
 msgstr "Profile édité"
 
-#: app/core/profil/views.py:75 app/core/profil/views.py:134
-msgid "Account added"
-msgstr "Utilisateur ajouté"
-
-#: app/core/profil/views.py:92
+#: app/core/profil/views.py:100
 msgid "Account delete"
-msgstr "Utilisateur supprimé"
+msgstr "Compte supprimé"
 
-#: app/core/profil/views.py:94
-msgid "Sorry you are not authorized !"
-msgstr "Vous n'êtes pas autorisé !"
-
-#: app/core/profil/views.py:121
+#: app/core/profil/views.py:129
 msgid "Account edit"
-msgstr "Utilisateur modifié"
+msgstr "Compte modifié"
 
-#: app/core/profil/templates/profil/account_add.html:9
+#: app/core/profil/templates/profil/account_add.html:7
 msgid "Add account"
-msgstr "Ajouter un utilisateur"
+msgstr "Ajouter un compte"
 
-#: app/core/profil/templates/profil/account_edit.html:9
+#: app/core/profil/templates/profil/account_edit.html:7
 msgid "Edit account"
-msgstr "Modifier un utilisateur"
+msgstr "Modifier un compte"
 
-#: app/core/profil/templates/profil/accounts.html:16
+#: app/core/profil/templates/profil/accounts.html:12
 msgid "Email"
-msgstr "Courriel"
+msgstr "Couriel"
 
-#: app/core/profil/templates/profil/license.html:4
+#: app/core/profil/templates/profil/license.html:7
 msgid "License"
 msgstr "Licence"
 
-#: app/core/profil/templates/profil/license.html:688
+#: app/core/profil/templates/profil/license.html:691
 msgid "Refuse"
 msgstr "Refuser"
 
-#: app/core/profil/templates/profil/license.html:689
+#: app/core/profil/templates/profil/license.html:692
 msgid "Accept"
 msgstr "Accepter"
 
-#: app/core/profil/templates/profil/profil.html:12
+#: app/core/profil/templates/profil/profil.html:7
 msgid "Your Account"
 msgstr "Votre compte"
 
-#: app/core/profil/templates/profil/profil.html:19
+#: app/core/profil/templates/profil/profil.html:14
 msgid "Profil"
-msgstr "Profile"
+msgstr "Profil"
 
-#: app/core/servers/forms.py:40
-#: app/core/servers/templates/server/server.html:14
+#: app/core/profil/templates/profil/signup.html:22
+msgid "Already have an account? "
+msgstr "Vous avez déjà un compte?"
+
+#: app/core/profil/templates/profil/signup.html:22
+msgid "Sign In"
+msgstr "Se connecter"
+
+#: app/core/servers/forms.py:41
+#: app/core/servers/templates/server/server.html:10
 msgid "Address"
 msgstr "Adresse"
 
-#: app/core/servers/forms.py:41
-#: app/core/servers/templates/server/server.html:15
+#: app/core/servers/forms.py:42
+#: app/core/servers/templates/server/server.html:11
 msgid "Login"
 msgstr "Utilisateur"
 
-#: app/core/servers/forms.py:44
-#: app/core/servers/templates/server/server.html:17
+#: app/core/servers/forms.py:45
+#: app/core/servers/templates/server/server.html:13
 msgid "Protocol"
 msgstr "Protocole"
 
-#: app/core/servers/forms.py:46
+#: app/core/servers/forms.py:47
 msgid "Organisations"
 msgstr "Organisations"
 
-#: app/core/servers/forms.py:48
+#: app/core/servers/forms.py:49
 msgid "Please choose an organisation ..."
 msgstr "Merci de choisir une organisation ..."
 
@@ -315,43 +355,113 @@ msgstr "Serveur modifié"
 
 #: app/core/servers/views.py:156
 msgid "Missing your self but added automaticaly !"
-msgstr "Ajout automatique de la personne qui ajoute"
+msgstr "Vous ne vous êtes pas ajouté, mais le système l'a fait automatiquement !"
 
-#: app/core/servers/templates/server/server_add.html:9
+#: app/core/servers/templates/server/server_add.html:7
+#: app/core/servers/templates/server/server_edit.html:8
 msgid "Add server"
 msgstr "Ajouter un serveur"
 
-#: app/core/servers/templates/server/server_edit.html:9
-msgid "Edit server"
-msgstr "Éditer un serveur"
+#: app/plugins/devices/templates/devices/device_add.html:7
+msgid "Add device"
+msgstr "Ajouter une terminaison"
 
-#: app/templates/base.html:46 app/templates/menu_top.html:17
+#: app/plugins/devices/templates/devices/device_edit.html:7
+msgid "Edit device"
+msgstr "Modifier une terminaison"
+
+#: app/plugins/users/templates/users/user_add.html:8
+msgid "Add user"
+msgstr "Ajouter un utilisateur"
+
+#: app/plugins/users/templates/users/user_edit.html:8
+msgid "Edit user"
+msgstr "Modifier un utilisateur"
+
+#: app/plugins/voicemails/templates/voicemails/voicemail_add.html:8
+msgid "Add voicemail"
+msgstr "Ajouter une boîte vocale"
+
+#: app/plugins/voicemails/templates/voicemails/voicemail_edit.html:8
+msgid "Edit voicemail"
+msgstr "Modifier une boîte vocale"
+
+#: app/templates/base.html:60
+#: app/templates/menu_top.html:35
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: app/templates/base.html:47
-msgid ""
-"This is the new webi interfaces for XiVO, developp with flask for better "
-"performance and better experiences."
-msgstr ""
-"Bienvenue sur la nouvelle interface web de XiVO, développé avec Flask pour "
-"de meilleure performance et une expérience meilleure."
+#: app/templates/base.html:61
+msgid "This web interface is a new GUI for XiVO based on flask."
+msgstr "Cette interface web est un nouveau configurateur pour XiVO."
 
-#: app/templates/base.html:48
-msgid "Learn more"
-msgstr "En savoir plus"
+#: app/templates/base.html:62
+msgid "Step 1"
+msgstr "Étape 1"
+
+#: app/templates/base.html:62
+msgid "Please configure your profil."
+msgstr "Merci de configurer votre profil"
+
+#: app/templates/base.html:63
+msgid "Step 2"
+msgstr "Étape 2"
+
+#: app/templates/base.html:63
+msgid "Go to the market place and install the module you need for your organisation."
+msgstr "Rendez vous sur la place de marché et installez les greffons nécessaire pour votre organisation."
+
+#: app/templates/base.html:64
+msgid "Step 3"
+msgstr "Étape 3"
+
+#: app/templates/base.html:64
+msgid "Add your XiVO server on Servers menu."
+msgstr "Ajoutez un serveur XiVO dans le menu serveur."
+
+#: app/templates/base.html:65
+msgid "Step 4"
+msgstr "Étape 4"
+
+#: app/templates/base.html:65
+msgid "Connect to the server and get module on market place."
+msgstr "Connectez vous and installez les greffons nécessaire sur la place du marché."
+
+#: app/templates/base.html:66
+msgid "Step 5"
+msgstr "Étape 5"
+
+#: app/templates/base.html:66
+msgid "Enjoy :)"
+msgstr "Profitez du système :)"
+
+#: app/templates/base.html:69
+msgid "Information : If you need more information please contact me !"
+msgstr "Information: Si vous souhaitez en savoir d'avantage, merci de me contacter !"
+
+#: app/templates/base.html:73
+msgid "Important"
+msgstr "Important"
+
+#: app/templates/base.html:73
+msgid "This web interface is still in beta test, please do not consider it for production !"
+msgstr "Cette interface de gestion est en phase de développement/test, ne l'utilisez pas en production !"
 
 #: app/templates/confirm.html:7
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: app/templates/confirm.html:11
 msgid "Are you sure you want to delete this item ?"
-msgstr "Êtes vous sûr de vouloir effacer cette entrée ?"
+msgstr "Êtes vous sûr de vouloir supprimer cet élément ?"
 
-#: app/templates/home_server.html:5
-msgid "Hello you're connected to"
-msgstr "Salut vous êtes connecté sur"
+#: app/templates/confirm.html:15
+msgid "Ok"
+msgstr "Ok"
 
-#: app/templates/home_server.html:5
-msgid "have fun ! :)"
-msgstr "Amusez vous bien ! :)"
+#: app/templates/confirm.html:16
+msgid "Cancel"
+msgstr "Annulé"
 
 #: app/templates/menu_left.html:7
 msgid "Configuration"
@@ -362,21 +472,26 @@ msgid "Plugins"
 msgstr "Greffons"
 
 #: app/templates/menu_top.html:15
-msgid "on"
-msgstr "sur"
-
-#: app/templates/menu_top.html:21
 msgid "Home"
 msgstr "Accueil"
 
-#: app/templates/menu_top.html:25
+#: app/templates/menu_top.html:19
 msgid "Servers"
 msgstr "Serveurs"
 
-#: app/templates/menu_top.html:27
+#: app/templates/menu_top.html:21
 msgid "Choosing server ..."
 msgstr "Choisir un serveur ..."
 
-#: app/templates/menu_top.html:29
+#: app/templates/menu_top.html:24
 msgid "Disconnect from"
-msgstr "Deconnecté de"
+msgstr "Se déconnecter de"
+
+#: app/templates/menu_top.html:33
+msgid "on"
+msgstr "sur"
+
+#: app/templates/menu_top.html:36
+msgid "Logout"
+msgstr "Déconnecter"
+

@@ -9,11 +9,11 @@
         {%- for endpoint, caption, role in [
                                   ('servers.server', 'Servers', 200),
                                   ('profil.accounts', 'Accounts', 200),
-                                  ('organisations.organisation', 'Organisation', 300),
+                                  ('organisations.organisation', 'Organisations', 300),
                                   ('market.themarket', 'Market', 200),
         ] %}
             {% if g.user.role >= role %}
-                <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ caption }}</a></li>
+                <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ _(caption) }}</a></li>
             {%- endif %}
         {%- endfor %}
         {% if g.plugins_list %}

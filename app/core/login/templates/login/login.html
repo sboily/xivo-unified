@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+
+{% block body %}
+<body style="background-image: url('../../static/img/background.jpg')">
+{% endblock %}
+
 {% block login %}
     {% from "forms/macros.html" import render_field %}
 
@@ -21,9 +26,5 @@
             {{ _('Don\'t have an account ?') }} <a href="{{url_for('profil.signup')}}">{{ _('Sign up') }}</a>
         </div>
 </div>
-
-<script>
-$('body').css("background-image", "url('../../static/img/background.jpg'");
-</script>
 
 {% endblock %}

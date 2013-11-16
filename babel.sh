@@ -1,7 +1,7 @@
 # Init, to creating a new catalog (ex: french)
 # pybabel extract -F babel.cfg -o messages.pot app
 # pybabel extract -F babel.cfg -k lazy_gettext -o messages.pot app
-# pybabel init -i messages.pot -d app/translation -l fr
+# pybabel init -i messages.pot -d app/translations -l fr
 
 
 # Update 

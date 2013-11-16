@@ -7,9 +7,9 @@
             <li class="nav-header">{{ _('Configuration') }}</li>
         {%- endif %}
         {%- for endpoint, caption, role in [
-                                  ('servers.server', 'Servers', 200),
                                   ('profil.accounts', 'Accounts', 200),
                                   ('organisations.organisation', 'Organisations', 300),
+                                  ('servers.server', 'Servers', 200),
                                   ('market.themarket', 'Market', 200),
         ] %}
             {% if g.user.role >= role %}
@@ -18,12 +18,12 @@
         {%- endfor %}
         {% if g.plugins_list %}
             <li class="nav-header">{{ _('Plugins') }}</li>
-            {% for p in g.plugins_list %}
+            {% for p in g.plugins_list|sort %}
                 {% if not p.dep %}
                     <li {% if  p.url == request.endpoint %} class="active" {% endif %}>
                     <a href="{{url_for(p.url)}}">{{ p.name }}</a>
                     </li>
-                    {% for pm in g.plugins_list %}
+                    {% for pm in g.plugins_list|sort %}
                         {% if pm.dep == p.module %}
                             <ul class="nav nav-pills nav-stacked">
                                 <li {% if  pm.url == request.endpoint %} class="active" {% endif %}>

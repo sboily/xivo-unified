@@ -1,6 +1,11 @@
 Installation of the dependance
 
-$ apt-get install python-flup python-pip rabbitmq-server
+$ apt-get install python-flup python-pip rabbitmq-server python-virtualenv
+$ virtualenv xivo-unified
+$ source xivo-unified/bin/activate
+
+Go to your xivo-unified sources
+
 $ pip install -r requirements.txt
 
 You need to execute the run.py to create the database.
@@ -34,10 +39,10 @@ $ apt-get remove --purge libc-dev-bin libc6-dev linux-libc-dev gcc libexpat1-dev
 
 Config file
 
-Copy sources into /usr/share/nginx/www/xivo-webi
+Copy sources into /usr/share/nginx/www/xivo-unified
 
 $ cp SOURCES /usr/share/nginx/www/
-$ chown www-data.www-data /usr/share/nginx/www/xivo-webi -R
+$ chown www-data.www-data /usr/share/nginx/www/xivo-xivo-unified -R
 
 Nginx :
 

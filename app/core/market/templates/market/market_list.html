@@ -3,9 +3,9 @@
       <td>{{ u.informations.description }}</td>
       <td>{{ u.informations.author }}</td>
       <td>{{ u.informations.email }}</td>
-      <td>{{ u.informations.version }} 
+      <td>{{ u.version_installed }} 
           {% if u.installed and u.informations.version != u.version_installed %}
-              -> {{ u.version_installed }}
+              -> {{ u.informations.version }}
           {% endif %}
       </td>
       <td>{{ u.informations.license }}</td>

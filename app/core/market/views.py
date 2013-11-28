@@ -32,8 +32,7 @@ market = Blueprint('market', __name__, template_folder='templates/market')
 @manager_role.require(403)
 def themarket():
     modules = _get_modules()
-    modules_installed = _get_modules_installed()
-    return render_template('market.html', modules=modules, modules_installed=modules_installed)
+    return render_template('market.html', modules=modules)
 
 @market.route('/market/del/<module>')
 @login_required
@@ -50,21 +49,27 @@ def market_get(module):
     _install_module(module)
     flash(_('Module %s has been installed !' % module))
     return redirect(url_for('home.reload_app'))
-    #return redirect(url_for('market.themarket'))
 
 def _get_modules():
     url = "http://market.xivo.fr/market.json"
     json_read = urllib2.urlopen(url).read()
     modules = json.loads(json_read)
+
     for module in modules:
         module['installed'] = _is_module_installed(module)
+        module[u'version_installed'] = _module_version_installed(module)
 
     return modules
 
 def _is_module_installed(module):
     available_modules = [m['module'] for m in plugin_manager.get_plugin_list()]
-    print "is module installed", module['name'], available_modules
     return module['name'] in available_modules
+
+def _module_version_installed(module):
+    for m in plugin_manager.get_plugin_list():
+        if module['name'] == m['module']:
+            return m['version']
+    return module['informations']['version']
 
 def _remove_module(module):
     print "Removing module %s" % module
@@ -73,9 +78,3 @@ def _remove_module(module):
 def _install_module(module):
     print "Installing module %s" % module
     plugin_manager.install_plugin(module)
-
-def _get_modules_installed():
-    installed = []
-    for mod in g.plugins_list:
-        installed.append(mod['name'])
-    return installed

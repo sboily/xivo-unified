@@ -63,6 +63,7 @@ def get_plugin_list():
                             'url': plugin_info.plugin_object.plugin_endpoint(),
                             'module': plugin_info.name,
                             'parent': plugin_info.details.get('Documentation', 'Parent'),
+                            'version': plugin_info.details.get('Documentation', 'Version'),
                            }
                     if plugin_info.details.has_option('Documentation', 'Dependance'):
                          info['dep'] = plugin_info.details.get('Documentation', 'Dependance')
@@ -74,6 +75,7 @@ def get_plugin_list():
                             'url': plugin_info.plugin_object.plugin_endpoint(),
                             'module': plugin_info.name,
                             'parent': plugin_info.details.get('Documentation', 'Parent'),
+                            'version': plugin_info.details.get('Documentation', 'Version'),
                            }
                     plugin_list.append(info)
 

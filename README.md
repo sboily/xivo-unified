@@ -14,7 +14,7 @@ Installation
 6. python ./run.py run (launch the application)
 7. python ./runcelery.py worker (lauch the task process)
 
-Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.
+.. warning:: The DEBUG settings in conf.py need to be true for the moment because we using the reload system from flask in debug mode for the market.
 
 Using nginx and supervisord
 ---------------------------

@@ -1,6 +1,10 @@
-Installation of the dependance
+= Goal =
 
-$ apt-get install python-flup python-pip rabbitmq-server python-virtualenv
+XiVO unified is a proof of concept for the futur of XiVO and vision of the telephony in entreprise.
+
+= Installation =
+
+$ apt-get install python-virtualenv python-pip rabbitmq-server
 $ virtualenv xivo-unified
 $ source xivo-unified/bin/activate
 
@@ -22,6 +26,8 @@ $ python ./runcelery.py worker
 
 Important note, the DEBUG settings in conf.py need to be true for the moment because we use the reload system from flask in debug mode for the market.
 
+= Using nginx and supervisord =
+
 For configuration with nginx, please install uwsgi 1.9 min and supervisor
 
 $ apt-get install supervisor nginx
@@ -31,11 +37,6 @@ To compile uwsgi you need
 $ apt-get install libc-dev gcc python-dev
 
 $ pip install uwsgi
-
-
-Clean 
-
-$ apt-get remove --purge libc-dev-bin libc6-dev linux-libc-dev gcc libexpat1-dev libssl-dev python-dev python2.7-dev zlib1g-dev
 
 Config file
 
@@ -59,3 +60,8 @@ $ cd SOURCES/conf/supervisor
 $ cp * /etc/supervisor/conf.d/
 $ service supervisor stop
 $ service supervisor start
+
+= Clean =
+
+$ apt-get remove --purge libc-dev-bin libc6-dev linux-libc-dev gcc libexpat1-dev libssl-dev python-dev python2.7-dev zlib1g-dev
+

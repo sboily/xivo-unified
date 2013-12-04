@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% set url_add = url_for('organisations.organisation_add') %}
+
 <div class="table-responsive">
-  <p class="text-right"><a class="btn btn-primary btn-xs" href="{{url_for('organisations.organisation_add')}}"><i class="glyphicon glyphicon-plus"></i> {{_('Add') }}</a></p>
+  {% include "table-header.html" %}
   <table class="table table-bordered table-striped table-highlight">
     <thead>
       <tr>
         <th>{{ _('Name') }}</th>
         <th>{{ _('Created at') }}</th>
-        <th style="width: 70px;"></th>
+        <th style="width: 6%;" class="sorter-false"></th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +27,7 @@
       </tr>
     {% endfor %}
     </tbody>
+  {% include "table-footer.html" %}
   </table>
 </div>
 

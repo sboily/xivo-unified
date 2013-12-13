@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
+{% set is_dashboard = 1 %}
+
 {% block content %}
-<div class="col-md-10">
     <div class="well jumbotron">
         <h2>{{ _('Welcome') }}, {{ current_user.displayname }} !</h2>
         <p>{{ _('This web interface is a new GUI for XiVO based on flask.')}}</p>
@@ -19,9 +20,9 @@
             <p>{{_('Important')}} : {{_('This web interface is still in beta test, please do not consider it for production !')}}</p>
         </div>
     </div>
-</div>
+{% endblock %}
 
-<div class="col-md-2">
+{% block dashboard %}
     <div class="well">
         <h3>{{ _('News') }}</h3>
             <p>Soon ...</p>

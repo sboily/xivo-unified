@@ -1,3 +1,4 @@
+{% if g.server or g.user.role >= 200 %}
 <div class="well">
     <ul class="nav nav-pills nav-stacked">
         {% if g.user.role >= 200 %}
@@ -13,6 +14,7 @@
                 <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ _(caption) }}</a></li>
             {%- endif %}
         {%- endfor %}
+
         {% if g.plugins_list %}
             <li class="nav-header">{{ _('Plugins') }}</li>
             {% for p in g.plugins_list|sort %}
@@ -34,3 +36,4 @@
         {% endif %}
     </ul>
 </div>
+{% endif %}

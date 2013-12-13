@@ -31,10 +31,20 @@
                 {% endif %}
             </div>
 
-            <div class="col-md-10">
-                {% block content %}
-                {% endblock %}
-            </div>
+            {% if is_dashboard %}
+                <div class="col-md-8">
+            {% else %}
+                <div class="col-md-10">
+            {% endif %}
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            {% if is_dashboard %}
+                <div class="col-md-2">
+                    {% block dashboard %}
+                    {% endblock %}
+                </div>
+            {% endif %}
         </div>
     {% endif %}
 

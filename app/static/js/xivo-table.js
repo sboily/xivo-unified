@@ -32,6 +32,7 @@ $(function() {
       output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
   });
 
-  $.tablesorter.filter.bindSearch($table, $('.search'));
+  if ($table.length > 0)
+      $.tablesorter.filter.bindSearch($table, $('.search'));
 
 });

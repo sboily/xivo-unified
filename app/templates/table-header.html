@@ -5,7 +5,9 @@
         <input class="search form-control" type="search">
         <div class="input-group-btn">
           <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>&nbsp;&nbsp;
-          <a class="btn btn-primary btn-xs" href="{{ url_add }}"><i class="glyphicon glyphicon-plus"></i> {{ _('Add') }}</a>
+          {% if url_add %}
+              <a class="btn btn-primary btn-xs" href="{{ url_add }}"><i class="glyphicon glyphicon-plus"></i> {{ _('Add') }}</a>
+          {% endif %}
         </div>
       </div>
     </div>

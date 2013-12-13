@@ -1,93 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>XiVO unified</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <link rel="stylesheet" media="screen" title="xivo" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="alternate stylesheet" media="screen" title="original" href="{{ url_for('static', filename='css/bootstrap-classic.css') }}">
-    <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/bootstrap-progressbar.css') }}">
-    <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/theme.bootstrap.css') }}">
-    <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/custom.css') }}">
-
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/jquery.tablesorter.pager.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/jquery.tablesorter.widgets.min.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/jquery.tablesorter.widgets-filter-formatter.min.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/bootstrap-progressbar.min.js') }}"></script>
-    <script language="javascript" type=text/javascript src="{{ url_for('static', filename='js/xivo-table.js') }}"></script>
-
-    {% block header %}
-    {% endblock %}
-</head>
-
-{% block body %}
-<body>
-{% endblock %}
-
-{% if current_user.is_authenticated() %}
-
-   {% include "menu_top.html" %}
-
-{% endif %}
-
-    <div class="row">
-        <div class="container">
-            {% for category, msg in get_flashed_messages(with_categories=true) %}
-                <div class="alert alert-warning alert-dismissable fade in">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ msg }}
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    {% block login %}
-    {% endblock %}
-
-    <div class="row">
-       <div class="col-md-2">
-            {% if g.wizard != True %}
-                 {% include "menu_left.html" %} 
-            {% endif %}
-       </div>
-
-
-       <div class="col-md-10">
-           {% block content %}
-               {% if current_user.is_authenticated() %}
-               <div class="well jumbotron">
-	           <h2>{{ _('Welcome') }}, {{ current_user.displayname }} !</h2>
-                   <p>{{ _('This web interface is a new GUI for XiVO based on flask.')}}</p>
-                   <span class="label label-warning">{{_('Step 1')}}</span> {{_('Please configure your profil.')}}<br>
-                   <span class="label label-warning">{{_('Step 2')}}</span> {{_('Go to the market place and install the module you need for your organisation.')}}<br>
-                   <span class="label label-warning">{{_('Step 3')}}</span> {{_('Add your XiVO server on Servers menu.')}}<br>
-                   <span class="label label-warning">{{_('Step 4')}}</span> {{_('Connect to the server and get module on market place.')}}<br>
-                   <span class="label label-warning">{{_('Step 5')}}</span> {{_('Enjoy :)')}}<br><br>
-
-                   <div class="alert alert-info">
-                       <p>{{_('Information : If you need more information please contact me !')}}</p>
-                   </div>
-
-                   <div class="alert alert-danger">
-                       <p>{{_('Important')}} : {{_('This web interface is still in beta test, please do not consider it for production !')}}</p>
-                   </div>
-               </div>
-               {% endif %}
-           {% endblock %}
-      </div>
-    </div>
-
-    <div id="footer"> 
-        {% block footer %}
+    <head>
+        {% include "header.html" %}
+        {% block header %}
         {% endblock %}
-    </div>
+    </head>
 
+    {% block body %}
+        <body>
+    {% endblock %}
 
-</body>
+    {% if current_user.is_authenticated() %}
+        {% include "menu_top.html" %}
+        {% block menu_top %}
+        {% endblock %}
+        {% include "messages.html" %}
+    {% else %}
+        {% include "messages.html" %}
+        {% block login %}
+        {% endblock %}
+    {% endif %}
+
+    {% if current_user.is_authenticated() %}
+        <div class="row">
+            <div class="col-md-2">
+                {% if g.wizard != True %}
+                    {% include "menu_left.html" %} 
+                    {% block menu_left %}
+                    {% endblock %}
+                {% endif %}
+            </div>
+
+            <div class="col-md-10">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% block footer %}
+    {% endblock %}
+
+    </body>
 </html>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-md-10">
+    <div class="well jumbotron">
+        <h2>{{ _('Welcome') }}, {{ current_user.displayname }} !</h2>
+        <p>{{ _('This web interface is a new GUI for XiVO based on flask.')}}</p>
+        <span class="label label-warning">{{_('Step 1')}}</span> {{_('Please configure your profil.')}}<br>
+        <span class="label label-warning">{{_('Step 2')}}</span> {{_('Go to the market place and install the module you need for your organisation.')}}<br>
+        <span class="label label-warning">{{_('Step 3')}}</span> {{_('Add your XiVO server on Servers menu.')}}<br>
+        <span class="label label-warning">{{_('Step 4')}}</span> {{_('Connect to the server and get module on market place.')}}<br>
+        <span class="label label-warning">{{_('Step 5')}}</span> {{_('Enjoy :)')}}<br><br>
+
+        <div class="alert alert-info">
+            <p>{{_('Information : If you need more information please contact me !')}}</p>
+        </div>
+
+        <div class="alert alert-danger">
+            <p>{{_('Important')}} : {{_('This web interface is still in beta test, please do not consider it for production !')}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-2">
+    <div class="well">
+        <h3>{{ _('News') }}</h3>
+            <p>Soon ...</p>
+    </div>
+
+    <div class="well">
+        <h3>{{ _('Test') }}</h3>
+            <p>Soon ...</p>
+    </div>
+</div>
+
+</div>
+{% endblock %}

@@ -31,7 +31,7 @@ home = Blueprint('home', __name__, template_folder='templates/home')
 def homepage():
     if hasattr(g,'wizard'):
         return redirect(url_for('home.wizard'))
-    return render_template('base.html')
+    return render_template('home.html')
 
 @home.route('/reload')
 @login_required

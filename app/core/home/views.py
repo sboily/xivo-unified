@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash, jsonify
+from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash
 from flask.ext.login import login_required
-from app import db
 from app.core.organisations.forms import OrganisationsForm
 from app.core.profil.forms import AccountForm
 from app.models import User, Organisations
 from flask.ext.babel import gettext as _
+from app import db
 import os
 
 home = Blueprint('home', __name__, template_folder='templates/home')
@@ -65,7 +65,6 @@ def wizard():
         flash(_('Organisation added'))
         return redirect(url_for("home.homepage"))
     return render_template('wizard.html', form=form)
-
 
 @home.route('/first', methods=['GET', 'POST'])
 def first():

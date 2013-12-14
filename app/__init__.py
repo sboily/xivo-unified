@@ -100,10 +100,6 @@ def configure_hooks(app):
         if current_user.is_authenticated():
             whoami(current_user.id)
 
-    @identity_loaded.connect_via(app)
-    def on_identity_loaded(sender, identity):
-        if identity.id:
-            g.user = User.query.from_identity(identity)
             if g.user.organisation_id:
                 g.user_organisation = Organisations.query.get(g.user.organisation_id)
 
@@ -113,6 +109,11 @@ def configure_hooks(app):
 
             g.servers_list = get_servers_list(g.user.role)
             g.plugins_list = plugin_manager.get_plugin_list()
+
+    @identity_loaded.connect_via(app)
+    def on_identity_loaded(sender, identity):
+        if identity.id:
+            g.user = User.query.from_identity(identity)
 
     @babel.localeselector
     def get_locale():

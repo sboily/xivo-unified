@@ -134,8 +134,13 @@ def get_servers_list(role):
 
 def configure_error_handlers(app):
     @app.errorhandler(403)
-    def page_not_found(e):
+    def page_not_authorized(e):
         flash(_('Sorry you are not authorized !'))
+        return redirect(url_for('home.homepage'))
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        flash('Sorry this page is not found !')
         return redirect(url_for('home.homepage'))
 
 def configure_logging(app):

@@ -2,7 +2,7 @@
 <div class="well">
     <ul class="nav nav-pills nav-stacked">
         {% if g.user.role >= 200 %}
-            <li class="nav-header">{{ _('Configuration') }}</li>
+            <li class="nav-header"><h3>{{ _('Configuration') }}</h3></li>
         {%- endif %}
         {%- for endpoint, caption, role in [
                                   ('profil.accounts', 'Accounts', 200),
@@ -16,7 +16,7 @@
         {%- endfor %}
 
         {% if g.plugins_list %}
-            <li class="nav-header">{{ _('Plugins') }}</li>
+            <li class="nav-header"><h3>{{ _('Plugins') }}</h3></li>
             {% for p in g.plugins_list|sort %}
                 {% if not p.dep %}
                     <li {% if  p.url == request.endpoint %} class="active" {% endif %}>

@@ -11,7 +11,7 @@ Installation
 3. source xivo-unified/bin/activate (activate the virtualenv)
 4. pip install -r requirements.txt (install the dependences, go to the root of the sources)
 5. python ./run.py run (launch the application)
-6. python ./runcelery.py worker (lauch the task process)
+6. python ./runcelery.py worker (launch the task process)
 
 .. warning:: The DEBUG settings in conf.py need to be true for the moment because we using the reload system from flask in debug mode for the market.
 

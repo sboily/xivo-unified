@@ -15,13 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, flash, redirect, session, url_for, request, g, Blueprint, current_app
+from flask import render_template, redirect, session, url_for, request, Blueprint, current_app
 from flask.ext.login import login_user, logout_user, current_user
-from flask.ext.principal import Identity, identity_changed, AnonymousIdentity
-from app import create_app as app
+from flask.ext.principal import Identity, identity_changed
 from forms import LoginForm
 from app.models import User
-from flask.ext.babel import gettext as _
 
 login = Blueprint('login', __name__, template_folder='templates/login')
 
@@ -34,6 +32,7 @@ def is_root_installed():
 def log():
     if current_user.is_authenticated():
         return redirect(url_for('home.homepage'))
+
     form = LoginForm()
     del form.language
     if form.validate_on_submit():
@@ -46,11 +45,8 @@ def log():
 
 @login.route("/logout")
 def logout():
-    for key in ('identity.name', 'identity.auth_type', 'server_id'):
+    for key in ('identity.name', 'identity.auth_type', 'server_id', 'organisation_id'):
         session.pop(key, None)
-
-    identity_changed.send(current_app._get_current_object(),
-                          identity=AnonymousIdentity())
 
     logout_user()
     return redirect(url_for('login.log'))

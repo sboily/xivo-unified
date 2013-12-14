@@ -106,12 +106,13 @@ def configure_hooks(app):
             g.user = User.query.from_identity(identity)
             if g.user.organisation_id:
                 g.user_organisation = Organisations.query.get(g.user.organisation_id)
-            g.servers_list = get_servers_list(g.user.role)
-            g.plugins_list = plugin_manager.get_plugin_list()
 
-            if session.has_key('server_id'):
+            if "server_id" in session:
                 g.server_id = session['server_id']
                 g.server = Servers.query.get(session['server_id'])
+
+            g.servers_list = get_servers_list(g.user.role)
+            g.plugins_list = plugin_manager.get_plugin_list()
 
     @babel.localeselector
     def get_locale():

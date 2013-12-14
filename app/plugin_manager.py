@@ -51,6 +51,7 @@ def get_plugin_list():
             plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
                                   .filter(Plugins.name == plugin_info.name) \
                                   .first()
+
         if plugin:
             if hasattr(plugin_info.plugin_object, 'activated'):
                 plugin_info.plugin_object.activated(plugin_info.name)

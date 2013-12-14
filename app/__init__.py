@@ -133,7 +133,7 @@ def configure_hooks(app):
                 del session['server_id']
                 _delete_session()
 
-        if identity.id:
+        if identity.id and g.user != None:
             g.plugins_list = _get_plugins_info()
 
     @babel.localeselector

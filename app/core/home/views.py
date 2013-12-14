@@ -26,6 +26,11 @@ import os
 
 home = Blueprint('home', __name__, template_folder='templates/home')
 
+@home.before_app_first_request
+def initdb():
+    db.create_all()
+    db.session.commit()
+
 @home.route('/')
 @login_required
 def homepage():
@@ -61,9 +66,10 @@ def wizard():
         return redirect(url_for("home.homepage"))
     return render_template('wizard.html', form=form)
 
+
 @home.route('/first', methods=['GET', 'POST'])
 def first():
-    if _check_first():
+    if User.query.filter(User.role == '300').first():
         return redirect(url_for("home.homepage"))
 
     form = AccountForm()
@@ -78,6 +84,3 @@ def first():
         flash(_('Account added'))
         return redirect(url_for("home.homepage"))
     return render_template('first.html', form=form)
-
-def _check_first():
-    return User.query.filter(User.role == '300').first()

@@ -26,7 +26,7 @@ manager = Manager(app)
 manager.add_command("run", Server(host="0.0.0.0", port=5000))
 
 @manager.command
-def initdb():
+def resetdb():
     """Init/reset database."""
 
     if not prompt_bool("Are you sure? You will lose all your data!"):

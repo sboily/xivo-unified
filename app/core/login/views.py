@@ -25,6 +25,11 @@ from flask.ext.babel import gettext as _
 
 login = Blueprint('login', __name__, template_folder='templates/login')
 
+@login.before_request
+def is_root_installed():
+    if not User.query.filter(User.role == '300').first():
+        return redirect(url_for('home.first'))
+
 @login.route("/login", methods=['GET', 'POST'])
 def log():
     if current_user.is_authenticated():

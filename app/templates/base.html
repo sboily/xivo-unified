@@ -24,7 +24,7 @@
     {% if current_user.is_authenticated() %}
         <div class="row">
             <div class="col-md-2">
-                {% if g.wizard != True %}
+                {% if not wizard %}
                     {% include "menu_left.html" %} 
                     {% block menu_left %}
                     {% endblock %}

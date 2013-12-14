@@ -45,7 +45,8 @@ def log():
 
 @login.route("/logout")
 def logout():
-    for key in ('identity.name', 'identity.auth_type', 'server_id', 'organisation_id'):
+    for key in ('identity.name', 'identity.auth_type', 'server_id', \
+                'organisation_id', 'server', 'user'):
         session.pop(key, None)
 
     logout_user()

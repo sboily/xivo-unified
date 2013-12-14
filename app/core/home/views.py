@@ -34,7 +34,7 @@ def initdb():
 @home.route('/')
 @login_required
 def homepage():
-    if hasattr(g,'wizard'):
+    if not g.user.organisation_id:
         return redirect(url_for('home.wizard'))
     return render_template('home.html')
 

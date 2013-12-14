@@ -86,17 +86,13 @@ def configure_extensions(app):
 
     # Plugins list global
     path = os.path.join(app.config['BASEDIR'], 'app/plugins')
-    #path = "/home/quintana/dev/xivo-webi-modules/"
     plugin_manager.init_plugin_manager(path, app)
     plugin_manager.activate_plugins()
     plugin_manager.setup_plugins()
 
-
 def whoami(id):
     me = User.query.filter(User.id == id).first()
-
     print me.id
-
 
 def configure_hooks(app):
     @app.before_request
@@ -106,35 +102,16 @@ def configure_hooks(app):
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
-        g.user = None
-
         if identity.id:
             g.user = User.query.from_identity(identity)
-            if g.user is  None:
-                _delete_session()
-                return
-            if g.user.organisation_id is None:
-                g.wizard = True
-            else:
+            if g.user.organisation_id:
                 g.user_organisation = Organisations.query.get(g.user.organisation_id)
+            g.servers_list = get_servers_list(g.user.role)
+            g.plugins_list = plugin_manager.get_plugin_list()
 
-            if g.user.role == 300:
-                g.servers_list = Servers.query.order_by(Servers.name)
-            elif g.user.role == 200:
-                g.servers_list = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
-            else:
-                g.servers_list = Servers.query.join(User.servers).filter(User.id == g.user.id).order_by(Servers.name)
-
-
-        if session.has_key('server_id') and session['server_id']:
-            g.server_id = session['server_id']
-            g.server = Servers.query.get(session['server_id'])
-            if g.server is None:
-                del session['server_id']
-                _delete_session()
-
-        if identity.id and g.user != None:
-            g.plugins_list = _get_plugins_info()
+            if session.has_key('server_id'):
+                g.server_id = session['server_id']
+                g.server = Servers.query.get(session['server_id'])
 
     @babel.localeselector
     def get_locale():
@@ -143,10 +120,15 @@ def configure_hooks(app):
         else:
             return request.accept_languages.best_match(LANGUAGES.keys())
 
-def _delete_session():
-    g.server_id = None
-    g.server = None
-    g.user = None
+def get_servers_list(role):
+    if role == 300:
+        servers = Servers.query.order_by(Servers.name)
+    elif role == 200:
+        servers = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
+    else:
+        servers = Servers.query.join(User.servers).filter(User.id == g.user.id).order_by(Servers.name)
+
+    return servers
 
 def configure_error_handlers(app):
     @app.errorhandler(403)
@@ -156,9 +138,6 @@ def configure_error_handlers(app):
 
 def configure_logging(app):
     app.logger.setLevel(logging.INFO)
-
-def _get_plugins_info():
-    return plugin_manager.get_plugin_list()
 
 # Configure roles
 root_role = Permission(RoleNeed('root'))

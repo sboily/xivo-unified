@@ -120,7 +120,7 @@ def install_plugin(plugin_name):
     print "Installing plugin %s" % plugin_name
     _add_to_db(plugin_name)
     _download_and_extract(plugin_name)
-    #_load_plugin(plugin_name)
+    _load_plugin(plugin_name)
 
 def _add_to_db(plugin_name):
     plugin = Plugins(plugin_name)
@@ -154,4 +154,7 @@ def _load_plugin(plugin_name):
     plugin_manager.activatePluginByName(plugin_name)
 
     plugin = plugin_manager.getPluginByName(plugin_name)
-    plugin.plugin_object.setup(current_app)
+
+    print dir(plugin)
+
+    #plugin.plugin_object.setup(current_app)

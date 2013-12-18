@@ -17,3 +17,6 @@ Flask-Gravatar==0.4.1
 six==1.4.1
 SQLAlchemy==0.8.3
 flup
+boto
+fabric
+python-novaclient

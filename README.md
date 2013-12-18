@@ -50,3 +50,9 @@ Clean
 
 1. apt-get remove --purge libc-dev-bin libc6-dev linux-libc-dev gcc libexpat1-dev libssl-dev python-dev python2.7-dev zlib1g-dev libpython-dev
 
+Patch
+-----
+
+You need to patch PluginManager.py in yapsy.
+
+Line 483 : candidate_module = imp.load_module('app.plugins.' + plugin_info.name,None,candidate_filepath,("py","r",imp.PKG_DIRECTORY))

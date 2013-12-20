@@ -8,30 +8,44 @@
 
 <div class="form-group">
             {% if with_label %}
-                <label for="{{ field.id }}">
+                <label for="{{ field.id }}" class="control-label">
                     {{ field.label.text }}{% if field.flags.required %} *{% endif %}:
                 </label>
             {% endif %}
+
             {% if with_icon %}
               <div class="input-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-{{ with_icon }}"></i></span>
             {% endif %}
 
-            {% set class_ = kwargs.pop('class_', 'form-control') %}
+            {% set class_ = kwargs.pop('class_', '') %}
             {% if field.flags.required %}
                 {% set class_ = class_ + ' required' %}
             {% endif %}
 
             {% if field.type == 'BooleanField' %}
-                <label class="checkbox">
+               <div class="checkbox">
+                 <label class="checkbox">
                     {{ field(class_=class_, **kwargs) }}
                     {{ field.label.text|safe }}
-                </label>
+                 </label>
+               </div>
+            {% elif field.type == 'RadioField' %}
+               <div class="radio-inline">
+                 <label>
+                    {{ field(class_=class_, **kwargs) }}
+                 </label>
+               </div>
             {% else %}
-                {% if field.type in ('TextField', 'TextAreaField', 'PasswordField') %}
+                {% if field.type in ('TextField', 'TextAreaField', 'PasswordField', 'EmailField') %}
                     {% set class_ = class_ + ' form-control' %}
                 {% endif %}
-                {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
+
+                {% if field.type in ('SelectField', 'QuerySelectField', 'QuerySelectMultipleField') %}
+                    {{ field(class_ = class_ + ' form-control', **kwargs) }}
+                {% else %}
+                    {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
+                {% endif %}
             {% endif %}
 
             {% if field.errors %}

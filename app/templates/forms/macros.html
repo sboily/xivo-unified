@@ -31,11 +31,13 @@
                  </label>
                </div>
             {% elif field.type == 'RadioField' %}
-               <div class="radio-inline">
-                 <label>
-                    {{ field(class_=class_, **kwargs) }}
-                 </label>
-               </div>
+                {% for value, label, _ in field.iter_choices() %}
+                    <div class="radio-inline">
+                        <label>
+                            <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}"> {{ label }}
+                        </label>
+                    </div>
+                 {% endfor %}
             {% else %}
                 {% if field.type in ('TextField', 'TextAreaField', 'PasswordField', 'EmailField') %}
                     {% set class_ = class_ + ' form-control' %}

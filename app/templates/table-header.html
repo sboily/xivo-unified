@@ -6,7 +6,19 @@
         <div class="input-group-btn">
           <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>&nbsp;&nbsp;
           {% if url_add %}
-              <a class="btn btn-primary btn-xs" href="{{ url_add }}"><i class="glyphicon glyphicon-plus"></i> {{ _('Add') }}</a>
+              <a class="btn btn-primary btn-xs" href="{{ url_add }}">
+              {% if icon_url_add %}
+                  <i class="glyphicon glyphicon-{{ icon_url_add }}"></i>
+              {% else %}
+                  <i class="glyphicon glyphicon-plus"></i>
+              {% endif %}
+
+              {% if name_url_add %}
+                  {{ _(name_url_add) }}
+              {% else %}
+                  {{ _('Add') }}
+              {% endif %}
+              </a>
           {% endif %}
         </div>
       </div>

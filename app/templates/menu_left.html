@@ -1,4 +1,4 @@
-{% if g.server or g.user.role >= 200 %}
+{% if g.server or g.user.role >= 200 and g.user.organisation_id %}
 <div class="well">
     <ul class="nav nav-pills nav-stacked">
         {% if g.user.role >= 200 %}

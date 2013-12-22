@@ -95,9 +95,10 @@ def configure_hooks(app):
             if g.user.organisation_id:
                 g.user_organisation = Organisations.query.get(g.user.organisation_id)
 
-            if session.get('server_id', None):
-                g.server_id = session['server_id']
-                g.server = Servers.query.get(session['server_id'])
+            server_id = session.get('server_id', None)
+            if server_id:
+                g.server_id = server_id
+                g.server = Servers.query.get(server_id)
 
             g.servers_list = get_servers_list(g.user.role)
             g.plugins_list = plugin_manager.get_plugin_list()

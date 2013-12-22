@@ -141,5 +141,5 @@ def signup():
         db.session.add(account)
         db.session.commit()
         flash(_('Account added'))
-        return redirect(url_for('login.log'))
+        return redirect(url_for('authentification.login'))
     return render_template('signup.html', form=form)

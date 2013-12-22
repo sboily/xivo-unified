@@ -16,23 +16,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import ldap
+from app.models import AuthServerLdap
 
 def UserLdap(username, passwd):
-    uid = ""
-    ldapsrv = ""
-    basedn = ""
+    authldapserver = AuthServerLdap.query.first()
+    if authldapserver:
+        basedn = authldapserver.basedn
+        searchfilter = authldapserver.searchfilter +"="+ username
+        userdn = searchfilter +","+ basedn
 
+    else:
+        return None
+
+    connect = ldap.open(authldapserver.host)
     try:
-        if username and passwd:
-            l = simpleldap.Connection(ldapsrv,
-                dn='uid={0},{1}'.format(username, basedn), password=passwd)
-            r = l.search('uid={0}'.format(username), base_dn=basedn)
-        else:
-            l = simpleldap.Connection(ldapsrv)
-            r = l.search('uidNumber={0}'.format(uid), base_dn=basedn)
-
-        return { 'name': r[0]['uid'][0],
-                 'id': unicode(r[0]['uidNumber'][0])
-               }
-    except:
+        connect.bind_s(userdn, password)
+        result = connect.search_s(basedn, ldap.SCOPE_SUBTREE, searchfilter)
+        connect.unbind_s()
+        print result
+        result = { 'name': result[0]['uid'][0],
+                   'id': unicode(result[0]['uidNumber'][0])
+                 }
+        return result
+    except ldap.LDAPError:
+        connect.unbind_s()
+        print "authentication error"
         return None

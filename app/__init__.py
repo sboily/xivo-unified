@@ -25,7 +25,7 @@ import logging
 
 CORE_MODULES = (
     'servers',
-    'login',
+    'authentification',
     'market',
     'profil',
     'home',
@@ -69,7 +69,7 @@ def configure_extensions(app):
 
     # Authentification
     login_manager.init_app(app)
-    login_manager.login_view = 'login.log'
+    login_manager.login_view = 'authentification.login'
 
     # Plugins list global
     plugin_manager.init_plugin_manager(app.root_path + '/plugins', app)

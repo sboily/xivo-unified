@@ -19,7 +19,7 @@
         {{ render_field(form.captcha) }}
         {{ render_field(form.agree) }}
         {{ render_field(form.submit, class="btn btn-default btn-primary") }}
-        {{ _('Already have an account? ') }} <a href="{{url_for('login.log')}}">{{ _('Sign In') }}</a>
+        {{ _('Already have an account? ') }} <a href="{{url_for('authentification.login')}}">{{ _('Sign In') }}</a>
       </form>
 </div>
 

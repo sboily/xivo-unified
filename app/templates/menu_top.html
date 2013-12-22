@@ -35,7 +35,7 @@
           {% endif %}
           {% endif %}
               <li><a href="{{url_for('profil.myprofil')}}">{{ _('Welcome') }}  {{current_user.displayname}}</a></li>
-              <li title="{{_('Logout')}}"><a href="{{ url_for('login.logout') }}" class="logout"><i class="glyphicon glyphicon-off"></i></a></li>
+              <li title="{{_('Logout')}}"><a href="{{ url_for('authentification.logout') }}" class="logout"><i class="glyphicon glyphicon-off"></i></a></li>
         </ul>
       </div>
 </div>

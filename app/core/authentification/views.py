@@ -16,21 +16,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import render_template, redirect, session, url_for, request, Blueprint, current_app
-from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.principal import Identity, identity_changed
+from app.helpers.acl.roles import root_role
 from forms import LoginForm
 from app.models import User
 from auth import Auth
 
-login = Blueprint('login', __name__, template_folder='templates/login')
+authentification = Blueprint('authentification', __name__, template_folder='templates/authentification')
 
-@login.before_request
+@authentification.before_request
 def is_root_installed():
     if not User.query.filter(User.role == '300').first():
         return redirect(url_for('home.first'))
 
-@login.route("/login", methods=['GET', 'POST'])
-def log():
+@authentification.route("/login", methods=['GET', 'POST'])
+def login():
     if current_user.is_authenticated():
         return redirect(url_for('home.homepage'))
 
@@ -44,11 +45,17 @@ def log():
             return redirect(request.args.get('next') or url_for('home.homepage'))
     return render_template('login.html', form=form)
 
-@login.route("/logout")
+@authentification.route("/logout")
 def logout():
     for key in ('identity.name', 'identity.auth_type', 'server_id', \
                 'organisation_id', 'server', 'user'):
         session.pop(key, None)
 
     logout_user()
-    return redirect(url_for('login.log'))
+    return redirect(url_for('authentification.login'))
+
+@authentification.route("/authentification/server/configure")
+@login_required
+@root_role.require(403)
+def auth_configure():
+    return render_template('authentification_configuration.html')

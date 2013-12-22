@@ -161,3 +161,17 @@ class Plugins(db.Model):
 
     def __repr__(self):
         return "<%d : name=%s org=%s serv=%s>" % (self.id, self.name, self.organisation_id, self.server_id)
+
+class AuthServerLdap(db.Model):
+    __tablename__ = 'auth_server_ldap'
+    id = db.Column(db.Integer, primary_key=True)
+    host = db.Column(db.Text())
+    basedn = db.Column(db.Text())
+    searchfilter = db.Column(db.Text())
+    created_time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "<%d : %s>" % (self.id, self.name)

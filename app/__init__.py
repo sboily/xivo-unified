@@ -15,15 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, render_template, session, g, current_app, flash, redirect, url_for, request
+from flask import Flask, session, g, flash, redirect, url_for, request
 from flask.ext.login import LoginManager, current_user
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded, AnonymousIdentity, identity_changed
+from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded
 from app.extensions import db, login_manager, babel, principal, celery
 from models import Servers, User, Organisations
-
 import plugin_manager
-import os
 import logging
 
 CORE_MODULES = (
@@ -80,13 +77,8 @@ def configure_extensions(app):
     login_manager.init_app(app)
     login_manager.login_view = 'login.log'
 
-    @login_manager.user_loader
-    def load_user(userid):
-        return User.query.filter_by(id=userid).first()
-
     # Plugins list global
-    path = os.path.join(app.config['BASEDIR'], 'app/plugins')
-    plugin_manager.init_plugin_manager(path, app)
+    plugin_manager.init_plugin_manager(app.root_path + '/plugins', app)
     plugin_manager.activate_plugins()
     plugin_manager.setup_plugins()
 
@@ -95,6 +87,10 @@ def whoami(id):
     print me.id
 
 def configure_hooks(app):
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.filter_by(id=userid).first()
+
     @app.before_request
     def before_request():
         if current_user.is_authenticated():
@@ -117,7 +113,7 @@ def configure_hooks(app):
 
     @babel.localeselector
     def get_locale():
-        if hasattr(g, 'user') and hasattr(g.user, 'language'):
+        if g.get('user', None):
             return g.user.language
         else:
             return request.accept_languages.best_match(LANGUAGES.keys())
@@ -126,9 +122,13 @@ def get_servers_list(role):
     if role == 300:
         servers = Servers.query.order_by(Servers.name)
     elif role == 200:
-        servers = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
+        servers = Servers.query.join(User.servers) \
+                               .filter(User.organisation_id == g.user.organisation_id) \
+                               .order_by(Servers.name)
     else:
-        servers = Servers.query.join(User.servers).filter(User.id == g.user.id).order_by(Servers.name)
+        servers = Servers.query.join(User.servers) \
+                               .filter(User.id == g.user.id) \
+                               .order_by(Servers.name)
 
     return servers
 

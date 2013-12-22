@@ -37,7 +37,6 @@ LANGUAGES = {
     'fr': 'French'
 }
 
-
 def create_app():
     core_modules = CORE_MODULES
 
@@ -51,17 +50,14 @@ def create_app():
 
     return app
 
-
 def configure_app(app):
     app.config.from_object('conf')
     celery.config_from_object(app.config)
-
 
 def configure_core_modules(app, core_modules):
     for module in core_modules:
         exec("from app.core.%s.views import %s" %(module, module))
         exec("app.register_blueprint(%s)" % module)
-
 
 def configure_extensions(app):
     # I18N
@@ -84,7 +80,7 @@ def configure_extensions(app):
 
 def whoami(id):
     me = User.query.filter(User.id == id).first()
-    print me.id
+    #print me.id
 
 def configure_hooks(app):
     @login_manager.user_loader
@@ -99,7 +95,7 @@ def configure_hooks(app):
             if g.user.organisation_id:
                 g.user_organisation = Organisations.query.get(g.user.organisation_id)
 
-            if "server_id" in session:
+            if session.get('server_id', None):
                 g.server_id = session['server_id']
                 g.server = Servers.query.get(session['server_id'])
 

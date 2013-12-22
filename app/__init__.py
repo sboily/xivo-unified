@@ -38,11 +38,9 @@ LANGUAGES = {
 }
 
 def create_app():
-    core_modules = CORE_MODULES
-
     app = Flask(__name__)
     configure_app(app)
-    configure_core_modules(app, core_modules)
+    configure_core_modules(app)
     configure_extensions(app)
     configure_hooks(app)
     configure_logging(app)
@@ -54,8 +52,8 @@ def configure_app(app):
     app.config.from_object('conf')
     celery.config_from_object(app.config)
 
-def configure_core_modules(app, core_modules):
-    for module in core_modules:
+def configure_core_modules(app):
+    for module in CORE_MODULES:
         exec("from app.core.%s.views import %s" %(module, module))
         exec("app.register_blueprint(%s)" % module)
 

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from "forms/macros.html" import render_field %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>{{ _('Authentification') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="well well-xs col-md-12">
+          <form class="form" method="post">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#configuration" data-toggle="tab">{{ _('Configuration') }}</a></li>
+                    <li class=""><a href="#authldap" data-toggle="tab">{{ _('Ldap') }}</a></li>
+                </ul>
+                <br>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="configuration">
+                        {{ form.csrf_token }}
+                        {{ render_field(form.active) }}
+                        {{ render_field(form.submit, class="btn btn-primary") }}
+                    </div>
+                    <div class="tab-pane" id="authldap">
+                        {{ form.csrf_token }}
+                        {{ render_field(form.host, with_label=1) }}
+                        {{ render_field(form.basedn, with_label=1) }}
+                        {{ render_field(form.searchfilter, with_label=1) }}
+                        {{ render_field(form.submit, class="btn btn-primary") }}
+                    </div>
+                </div>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

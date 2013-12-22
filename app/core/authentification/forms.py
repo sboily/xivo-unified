@@ -48,3 +48,10 @@ class LoginForm(Form):
 
     def get_user(self):
         return User.query.filter_by(username=self.username.data).first()
+
+class AuthServerLdapForm(Form):
+    host = TextField(_('LDAP host'), [Required()])
+    basedn = TextField(_('Base DN'), [Required()])
+    searchfilter = TextField(_('Search filter'), [Required()])
+    active = BooleanField(_('Enable LDAP auth'), default=False)
+    submit = SubmitField(_('Save'))

@@ -168,6 +168,7 @@ class AuthServerLdap(db.Model):
     host = db.Column(db.Text())
     basedn = db.Column(db.Text())
     searchfilter = db.Column(db.Text())
+    active = db.Column(db.Boolean)
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, name):

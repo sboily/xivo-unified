@@ -15,12 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, redirect, session, url_for, request, Blueprint, current_app
+from flask import render_template, redirect, session, url_for, request, Blueprint, current_app, flash
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.principal import Identity, identity_changed
+from flask.ext.babel import lazy_gettext as _
 from app.helpers.acl.roles import root_role
-from forms import LoginForm
-from app.models import User
+from forms import LoginForm, AuthServerLdapForm
+from app.extensions import db
+from app.models import User, AuthServerLdap
 from auth import Auth
 
 authentification = Blueprint('authentification', __name__, template_folder='templates/authentification')
@@ -54,8 +56,21 @@ def logout():
     logout_user()
     return redirect(url_for('authentification.login'))
 
-@authentification.route("/authentification/server/configure")
+@authentification.route("/authentification/server/configure", methods=['GET', 'POST'])
 @login_required
 @root_role.require(403)
 def auth_configure():
-    return render_template('authentification_configuration.html')
+    server = AuthServerLdap.query.first()
+    form = AuthServerLdapForm(obj=server)
+    if form.validate_on_submit():
+        if server:
+            form.populate_obj(server)
+        else:
+            server = AuthServerLdap(form.host.data)
+            server.basedn = form.basedn.data
+            server.searchfilter = form.searchfilter.data
+            server.active = form.active.data
+        db.session.add(server)
+        db.session.commit()
+        flash(_('Server LDAP edited'))
+    return render_template('authentification_configuration.html', form=form)

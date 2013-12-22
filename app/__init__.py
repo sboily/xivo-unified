@@ -16,9 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import Flask, session, g, flash, redirect, url_for, request
-from flask.ext.login import LoginManager, current_user
-from flask.ext.principal import Principal, Permission, RoleNeed, identity_loaded
-from app.extensions import db, login_manager, babel, principal, celery
+from flask.ext.login import current_user
+from flask.ext.principal import identity_loaded
+from extensions import db, login_manager, babel, principal, celery
 from models import Servers, User, Organisations
 import plugin_manager
 import logging
@@ -100,7 +100,7 @@ def configure_hooks(app):
                 g.server_id = server_id
                 g.server = Servers.query.get(server_id)
 
-            g.servers_list = get_servers_list(g.user.role)
+            g.servers_list = core.servers.views.get_servers_list()
             g.plugins_list = plugin_manager.get_plugin_list()
 
     @identity_loaded.connect_via(app)
@@ -115,20 +115,6 @@ def configure_hooks(app):
         else:
             return request.accept_languages.best_match(LANGUAGES.keys())
 
-def get_servers_list(role):
-    if role == 300:
-        servers = Servers.query.order_by(Servers.name)
-    elif role == 200:
-        servers = Servers.query.join(User.servers) \
-                               .filter(User.organisation_id == g.user.organisation_id) \
-                               .order_by(Servers.name)
-    else:
-        servers = Servers.query.join(User.servers) \
-                               .filter(User.id == g.user.id) \
-                               .order_by(Servers.name)
-
-    return servers
-
 def configure_error_handlers(app):
     @app.errorhandler(403)
     def page_not_authorized(e):
@@ -142,8 +128,3 @@ def configure_error_handlers(app):
 
 def configure_logging(app):
     app.logger.setLevel(logging.INFO)
-
-# Configure roles
-root_role = Permission(RoleNeed('root'))
-manager_role = Permission(RoleNeed('manager')).union(root_role)
-admin_role = Permission(RoleNeed('admin')).union(manager_role)

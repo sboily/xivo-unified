@@ -19,7 +19,8 @@ from flask import render_template, Blueprint, request, flash, redirect, url_for,
 from flask.ext.login import login_required, current_user
 from app.models import Organisations, User, Servers
 from forms import OrganisationsForm
-from app import db, root_role, manager_role, admin_role
+from app.extensions import db
+from app.helpers.acl.roles import root_role, manager_role, admin_role
 from flask.ext.babel import gettext as _
 
 organisations = Blueprint('organisations', __name__, template_folder='templates/organisations')

@@ -17,13 +17,13 @@
 
 from flask import render_template, Blueprint, flash, redirect, url_for, g, flash, current_app
 from flask.ext.login import login_required
-from app import db, manager_role, create_app as app
+from app.extensions import db
+from app.helpers.acl.roles import manager_role
 from flask.ext.babel import gettext as _
 from app.models import Plugins
+from app import plugin_manager
 import json
 import urllib2
-
-from app import plugin_manager
 
 market = Blueprint('market', __name__, template_folder='templates/market')
 

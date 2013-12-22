@@ -18,7 +18,8 @@
 from flask import render_template, Blueprint, flash, redirect, url_for, request, g, current_app
 from werkzeug.security import generate_password_hash
 from flask.ext.login import login_required, current_user
-from app import db, root_role, manager_role, admin_role
+from app.extensions import db
+from app.helpers.acl.roles import root_role, manager_role, admin_role
 from app.models import User
 from forms import AccountForm, AccountFormEdit, SignupForm
 from flask.ext.babel import gettext as _

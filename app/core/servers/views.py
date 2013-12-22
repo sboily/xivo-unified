@@ -19,7 +19,8 @@ from flask import render_template, Blueprint, request, flash, redirect, url_for,
 from flask.ext.login import login_required, current_user
 from app.models import Servers, User, Organisations
 from forms import ServersForm
-from app import db, manager_role, admin_role
+from app.extensions import db
+from app.helpers.acl.roles import manager_role, admin_role
 from flask.ext.babel import gettext as _
 
 servers = Blueprint('servers', __name__, template_folder='templates/server')
@@ -28,7 +29,7 @@ servers = Blueprint('servers', __name__, template_folder='templates/server')
 @login_required
 @manager_role.require(403)
 def server():
-    servers = _get_servers()
+    servers = get_servers_list()
     return render_template('server.html', servers=servers)
 
 @servers.route('/server/add', methods=['GET', 'POST'])
@@ -132,14 +133,19 @@ def server_disconnect():
         g.server = ""
     return redirect(url_for("home.homepage"))
 
-def _get_servers():
+def get_servers_list():
     if g.user.role == 300:
         servers = Servers.query.order_by(Servers.organisation_id)
+    elif g.user.role == 200:
+        servers = Servers.query.join(User.servers) \
+                               .filter(User.organisation_id == g.user.organisation_id) \
+                               .order_by(Servers.name)
     else:
-        servers = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id).order_by(Servers.name)
+        servers = Servers.query.join(User.servers) \
+                               .filter(User.id == g.user.id) \
+                               .order_by(Servers.name)
 
     return servers
-
 
 def _add_users(form):
     users = []

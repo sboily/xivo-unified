@@ -20,6 +20,7 @@ from flask.ext.login import login_user, logout_user, current_user
 from flask.ext.principal import Identity, identity_changed
 from forms import LoginForm
 from app.models import User
+from auth import Auth
 
 login = Blueprint('login', __name__, template_folder='templates/login')
 
@@ -36,8 +37,8 @@ def log():
     form = LoginForm()
     del form.language
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
+        user = Auth(form.username.data, form.password.data)
+        if user.is_active:
             login_user(user, remember=form.remember_me.data)
             identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
             return redirect(request.args.get('next') or url_for('home.homepage'))

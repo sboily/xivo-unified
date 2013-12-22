@@ -23,7 +23,7 @@ from flask.ext.login import UserMixin
 from flask.ext.principal import RoleNeed, UserNeed
 from flask.ext.sqlalchemy import BaseQuery
 from datetime import datetime
-from app import db
+from app.extensions import db
 
 users_server = db.Table('users_server',
     db.Column('server_id', db.Integer, db.ForeignKey('servers.id')),

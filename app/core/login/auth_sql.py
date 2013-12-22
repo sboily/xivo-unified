@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Copyright (C) 2013 Sylvain Boily <sboily@proformatique.com>
@@ -16,25 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from app.models import User
 
-from flask.ext.script import Manager, prompt_bool, Server
-from app.extensions import db
-from app import create_app
-
-application = create_app()
-manager = Manager(application)
-manager.add_command("run", Server(host="0.0.0.0", port=5000))
-
-@manager.command
-def resetdb():
-    """Init/reset database."""
-
-    if not prompt_bool("Are you sure? You will lose all your data!"):
-        return
-
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
-
-if __name__ == "__main__":
-    manager.run()
+def UserSql(username, passwd):
+    user = User.query.filter_by(username=username).first()
+    if user and user.check_password(passwd):
+        return user

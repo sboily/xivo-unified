@@ -147,6 +147,9 @@ def get_servers_list():
 
     return servers
 
+def get_my_server():
+    return Servers.query.get(g.server_id)
+
 def _add_users(form):
     users = []
     auto_add = False

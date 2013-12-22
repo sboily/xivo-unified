@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, session, g, flash, redirect, url_for, request
+from flask import Flask, session, g, flash, redirect, url_for, request, template_rendered
 from flask.ext.login import current_user
 from flask.ext.principal import identity_loaded
 from extensions import db, login_manager, babel, principal, celery
-from models import Servers, User, Organisations
+from models import User
 import plugin_manager
 import logging
 
@@ -78,10 +78,6 @@ def configure_extensions(app):
     plugin_manager.activate_plugins()
     plugin_manager.setup_plugins()
 
-def whoami(id):
-    me = User.query.filter(User.id == id).first()
-    #print me.id
-
 def configure_hooks(app):
     @login_manager.user_loader
     def load_user(userid):
@@ -90,15 +86,13 @@ def configure_hooks(app):
     @app.before_request
     def before_request():
         if current_user.is_authenticated():
-            whoami(current_user.id)
-
             if g.user.organisation_id:
-                g.user_organisation = Organisations.query.get(g.user.organisation_id)
+                g.user_organisation = core.organisations.views.get_my_organisation()
 
             server_id = session.get('server_id', None)
             if server_id:
                 g.server_id = server_id
-                g.server = Servers.query.get(server_id)
+                g.server = core.servers.views.get_my_server()
 
             g.servers_list = core.servers.views.get_servers_list()
             g.plugins_list = plugin_manager.get_plugin_list()

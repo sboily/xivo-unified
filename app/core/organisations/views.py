@@ -110,7 +110,10 @@ def organisation_accounts(id):
 
 
 def _get_organisations():
-        return Organisations.query.order_by(Organisations.name)
+    return Organisations.query.order_by(Organisations.name)
+
+def get_my_organisation():
+    return Organisations.query.get(g.user.organisation_id)
 
 def _edit_users(form):
     users = []

@@ -37,34 +37,53 @@ from auth_sql import UserSql
 
 class Auth(UserMixin):
     def __init__(self, username=None, passwd=None):
-        self.username = username
-        self.passwd = passwd
+        self.username = None
+        self.passwd = False
+        self.id = None
         self.active = False
 
+        self.userldap = UserLdap(username, passwd)
+        self.usersql = UserSql(username, passwd)
+
         is_sql = True
-        is_ldap = False
+        is_ldap = self.userldap.is_active()
 
         if is_sql:
-            self.auth_sql()
+            if self.auth_sql():
+                return None
 
         if is_ldap:
-            self.auth_ldap()
+            if self.auth_ldap():
+                return None
 
     def auth_ldap(self):
-       user = UserLdap(self.username, self.passwd)
-
-       if user:
-           self.id = user['id']
-           self.active = True
+        user = self.userldap.auth()
+        if user:
+            self.username = user['username']
+            self.id = user['id']
+            self.active = True
+            self.passwd = True
+            return True
+        return False
 
     def auth_sql(self):
-        user = UserSql(self.username, self.passwd)
+        user = self.usersql.auth()
         if user:
-            self.active = True
+            self.username = user.username
             self.id = user.id
+            self.active = True
+            self.passwd = True
+            return True
+        return False
 
     def is_active(self):
         return self.active
 
     def get_id(self):
         return self.id
+
+    def get_user(self):
+        return self.username
+
+    def check_password(self):
+        return self.passwd

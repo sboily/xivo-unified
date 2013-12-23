@@ -21,6 +21,7 @@ from wtforms.validators import Required, ValidationError
 from flask.ext.babel import lazy_gettext as _
 from app.models import User
 from app.utils import Form
+from auth import Auth
 
 class LoginForm(Form):
     username = TextField(_('Username'), validators=[Required()])
@@ -43,11 +44,16 @@ class LoginForm(Form):
         if user is None:
             raise ValidationError(_('Invalid user'))
 
-        if not User.check_password(user, self.password.data):
+        if not self.check_password():
             raise ValidationError(_('Invalid password'))
 
     def get_user(self):
-        return User.query.filter_by(username=self.username.data).first()
+        auth = Auth(self.username.data, self.password.data)
+        return auth.get_user()
+
+    def check_password(self):
+        auth = Auth(self.username.data, self.password.data)
+        return auth.check_password()
 
 class AuthServerLdapForm(Form):
     host = TextField(_('LDAP host'), [Required()])

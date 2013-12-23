@@ -41,10 +41,12 @@ def login():
     del form.language
     if form.validate_on_submit():
         user = Auth(form.username.data, form.password.data)
-        if user.is_active:
+        if user.is_active():
             login_user(user, remember=form.remember_me.data)
             identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
             return redirect(request.args.get('next') or url_for('home.homepage'))
+        else:
+            flash(_('Login error, please try again !'))
     return render_template('login.html', form=form)
 
 @authentification.route("/logout")

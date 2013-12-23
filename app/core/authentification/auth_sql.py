@@ -15,9 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
 
-def UserSql(username, passwd):
-    user = User.query.filter_by(username=username).first()
-    if user and user.check_password(passwd):
-        return user
+class UserSql(object):
+    def __init__(self, username, passwd):
+        self.username = username
+        self.passwd = passwd
+
+    def auth(self):
+        user = User.query.filter_by(username=self.username).first()
+        if user and self.check_passwd(user.password):
+            return user
+
+    def check_passwd(self, passwd):
+        return check_password_hash(passwd, self.passwd)

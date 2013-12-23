@@ -26,8 +26,8 @@
             {% if field.type == 'BooleanField' %}
                <div class="checkbox">
                  <label class="checkbox">
-                    {{ field(class_=class_, **kwargs) }}
                     {{ field.label.text|safe }}
+                    {{ field(class_ = class_, **kwargs) }}
                  </label>
                </div>
             {% elif field.type == 'RadioField' %}
@@ -46,7 +46,7 @@
                 {% if field.type in ('SelectField', 'QuerySelectField', 'QuerySelectMultipleField') %}
                     {{ field(class_ = class_ + ' form-control', **kwargs) }}
                 {% else %}
-                    {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
+                    {{ field(class_ = class_, placeholder=placeholder, **kwargs) }}
                 {% endif %}
             {% endif %}
 

@@ -18,27 +18,32 @@
 import ldap
 from app.models import AuthServerLdap
 
-def UserLdap(username, passwd):
-    authldapserver = AuthServerLdap.query.first()
-    if authldapserver:
-        basedn = authldapserver.basedn
-        searchfilter = authldapserver.searchfilter +"="+ username
-        userdn = searchfilter +","+ basedn
+class UserLdap(object):
+    def __init__(self, username, passwd):
+        self.username = username
+        self.passwd = passwd
+        self.authldapserver = AuthServerLdap.query.first()
 
-    else:
-        return None
+    def auth(self):
+        if self.authldapserver:
+            basedn = self.authldapserver.basedn
+            searchfilter = self.authldapserver.searchfilter +"="+ self.username
+            userdn = searchfilter +","+ basedn
+        else:
+            return None
 
-    connect = ldap.open(authldapserver.host)
-    try:
-        connect.bind_s(userdn, password)
-        result = connect.search_s(basedn, ldap.SCOPE_SUBTREE, searchfilter)
-        connect.unbind_s()
-        print result
-        result = { 'name': result[0]['uid'][0],
-                   'id': unicode(result[0]['uidNumber'][0])
-                 }
-        return result
-    except ldap.LDAPError:
-        connect.unbind_s()
-        print "authentication error"
-        return None
+        connect = ldap.open(self.authldapserver.host)
+        try:
+            connect.bind_s(userdn, self.passwd)
+            result = connect.search_s(basedn, ldap.SCOPE_SUBTREE, searchfilter)
+            connect.unbind_s()
+            result = { 'username': result[0][1]['uid'][0],
+                       'id': unicode(result[0][1]['uidNumber'][0])
+                     }
+            return result
+        except ldap.LDAPError:
+            connect.unbind_s()
+            return None
+
+    def is_active(self):
+        return self.authldapserver.active

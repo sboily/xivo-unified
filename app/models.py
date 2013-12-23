@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from werkzeug.utils import cached_property
 from flask.ext.login import UserMixin
 from flask.ext.principal import RoleNeed, UserNeed
@@ -70,9 +70,6 @@ class User(db.Model, UserMixin):
         self.password = generate_password_hash(password)
         self.displayname = displayname
         self.role = role
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
 
     @cached_property
     def permissions(self):

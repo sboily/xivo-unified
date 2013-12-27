@@ -70,16 +70,8 @@ def organisation_edit(id):
                                       .first()
  
     form = OrganisationsForm(obj=organisation)
-    form.users.query_factory = lambda: User.query.filter(User.organisation_id == Organisations.id) \
-                                                 .filter(Organisations.id == id) \
-                                                 .all()
-
     if form.validate_on_submit():
         form.populate_obj(organisation)
-
-        users = _edit_users(form)
-
-        organisation.users = users
         db.session.add(organisation)
         db.session.commit()
         flash(_('Organisation edit'))
@@ -114,12 +106,3 @@ def _get_organisations():
 
 def get_my_organisation():
     return Organisations.query.get(g.user.organisation_id)
-
-def _edit_users(form):
-    users = []
-    for choice in form.users.iter_choices():
-        if choice[2]:
-            user = User.query.filter_by(id=choice[0]).first()
-            users.append(user)
-
-    return users

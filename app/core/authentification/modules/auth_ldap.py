@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import ldap
-from app.models import AuthServerLdap
+from app.models import AuthServerLdap, Organisations
 from flask.ext.principal import RoleNeed, UserNeed
 from flask.ext.login import UserMixin
 from ..plugins import Plugin
@@ -27,7 +27,7 @@ class AuthLdap(Plugin, UserMixin):
         self.passwd = None
         self.id = None
         self.organisation_id = 0
-        self.role = 300
+        self.role = 0
         self.language = 'en'
         self.displayname = 'Not set'
         self.active = 0
@@ -80,9 +80,19 @@ class AuthLdap(Plugin, UserMixin):
         self.username = result[0][1]['uid'][0]
         self.id = unicode(result[0][1]['uidNumber'][0])
         self.displayname = result[0][1]['cn'][0]
+        self.organisation_id = self.get_organisation_id(result[0][1]['o'][0])
+        self.role = 100
         self.active = 1
 
         return True
+
+    def get_organisation_id(self, organisation):
+        org = Organisations.query.filter(Organisations.name == organisation).first()
+        print org
+        if org:
+            return org.id
+
+        return 0
 
     def is_activate(self):
         return True
@@ -106,7 +116,7 @@ class AuthLdap(Plugin, UserMixin):
 
     def provides(self, userid):
         needs = [RoleNeed('authenticated'), UserNeed(userid)]
-        needs.append(RoleNeed('root'))
+        needs.append(RoleNeed('user'))
         return needs
 
     def register_signals(self):

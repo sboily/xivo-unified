@@ -15,15 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from wtforms import widgets
-from wtforms.fields import TextField, BooleanField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import ValidationError, Required, Regexp, Length
-from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from flask.ext.login import current_user
+from wtforms.fields import TextField, SubmitField, TextAreaField
+from wtforms.validators import Required, Regexp, Length
 from flask.ext.babel import lazy_gettext as _
 from app.utils import Form
-from app.models import User
 
 class OrganisationsForm(Form):
     name = TextField(_('Name'), [Required(),
@@ -32,17 +27,4 @@ class OrganisationsForm(Form):
     ])
 
     description = TextAreaField(_('Description'))
-
-    users = QuerySelectMultipleField(_('Users'), get_label='displayname',query_factory=lambda: User.query.order_by(User.displayname))
-
     submit = SubmitField(_('Submit'))
-
-
-    def validate_users(self, field):
-        miss_me = False
-        for choice in field.iter_choices():
-            if int(choice[0]) == int(current_user.id) and choice[2] == False:
-                miss_me = True
-
-        if miss_me:
-            raise ValidationError(_('Missing your self !'))

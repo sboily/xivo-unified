@@ -87,7 +87,7 @@ def get_plugin_list():
                          info['dep'] = plugin_info.details.get('Documentation', 'Depend')
                     plugin_list.append(info)
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'server':
+            if plugin_info.details.get('Documentation', 'Parent') == 'server' and g.user.role >= 200:
                 if hasattr(g, 'server_id'):
                     info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
                             'url': plugin_info.plugin_object.plugin_endpoint(),
@@ -96,6 +96,15 @@ def get_plugin_list():
                             'version': plugin_info.details.get('Documentation', 'Version'),
                            }
                     plugin_list.append(info)
+
+            if plugin_info.details.get('Documentation', 'Parent') == 'user' and g.user.role == 100:
+                info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
+                        'url': plugin_info.plugin_object.plugin_endpoint(),
+                        'module': plugin_info.name,
+                        'parent': plugin_info.details.get('Documentation', 'Parent'),
+                        'version': plugin_info.details.get('Documentation', 'Version'),
+                       }
+                plugin_list.append(info)
 
     return plugin_list
 

@@ -81,7 +81,7 @@ class AuthLdap(Plugin, UserMixin):
         self.id = unicode(result[0][1]['uidNumber'][0])
         self.displayname = result[0][1]['cn'][0]
         self.organisation_id = self.get_organisation_id(result[0][1]['o'][0])
-        self.role = 100
+        self.role = 50
         self.active = 1
 
         return True

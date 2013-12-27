@@ -88,7 +88,7 @@ def get_plugin_list():
                          info['dep'] = plugin_info.details.get('Documentation', 'Depend')
                     plugin_list.append(info)
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'server' and g.user.role >= 200:
+            if plugin_info.details.get('Documentation', 'Parent') == 'server' and g.user.role >= 100:
                 if hasattr(g, 'server_id'):
                     info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
                             'url': plugin_info.plugin_object.plugin_endpoint(),

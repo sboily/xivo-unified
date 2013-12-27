@@ -73,7 +73,9 @@ def get_plugin_list():
             if hasattr(plugin_info.plugin_object, 'activated'):
                 plugin_info.plugin_object.activated(plugin_info.name)
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'organisation' and g.user.role >= 200:
+            if plugin_info.details.get('Documentation', 'Parent') == 'organisation' or \
+               plugin_info.details.get('Documentation', 'Parent') == 'user' \
+               and g.user.role >= 200:
                 if hasattr(g, 'server_id'):
                     pass
                 else:

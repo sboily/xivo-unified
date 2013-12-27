@@ -23,7 +23,7 @@ from app.helpers.acl.roles import root_role
 from forms import LoginForm, AuthServerLdapForm
 from app.extensions import db
 from app.models import User, AuthServerLdap
-from auth import Auth
+import auth
 
 authentification = Blueprint('authentification', __name__, template_folder='templates/authentification')
 
@@ -40,7 +40,7 @@ def login():
     form = LoginForm()
     del form.language
     if form.validate_on_submit():
-        user = Auth(form.username.data, form.password.data)
+        user = auth.authenticate(form.username.data, form.password.data)
         if user.is_active():
             login_user(user, remember=form.remember_me.data)
             identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
@@ -74,5 +74,5 @@ def auth_configure():
             server.active = form.active.data
         db.session.add(server)
         db.session.commit()
-        flash(_('Server LDAP edited'))
+        flash(_('Server LDAP configured'))
     return render_template('authentification_configuration.html', form=form)

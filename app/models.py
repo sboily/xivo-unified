@@ -162,6 +162,8 @@ class Plugins(db.Model):
 class AuthServerLdap(db.Model):
     __tablename__ = 'auth_server_ldap'
     id = db.Column(db.Integer, primary_key=True)
+    login = db.Column(db.Text())
+    passwd = db.Column(db.Text())
     host = db.Column(db.Text())
     basedn = db.Column(db.Text())
     searchfilter = db.Column(db.Text())

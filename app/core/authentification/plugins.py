@@ -15,18 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import User
 
-class UserSql(object):
-    def __init__(self, username, passwd):
-        self.username = username
-        self.passwd = passwd
+class AuthPlugin(type):
+    def __init__(cls, name, bases, attrs):
+        if not hasattr(cls, 'plugins'):
+            cls.plugins = []
+        else:
+            cls.register_plugin(cls) 
 
-    def auth(self):
-        user = User.query.filter_by(username=self.username).first()
-        if user and self.check_passwd(user.password):
-            return user
+    def register_plugin(cls, plugin):
+        instance = plugin()
+        if instance.is_activate():
+            cls.plugins.append(instance)
+            instance.register_signals()
 
-    def check_passwd(self, passwd):
-        return check_password_hash(passwd, self.passwd)
+class Plugin(object):
+    __metaclass__ = AuthPlugin
+
+from modules.auth_ldap import AuthLdap
+from modules.auth_sql import AuthSql

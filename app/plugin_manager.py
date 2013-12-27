@@ -28,7 +28,7 @@ from app import db
 from models import Plugins
 import logging 
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 plugin_manager = None
 plugin_directory = None

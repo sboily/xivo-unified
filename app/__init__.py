@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, session, g, flash, redirect, url_for, request, template_rendered
+from flask import Flask, session, g, flash, redirect, url_for, request
 from flask.ext.login import current_user
 from flask.ext.principal import identity_loaded
-from extensions import db, login_manager, babel, principal, celery
-from models import User
+from extensions import db, babel, celery, login_manager, principal
+from flask.ext.babel import gettext as _
 import plugin_manager
 import logging
 
@@ -36,6 +36,7 @@ LANGUAGES = {
     'en': 'English',
     'fr': 'French'
 }
+
 
 def create_app():
     app = Flask(__name__)
@@ -64,12 +65,12 @@ def configure_extensions(app):
     # Database
     db.init_app(app)
 
-    # Roles
-    principal.init_app(app)
-
-    # Authentification
+    # Login
     login_manager.init_app(app)
     login_manager.login_view = 'authentification.login'
+
+    # Roles
+    principal.init_app(app)
 
     # Plugins list global
     plugin_manager.init_plugin_manager(app.root_path + '/plugins', app)
@@ -77,10 +78,6 @@ def configure_extensions(app):
     plugin_manager.setup_plugins()
 
 def configure_hooks(app):
-    @login_manager.user_loader
-    def load_user(userid):
-        return User.query.filter_by(id=userid).first()
-
     @app.before_request
     def before_request():
         if current_user.is_authenticated():
@@ -95,10 +92,14 @@ def configure_hooks(app):
             g.servers_list = core.servers.views.get_servers_list()
             g.plugins_list = plugin_manager.get_plugin_list()
 
+    @login_manager.user_loader
+    def load_user(id):
+        return core.authentification.auth.get_user_by_id(id)
+
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
         if identity.id:
-            g.user = User.query.from_identity(identity)
+            g.user = core.authentification.auth.from_identity(identity)
 
     @babel.localeselector
     def get_locale():

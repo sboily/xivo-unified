@@ -37,7 +37,6 @@ def organisation():
 @root_role.require(403)
 def organisation_add():
     form = OrganisationsForm()
-    del form.users
     if form.validate_on_submit():
         organisation = Organisations(form.name.data)
         organisation.description = form.description.data

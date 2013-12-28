@@ -24,11 +24,15 @@ from ..plugins import Plugin
 class AuthLdap(Plugin):
     def __init__(self):
         self.auth_type = "ldap"
+        self.ldap_timeout = float(2)
 
     def connect(self, host):
+        ld = ldap.initialize("ldap://%s" % host)
+        ld.set_option(ldap.OPT_TIMEOUT, self.ldap_timeout)
+        ld.set_option(ldap.OPT_NETWORK_TIMEOUT, self.ldap_timeout)
+        ld.set_option(ldap.OPT_REFERRALS, self.ldap_timeout)
         connect = ldap.open(host)
         if connect:
-            connect.set_option(ldap.OPT_TIMEOUT, float(2))
             return connect
         return False
 

@@ -23,7 +23,7 @@ from ..plugins import Plugin
 
 class AuthLdap(Plugin):
     def __init__(self):
-        pass
+        self.auth_type = "ldap"
 
     def connect(self, host):
         connect = ldap.open(host)
@@ -60,10 +60,8 @@ class AuthLdap(Plugin):
 
     def search_by_id_or_username(self, id=None, username=None):
         if id:
-            print "Searching by ID : ", id
             searchfilter = "uidNumber=" + str(id)
         if username:
-            print "Searching by username: ", id
             searchfilter = "uid=" + username
 
         is_active = False
@@ -78,7 +76,7 @@ class AuthLdap(Plugin):
         if is_active:
             conn = self.connect(host)
             user = UserLdap(conn, basedn, searchfilter)
-            if user.search_authenticate_user(login, passwd):
+            if user.authenticate(login, passwd, True):
                 return user
 
         return False
@@ -88,7 +86,6 @@ class AuthLdap(Plugin):
 
     def get_user_by_id(self, id):
         if id.isnumeric():
-            print "MY ID : ", id
             return self.search_by_id_or_username(id=id)
         return False
 
@@ -99,7 +96,6 @@ class AuthLdap(Plugin):
 
     def from_identity(self, identity):
         if identity.id and (not identity.auth_type or identity.auth_type == "ldap"):
-            print "Identity : ", identity.id
             user = self.search_by_id_or_username(id=identity.id)
             if user:
                 identity.provides.update(self.provides(identity.id))
@@ -130,10 +126,8 @@ class UserLdap(UserMixin):
         self.active = 0
         self.attrs = ['uid', 'o', 'uidNumber', 'cn']
 
-        print "searching LDAP user ..."
-
-    def authenticate(self, user, passwd):
-        if self.bind(user, passwd):
+    def authenticate(self, user, passwd, with_auth_ldap=None):
+        if self.bind(user, passwd, with_auth_ldap):
             return self.search()
         return False
 
@@ -146,18 +140,10 @@ class UserLdap(UserMixin):
         except:
             print "Error on LDAP binding"
 
-        return False
-
-    def search_authenticate_user(self, login, passwd):
-        print "Searching user with auth %s : %s" %(login, passwd)
-        if self.bind(login, passwd, True) != 0:
-            user = self.search()
-            return user
-
+        self.conn.unbind_s()
         return False
 
     def search(self):
-        print "Searching ...", self.searchfilter
         result = self.conn.search_s(self.basedn, ldap.SCOPE_SUBTREE, self.searchfilter, self.attrs)
         self.conn.unbind_s()
 
@@ -167,16 +153,16 @@ class UserLdap(UserMixin):
         self.username = result[0][1]['uid'][0]
         self.id = unicode(result[0][1]['uidNumber'][0])
         self.displayname = result[0][1]['cn'][0]
-        self.organisation_id = self.get_organisation_id(result[0][1]['o'][0])
+        self.organisation_id = self._get_organisation_id(result[0][1]['o'][0])
         self.role = 50
         self.active = 1
 
         return self
 
-    def get_organisation_id(self, organisation):
-        orgsanisation_id = 0
+    def _get_organisation_id(self, organisation):
+        organisation_id = 0
         org = Organisations.query.filter(Organisations.name == organisation).first()
         if org:
-            orgsanisation_id = org.id
+            organisation_id = org.id
 
-        return orgsanisation_id
+        return organisation_id

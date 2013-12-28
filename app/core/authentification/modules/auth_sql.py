@@ -21,7 +21,7 @@ from ..plugins import Plugin
 
 class AuthSql(Plugin):
     def __init__(self):
-        pass
+        self.auth_type = "sql"
 
     def authenticate(self, username, passwd):
         user = User.query.filter_by(username=username).first()

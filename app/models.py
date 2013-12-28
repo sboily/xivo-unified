@@ -40,6 +40,7 @@ class UserQuery(BaseQuery):
 
         if user:
             identity.provides.update(user.provides)
+            identity.auth_type = "sql"
 
         identity.user = user
 

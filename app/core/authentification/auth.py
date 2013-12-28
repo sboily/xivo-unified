@@ -16,34 +16,48 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from plugins import Plugin
+import inspect
+
+_debug = True
 
 def authenticate(username, password):
     for plugin in Plugin.plugins:
-        print "Backend : ", plugin.__module__
         user = plugin.authenticate(username, password)
-        print "Authenticate :", dir(user)
-        print "Is user is activate : ", user.active
-        print "####################################"
-        if user.active:
+        _debug(plugin, user, username, password)
+        if user is not False:
             return user
+    return False
 
 def get_user_by_id(id):
     for plugin in Plugin.plugins:
         user = plugin.get_user_by_id(id)
-        if user:
+        _debug(plugin, user, id)
+        if user is not False:
             return user
 
 def get_user_by_username(username):
     for plugin in Plugin.plugins:
         user = plugin.get_user_by_username(username)
-        if user:
+        _debug(plugin, user, username)
+        if user is not False:
             return user
 
 def from_identity(identity):
     for plugin in Plugin.plugins:
         user = plugin.from_identity(identity)
-        if user:
+        _debug(plugin, user, identity)
+        if user is not False:
             return user
 
 def check_password():
     return True
+
+def _debug(plugin, user , *args):
+    if _debug:
+        print "############ DEBUG ##################"
+        print "From function : ", inspect.stack()[1][3]
+        print "Backend : ", plugin.__module__
+        print "Authenticate :", dir(user)
+        print "Arguments : ", args
+        print "Return : ", user
+        print "####################################"

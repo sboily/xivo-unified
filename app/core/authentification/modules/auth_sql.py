@@ -17,31 +17,28 @@
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
-from flask.ext.login import UserMixin
 from ..plugins import Plugin
 
-class AuthSql(Plugin, UserMixin):
+class AuthSql(Plugin):
     def __init__(self):
-        self.active = 0
-        self.user = None
+        pass
 
     def authenticate(self, username, passwd):
         user = User.query.filter_by(username=username).first()
         if user and self.check_passwd(user.password, passwd):
-            self.active = 1
-            self.user = user
-            setattr(user, "active", 1)
             return user
-        return self
+        return False
 
-    def get_user_by_id(self, userid):
-        return User.query.filter_by(id=userid).first()
+    def get_user_by_id(self, id):
+        return User.query.filter_by(id=id).first()
 
-    def get_user_by_username(self, userid):
-        return User.query.filter_by(username=userid).first()
+    def get_user_by_username(self, username):
+        return User.query.filter_by(username=username).first()
 
     def from_identity(self, identity):
-        return User.query.from_identity(identity)
+        if identity.id and (not identity.auth_type or identity.auth_type == "sql"):
+            return User.query.from_identity(identity)
+        return False
 
     def check_passwd(self, sql_passwd, passwd):
         return check_password_hash(sql_passwd, passwd)

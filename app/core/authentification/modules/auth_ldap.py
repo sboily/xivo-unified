@@ -28,7 +28,7 @@ class AuthLdap(Plugin):
     def connect(self, host):
         ldapobj = ldap.initialize("ldap://%s:389" % host, 0)
         ldapobj.set_option(ldap.OPT_TIMEOUT, 1)
-        ldapobj.set_option(ldap.OPT_NETWORK_TIMEOUT, 1)
+        ldapobj.set_option(ldap.OPT_NETWORK_TIMEOUT, 0.5)
         ldapobj.set_option(ldap.OPT_REFERRALS, 0)
         if ldapobj:
             return ldapobj

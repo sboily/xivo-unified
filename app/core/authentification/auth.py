@@ -22,44 +22,30 @@ import inspect
 debug_auth = False
 
 def authenticate(username, password):
-    for plugin in Plugin.plugins:
-        auth_type = session.get('identity.auth_type', None)
-        if plugin.auth_type == auth_type or auth_type == None:
-            user = plugin.authenticate(username, password)
-            _debug(plugin, user, username, password)
-            if user is not False:
-                return user
-    return False
+    return _call('authenticate', username, password)
 
 def get_user_by_id(id):
-    for plugin in Plugin.plugins:
-        auth_type = session.get('identity.auth_type', None)
-        if plugin.auth_type == auth_type or auth_type == None:
-            user = plugin.get_user_by_id(id)
-            _debug(plugin, user, id)
-            if user is not False:
-                return user
+    return _call('get_user_by_id', id)
 
 def get_user_by_username(username):
-    for plugin in Plugin.plugins:
-        auth_type = session.get('identity.auth_type', None)
-        if plugin.auth_type == auth_type or auth_type == None:
-            user = plugin.get_user_by_username(username)
-            _debug(plugin, user, username)
-            if user is not False:
-                return user
+    return _call('get_user_by_username', username)
 
 def from_identity(identity):
-    for plugin in Plugin.plugins:
-        auth_type = session.get('identity.auth_type', None)
-        if plugin.auth_type == auth_type or auth_type == None:
-            user = plugin.from_identity(identity)
-            _debug(plugin, user, identity)
-            if user is not False:
-                return user
+    return _call('from_identity', identity)
 
 def check_password():
     return True
+
+def _call(method, *args):
+    for plugin in Plugin.plugins:
+        auth_type = session.get('identity.auth_type', None)
+        if plugin.auth_type == auth_type or auth_type == None:
+            call = getattr(plugin, method)
+            user = call(*args)
+            _debug(plugin, user, *args)
+            if user is not False:
+                return user
+    return False
 
 def _debug(plugin, user , *args):
     if debug_auth:

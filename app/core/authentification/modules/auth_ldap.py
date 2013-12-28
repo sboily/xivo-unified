@@ -28,6 +28,7 @@ class AuthLdap(Plugin):
     def connect(self, host):
         connect = ldap.open(host)
         if connect:
+            connect.set_option(ldap.OPT_TIMEOUT, float(2))
             return connect
         return False
 

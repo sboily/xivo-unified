@@ -18,7 +18,7 @@
 from flask import Flask, session, g, flash, redirect, url_for, request
 from flask.ext.login import current_user
 from flask.ext.principal import identity_loaded
-from extensions import db, babel, celery, login_manager, principal
+from extensions import db, babel, celery, login_manager, principal, couchdbmanager
 from flask.ext.babel import gettext as _
 import plugin_manager
 import logging
@@ -64,6 +64,9 @@ def configure_extensions(app):
 
     # Database
     db.init_app(app)
+
+    # CouchDB
+    couchdbmanager.setup(app)
 
     # Login
     login_manager.init_app(app)

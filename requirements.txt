@@ -20,3 +20,4 @@ flup
 boto
 fabric
 python-novaclient
+flask-couchdb==0.2.1

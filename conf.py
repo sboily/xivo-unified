@@ -34,3 +34,5 @@ BROKER_URL = 'amqp://guest@localhost:5672//'
 CELERY_RESULT_BACKEND = 'amqp'
 CELERY_SEND_TASK_SENT_EVENT = True
 CELERY_TRACK_STARTED = True
+COUCHDB_SERVER = 'http://localhost:5984/'
+COUCHDB_DATABASE = 'xivo-unified'

@@ -6,7 +6,7 @@ XiVO unified is a proof of concept for the futur of XiVO and vision of the telep
 Installation
 ------------
 
-1. apt-get install python-virtualenv python-pip rabbitmq-server libpython-dev
+1. apt-get install python-virtualenv python-pip rabbitmq-server libpython-dev couchdb
 2. virtualenv xivo-unified
 3. source xivo-unified/bin/activate (activate the virtualenv)
 4. pip install -r requirements.txt (install the dependences, go to the root of the sources)

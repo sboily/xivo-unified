@@ -29,3 +29,6 @@ login_manager = LoginManager()
 
 from flask.ext.principal import Principal
 principal = Principal()
+
+from flask.ext.couchdb import CouchDBManager
+couchdbmanager = CouchDBManager()

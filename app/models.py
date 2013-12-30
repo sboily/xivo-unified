@@ -50,6 +50,7 @@ class User(db.Model, UserMixin):
 
     query_class = UserQuery
 
+    USER = 50
     ADMIN = 100
     MANAGER = 200
     ROOT = 300
@@ -73,26 +74,29 @@ class User(db.Model, UserMixin):
         self.role = role
 
     @cached_property
-    def permissions(self):
-        return self.Permissions(self)
-
-    @cached_property
     def provides(self):
         needs = [RoleNeed('authenticated'), UserNeed(self.id)]
 
         if self.is_user:
+            needs.append(RoleNeed('user'))
+
+        if self.is_admin:
             needs.append(RoleNeed('admin'))
 
         if self.is_manager:
             needs.append(RoleNeed('manager'))
 
-        if self.is_admin:
+        if self.is_root:
             needs.append(RoleNeed('root'))
 
         return needs
 
     @property
     def is_user(self):
+        return self.role == self.USER
+
+    @property
+    def is_admin(self):
         return self.role == self.ADMIN
 
     @property
@@ -100,7 +104,7 @@ class User(db.Model, UserMixin):
         return self.role == self.MANAGER
 
     @property
-    def is_admin(self):
+    def is_root(self):
         return self.role == self.ROOT
 
     def __repr__(self):

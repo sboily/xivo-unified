@@ -24,11 +24,12 @@ import urllib2
 import json
 
 from flask import current_app, g
+from flask.ext.login import current_user
 from app import db
 from models import Plugins
 import logging 
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 plugin_manager = None
 plugin_directory = None
@@ -58,6 +59,7 @@ def activate_plugins():
 
 def get_plugin_list():
     plugin_list = []
+
     for plugin_info in plugin_manager.getAllPlugins():
         if hasattr(g, 'server_id'):
             plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
@@ -73,8 +75,8 @@ def get_plugin_list():
             if hasattr(plugin_info.plugin_object, 'activated'):
                 plugin_info.plugin_object.activated(plugin_info.name)
 
-            if g.user.role >= 200 and (plugin_info.details.get('Documentation', 'Parent') == 'organisation' or \
-                                      plugin_info.details.get('Documentation', 'Parent') == 'user'):
+            if (current_user.is_manager or current_user.is_root) and (plugin_info.details.get('Documentation', 'Parent') == 'organisation' or \
+                                                                      plugin_info.details.get('Documentation', 'Parent') == 'user'):
                 if hasattr(g, 'server_id'):
                     pass
                 else:
@@ -88,7 +90,9 @@ def get_plugin_list():
                          info['dep'] = plugin_info.details.get('Documentation', 'Depend')
                     plugin_list.append(info)
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'server' and g.user.role >= 100:
+            if plugin_info.details.get('Documentation', 'Parent') == 'server' and (current_user.is_admin or \
+                                                                                   current_user.is_manager or \
+                                                                                   current_user.is_root):
                 if hasattr(g, 'server_id'):
                     info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
                             'url': plugin_info.plugin_object.plugin_endpoint(),
@@ -98,7 +102,7 @@ def get_plugin_list():
                            }
                     plugin_list.append(info)
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'user' and g.user.role == 50:
+            if plugin_info.details.get('Documentation', 'Parent') == 'user' and current_user.is_user:
                 info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
                         'url': plugin_info.plugin_object.plugin_endpoint(),
                         'module': plugin_info.name,

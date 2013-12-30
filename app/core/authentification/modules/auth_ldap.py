@@ -22,13 +22,14 @@ from flask.ext.login import UserMixin
 from ..plugins import Plugin
 
 class AuthLdap(Plugin):
+
     def __init__(self):
         self.auth_type = "ldap"
 
     def connect(self, host):
         ldapobj = ldap.initialize("ldap://%s:389" % host, 0)
-        ldapobj.set_option(ldap.OPT_TIMEOUT, 1)
-        ldapobj.set_option(ldap.OPT_NETWORK_TIMEOUT, 1)
+        ldapobj.set_option(ldap.OPT_TIMEOUT, 2)
+        ldapobj.set_option(ldap.OPT_NETWORK_TIMEOUT, 2)
         ldapobj.set_option(ldap.OPT_REFERRALS, 0)
         if ldapobj:
             return ldapobj
@@ -117,6 +118,12 @@ class AuthLdap(Plugin):
         print "Activating LDAP Auth"
 
 class UserLdap(UserMixin):
+
+    USER = 50
+    ADMIN = 100
+    MANAGER = 200
+    ROOT = 300
+
     def __init__(self, conn, basedn, searchfilter):
         self.conn = conn
         self.basedn = basedn
@@ -127,7 +134,8 @@ class UserLdap(UserMixin):
         self.language = 'en'
         self.displayname = 'Not set'
         self.active = 0
-        self.attrs = ['uid', 'o', 'uidNumber', 'cn']
+        self.email = None
+        self.attrs = ['uid', 'o', 'uidNumber', 'cn', 'mail']
 
     def authenticate(self, user, passwd, with_auth_ldap=None):
         if self.bind(user, passwd, with_auth_ldap):
@@ -154,8 +162,9 @@ class UserLdap(UserMixin):
             return False
 
         self.username = result[0][1]['uid'][0]
-        self.id = unicode(result[0][1]['uidNumber'][0])
+        self.id = int(result[0][1]['uidNumber'][0])
         self.displayname = result[0][1]['cn'][0]
+        self.email = result[0][1]['mail'][0]
         self.organisation_id = self._get_organisation_id(result[0][1]['o'][0])
         self.role = 50
         self.active = 1
@@ -169,3 +178,39 @@ class UserLdap(UserMixin):
             organisation_id = org.id
 
         return organisation_id
+
+    def provides(self):
+        needs = [RoleNeed('authenticated'), UserNeed(self.id)]
+
+        if self.is_user:
+            needs.append(RoleNeed('user'))
+
+        if self.is_admin:
+            needs.append(RoleNeed('admin'))
+
+        if self.is_manager:
+            needs.append(RoleNeed('manager'))
+
+        if self.is_root:
+            needs.append(RoleNeed('root'))
+
+        return needs
+
+    @property
+    def is_user(self):
+        return self.role == self.USER
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN
+
+    @property
+    def is_manager(self):
+        return self.role == self.MANAGER
+
+    @property
+    def is_root(self):
+        return self.role == self.ROOT
+
+    def __repr__(self):
+        return "<%d : %s (%s)>" % (self.id, self.username, self.email)

@@ -21,12 +21,13 @@ from wtforms.fields import TextField, BooleanField, PasswordField, SubmitField, 
 from wtforms.validators import Required, IPAddress, Regexp, Length, Regexp
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from app.models import User, Servers, Organisations
+from flask.ext.login import current_user
 from app.utils import Form
 from flask.ext.babel import lazy_gettext as _
 from flask import g
 
 def get_servers_list():
-    if g.user.role == 300:
+    if current_user.is_root:
         return User.query.order_by(User.displayname)
     else:
         return User.query.filter(User.organisation_id==g.user_organisation.id) \

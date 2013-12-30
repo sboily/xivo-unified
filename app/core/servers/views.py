@@ -37,7 +37,7 @@ def server():
 @manager_role.require(403)
 def server_add():
     form = ServersForm()
-    if g.user.role != 300:
+    if not current_user.is_root:
         form.organisations.query_factory = lambda: Organisations.query.filter(Organisations.id == g.user_organisation.id).all()
         form.organisations.allow_blank = False
 
@@ -60,7 +60,7 @@ def server_add():
 @login_required
 @manager_role.require(403)
 def server_del(id):
-    if g.user.role == 300:
+    if current_user.is_root:
         server = Servers.query.get_or_404(id)
     else:
         server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
@@ -75,7 +75,7 @@ def server_del(id):
 @login_required
 @manager_role.require(403)
 def server_edit(id):
-    if g.user.role == 300:
+    if current_user.is_root:
         server = Servers.query.get_or_404(id)
         form = ServersForm(obj=server)
     else:
@@ -106,9 +106,9 @@ def server_edit(id):
 @login_required
 @admin_role.require(403)
 def server_save(id):
-    if g.user.role == 300:
+    if current_user.is_root:
         server = Servers.query.order_by(Servers.name).first()
-    elif g.user.role == 200:
+    elif current_user.is_manager:
         server = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id) \
                                                  .order_by(Servers.name)
     else:
@@ -134,9 +134,9 @@ def server_disconnect():
     return redirect(url_for("home.homepage"))
 
 def get_servers_list():
-    if g.user.role == 300:
+    if current_user.is_root:
         servers = Servers.query.order_by(Servers.organisation_id)
-    elif g.user.role == 200:
+    elif current_user.is_manager:
         servers = Servers.query.join(User.servers) \
                                .filter(User.organisation_id == g.user.organisation_id) \
                                .order_by(Servers.name)
@@ -158,7 +158,7 @@ def _add_users(form):
             user = User.query.filter_by(id=choice[0]).first()
             users.append(user)
         if int(choice[0]) == int(current_user.id) and choice[2] == False:
-            if g.user.role != 300:
+            if not current_user.is_root:
                 auto_add = True
 
     if auto_add:

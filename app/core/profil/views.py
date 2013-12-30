@@ -59,11 +59,11 @@ def myprofil():
 @login_required
 @manager_role.require(403)
 def accounts():
-    if g.user.role == 300:
+    if current_user.is_root:
         users = User.query.all()
     else:
         users = User.query.filter(User.organisation_id == g.user.organisation_id) \
-                          .filter(User.role <= 200) \
+                          .filter(User.role <= current_user.MANAGER) \
                           .all()
     return render_template('accounts.html', users=users)
 
@@ -72,8 +72,8 @@ def accounts():
 @manager_role.require(403)
 def account_add():
     form = AccountForm()
-    if g.user.role == 200:
-        form.role.choices = [('200', 'Manager'),('100', 'Admin')]
+    if current_user.is_manager:
+        form.role.choices = [(current_user.MANAGER, 'Manager'),(current_user.ADMIN, 'Admin')]
     if form.validate_on_submit():
         account = User(form.username.data, form.password.data,
                     form.email.data, form.displayname.data, form.role.data)
@@ -89,7 +89,7 @@ def account_add():
 @login_required
 @manager_role.require(403)
 def account_del(id):
-    if g.user.role == 300:
+    if current_user.is_root:
         account = User.query.filter_by(id=id).first()
     else:
         account = User.query.filter(User.organisation_id == g.user.organisation_id) \
@@ -107,16 +107,16 @@ def account_del(id):
 @login_required
 @manager_role.require(403)
 def account_edit(id):
-    if g.user.role == 300:
+    if current_user.is_root:
         account = User.query.get_or_404(id)
     else:
         account = User.query.filter(User.organisation_id == g.user.organisation_id) \
-                            .filter(User.role <= 200) \
+                            .filter(User.role <= current_user.MANAGER) \
                             .filter_by(id=id) \
                             .first()
     form = AccountFormEdit(obj=account)
-    if g.user.role == 200:
-        form.role.choices = [('200', 'Manager'),('100', 'Admin')]
+    if current_user.is_manager:
+        form.role.choices = [(current_user.MANAGER, 'Manager'),(current_user.ADMIN, 'Admin')]
     if request.method == 'POST':
         form.username.data = User.query.get_or_404(id).username
         if not form.password.data and account.password:

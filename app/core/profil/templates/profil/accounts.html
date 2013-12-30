@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% set real_role = {100 : 'Admin', 200 : 'Manager', 300 : 'Root' } %}
+{% set real_role = {current_user.ADMIN : 'Admin', current_user.MANAGER : 'Manager', current_user.ROOT : 'Root' } %}
 {% set url_add = url_for('profil.account_add') %}
 
 <div class="table-responsive">

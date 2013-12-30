@@ -24,7 +24,7 @@
 </div>
 
 
-{% if g.user.role == 300 %}
+{% if current_user.is_root %}
 <script type=text/javascript>
     $("label[for=users]").hide()
     $('#users').hide();

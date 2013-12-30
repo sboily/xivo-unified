@@ -22,12 +22,13 @@ from wtforms.validators import ValidationError, Required, Length, Regexp, EqualT
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask.ext.wtf import RecaptchaField
 from flask.ext.babel import lazy_gettext as _
+from flask.ext.login import current_user
 from app.models import Organisations, User
 from app.utils import Form
 from flask import g
 
 def get_organisations():
-    if g.user.role == 300:
+    if current_user.is_root:
         return Organisations.query.all()
     else:
         return Organisations.query.filter(Organisations.id == g.user.organisation_id).all()

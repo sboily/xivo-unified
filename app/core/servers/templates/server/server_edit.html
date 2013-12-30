@@ -24,7 +24,7 @@
     </div>
 </div>
 
-{% if g.user.role == 300 %}
+{% if current_user.is_root %}
 <script type=text/javascript>
 
     function _update_options_users() {

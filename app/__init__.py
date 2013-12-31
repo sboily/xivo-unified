@@ -66,6 +66,7 @@ def configure_extensions(app):
 
     # CouchDB
     couchdbmanager.setup(app)
+    couchdbmanager.sync(app)
 
     # Login
     login_manager.init_app(app)

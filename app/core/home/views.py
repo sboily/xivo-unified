@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash
-from flask.ext.login import login_required
+from flask.ext.login import login_required, current_user
 from app.core.organisations.forms import OrganisationsForm
 from app.core.profil.forms import AccountForm
 from app.models import User, Organisations
@@ -68,7 +68,8 @@ def wizard():
 
 @home.route('/first', methods=['GET', 'POST'])
 def first():
-    if User.query.filter(User.role == '300').first():
+    ROOT = '300'
+    if User.query.filter(User.role == current_user.ROOT).first():
         return redirect(url_for("home.homepage"))
 
     form = AccountForm()
@@ -77,7 +78,7 @@ def first():
     del form.language
     if form.validate_on_submit():
         account = User(form.username.data, form.password.data,
-                       form.email.data, form.displayname.data, '300')
+                       form.email.data, form.displayname.data, ROOT)
         db.session.add(account)
         db.session.commit()
         flash(_('Account added'))

@@ -25,13 +25,17 @@ from flask.ext.babel import lazy_gettext as _
 from flask.ext.login import current_user
 from app.models import Organisations, User
 from app.utils import Form
-from flask import g
+
+ROOT = '300'
+MANAGER = '200'
+ADMIN = '100'
+USER = '50'
 
 def get_organisations():
     if current_user.is_root:
         return Organisations.query.all()
     else:
-        return Organisations.query.filter(Organisations.id == g.user.organisation_id).all()
+        return Organisations.query.filter(Organisations.id == current_user.organisation_id).all()
 
 class AccountForm(Form):
     username = TextField(_('Username'), [Required(),
@@ -46,7 +50,7 @@ class AccountForm(Form):
     password = PasswordField(_('Password'), [Required(),
         Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
-    role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
+    role = SelectField(_('Role'), choices=[(ROOT, 'Root'),(MANAGER, 'Manager'),(ADMIN, 'Admin')])
     submit = SubmitField(_('Save'))
 
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
@@ -84,7 +88,7 @@ class AccountFormEdit(Form):
     password = PasswordField(_('Password'), [Required(),
         Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
-    role = SelectField(_('Role'), choices=[('300', 'Root'),('200', 'Manager'),('100', 'Admin')])
+    role = SelectField(_('Role'), choices=[(ROOT, 'Root'),(MANAGER, 'Manager'),(ADMIN, 'Admin')])
     submit = SubmitField(_('Save'))
 
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])

@@ -37,7 +37,6 @@ LANGUAGES = {
     'fr': 'French'
 }
 
-
 def create_app():
     app = Flask(__name__)
     configure_app(app)
@@ -84,7 +83,7 @@ def configure_hooks(app):
     @app.before_request
     def before_request():
         if current_user.is_authenticated():
-            if g.user.organisation_id:
+            if current_user.organisation_id:
                 g.user_organisation = core.organisations.views.get_my_organisation()
 
             server_id = session.get('server_id', None)
@@ -107,7 +106,7 @@ def configure_hooks(app):
     @babel.localeselector
     def get_locale():
         if g.get('user', None):
-            return g.user.language
+            return current_user.language
         else:
             return request.accept_languages.best_match(LANGUAGES.keys())
 

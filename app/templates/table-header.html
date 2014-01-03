@@ -1,7 +1,7 @@
 {% if role_url_add %}
   {% set role = role_url_add %}
 {% else %}
-  {% set role = 300 %}
+  {% set role = 200 %}
 {% endif %}
 
   <div class="row" style="margin-right: 0px; padding-left: 0px; margin-bottom: 20px;">
@@ -11,7 +11,7 @@
         <input class="search form-control" type="search">
         <div class="input-group-btn">
           <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>&nbsp;&nbsp;
-          {% if url_add and g.user.role >= role %}
+          {% if url_add and current_user.role >= role %}
               <a class="btn btn-primary btn-xs" href="{{ url_add }}">
               {% if icon_url_add %}
                   <i class="glyphicon glyphicon-{{ icon_url_add }}"></i>

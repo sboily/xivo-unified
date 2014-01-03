@@ -156,6 +156,7 @@ class Plugins(db.Model):
     name = db.Column(db.String(200))
     installed_time = db.Column(db.DateTime, default=datetime.utcnow)
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))
+    user_id = db.Column(db.Integer)
     server_id = db.Column(db.Integer, db.ForeignKey('servers.id'))
 
     def __init__(self, name):

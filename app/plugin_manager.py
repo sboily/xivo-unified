@@ -62,12 +62,17 @@ def get_plugin_list():
 
     for plugin_info in plugin_manager.getAllPlugins():
         if hasattr(g, 'server_id'):
-            plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
+            plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
                                   .filter(Plugins.server_id == g.server_id) \
                                   .filter(Plugins.name == plugin_info.name) \
                                   .first()
+        elif current_user.is_user:
+            plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
+                                  .filter(Plugins.name == plugin_info.name) \
+                                  .filter(Plugins.user_id == current_user.id) \
+                                  .first()
         else:
-            plugin = Plugins.query.filter(Plugins.organisation_id == g.user.organisation_id) \
+            plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
                                   .filter(Plugins.name == plugin_info.name) \
                                   .first()
 
@@ -155,7 +160,8 @@ def install_plugin(plugin_name):
 
 def _add_to_db(plugin_name):
     plugin = Plugins(plugin_name)
-    plugin.organisation_id = g.user.organisation_id
+    plugin.organisation_id = current_user.organisation_id
+    plugin.user_id = current_user.id
     if hasattr(g, 'server_id'):
         plugin.server_id = g.server_id
     db.session.add(plugin)

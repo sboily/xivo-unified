@@ -16,18 +16,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from yapsy.PluginManager import PluginManager
+from flask import current_app, g
+from flask.ext.login import current_user
+from extensions import db
+from models import Plugins
+import logging 
 import os
 import tempfile
 import shutil
 import tarfile
 import urllib2
 import json
-
-from flask import current_app, g
-from flask.ext.login import current_user
-from app import db
-from models import Plugins
-import logging 
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -47,7 +46,6 @@ def init_plugin_manager(directory, created_app):
     plugin_manager.setPluginInfoExtension('plugin')
     plugin_manager.collectPlugins()
 
-
 def setup_plugins():
     for plugin_info in plugin_manager.getAllPlugins():
         plugin_info.plugin_object.setup(app)
@@ -56,68 +54,60 @@ def activate_plugins():
     for plugin_info in plugin_manager.getAllPlugins():
         plugin_manager.activatePluginByName(plugin_info.name)
 
-
 def get_plugin_list():
     plugin_list = []
 
     for plugin_info in plugin_manager.getAllPlugins():
-        if hasattr(g, 'server_id'):
-            plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
-                                  .filter(Plugins.server_id == g.server_id) \
-                                  .filter(Plugins.name == plugin_info.name) \
-                                  .first()
-        elif current_user.is_user:
-            plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
-                                  .filter(Plugins.name == plugin_info.name) \
-                                  .filter(Plugins.user_id == current_user.id) \
-                                  .first()
-        else:
-            plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
-                                  .filter(Plugins.name == plugin_info.name) \
-                                  .first()
+        plugin = get_plugin_list_from_db(plugin_info)
 
         if plugin:
+            plugin_type = plugin_info.details.get('Documentation', 'Parent')
+
             if hasattr(plugin_info.plugin_object, 'activated'):
                 plugin_info.plugin_object.activated(plugin_info.name)
 
-            if (current_user.is_manager or current_user.is_root) and (plugin_info.details.get('Documentation', 'Parent') == 'organisation' or \
-                                                                      plugin_info.details.get('Documentation', 'Parent') == 'user'):
-                if hasattr(g, 'server_id'):
-                    pass
-                else:
-                    info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
-                            'url': plugin_info.plugin_object.plugin_endpoint(),
-                            'module': plugin_info.name,
-                            'parent': plugin_info.details.get('Documentation', 'Parent'),
-                            'version': plugin_info.details.get('Documentation', 'Version'),
-                           }
-                    if plugin_info.details.has_option('Documentation', 'Depend'):
-                         info['dep'] = plugin_info.details.get('Documentation', 'Depend')
-                    plugin_list.append(info)
+            if (plugin_type == 'organisation' or plugin_type == 'user') and (current_user.is_manager or current_user.is_root):
+                if not g.get('server_id', None):
+                    plugin_list.append(add_to_plugin_list(plugin_info))
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'server' and (current_user.is_admin or \
-                                                                                   current_user.is_manager or \
-                                                                                   current_user.is_root):
-                if hasattr(g, 'server_id'):
-                    info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
-                            'url': plugin_info.plugin_object.plugin_endpoint(),
-                            'module': plugin_info.name,
-                            'parent': plugin_info.details.get('Documentation', 'Parent'),
-                            'version': plugin_info.details.get('Documentation', 'Version'),
-                           }
-                    plugin_list.append(info)
+            if plugin_type == 'server' and (current_user.is_admin or current_user.is_manager or current_user.is_root):
+                if g.get('server_id', None):
+                    plugin_list.append(add_to_plugin_list(plugin_info))
 
-            if plugin_info.details.get('Documentation', 'Parent') == 'user' and current_user.is_user:
-                info = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
-                        'url': plugin_info.plugin_object.plugin_endpoint(),
-                        'module': plugin_info.name,
-                        'parent': plugin_info.details.get('Documentation', 'Parent'),
-                        'version': plugin_info.details.get('Documentation', 'Version'),
-                       }
-                plugin_list.append(info)
+            if plugin_type == 'user' and current_user.is_user:
+                plugin_list.append(add_to_plugin_list(plugin_info))
 
     return plugin_list
 
+def get_plugin_list_from_db(plugin_info):
+    if g.get('server_id', None):
+        plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
+                              .filter(Plugins.server_id == g.server_id) \
+                              .filter(Plugins.name == plugin_info.name) \
+                              .first()
+    elif current_user.is_user:
+        plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
+                              .filter(Plugins.name == plugin_info.name) \
+                              .filter(Plugins.user_id == current_user.id) \
+                              .first()
+    else:
+        plugin = Plugins.query.filter(Plugins.organisation_id == current_user.organisation_id) \
+                              .filter(Plugins.name == plugin_info.name) \
+                              .first()
+
+    return plugin
+
+def add_to_plugin_list(plugin_info):
+    plugin = {'name': plugin_info.details.get('Documentation', 'DisplayName'),
+              'url': plugin_info.plugin_object.plugin_endpoint(),
+              'module': plugin_info.name,
+              'parent': plugin_info.details.get('Documentation', 'Parent'),
+              'version': plugin_info.details.get('Documentation', 'Version'),
+             }
+    if plugin_info.details.has_option('Documentation', 'Depend'):
+        plugin['dep'] = plugin_info.details.get('Documentation', 'Depend')
+
+    return plugin
 
 def remove_plugin(plugin_name):
     _deactivated_plugin(plugin_name)
@@ -132,11 +122,11 @@ def _deactivated_plugin(plugin_name):
 
 def _remove_from_db(plugin_name):
     plugin = Plugins.query.filter(Plugins.name == plugin_name) \
-                          .filter(Plugins.organisation_id == g.user_organisation.id) \
+                          .filter(Plugins.organisation_id == current_user.organisation.id) \
                           .first()
-    if hasattr(g, 'server_id'):
+    if g.get('server_id', None):
         plugin = Plugins.query.filter(Plugins.name == plugin_name) \
-                              .filter(Plugins.organisation_id == g.user_organisation.id) \
+                              .filter(Plugins.organisation_id == current_user.organisation.id) \
                               .filter(Plugins.server_id == g.server_id) \
                               .first()
     db.session.delete(plugin)
@@ -162,7 +152,7 @@ def _add_to_db(plugin_name):
     plugin = Plugins(plugin_name)
     plugin.organisation_id = current_user.organisation_id
     plugin.user_id = current_user.id
-    if hasattr(g, 'server_id'):
+    if g.get('server_id', None):
         plugin.server_id = g.server_id
     db.session.add(plugin)
     db.session.commit()

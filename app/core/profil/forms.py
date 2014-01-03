@@ -26,10 +26,10 @@ from flask.ext.login import current_user
 from app.models import Organisations, User
 from app.utils import Form
 
-ROOT = '300'
-MANAGER = '200'
-ADMIN = '100'
-USER = '50'
+ROOT = 300
+MANAGER = 200
+ADMIN = 100
+USER = 50
 
 def get_organisations():
     if current_user.is_root:
@@ -50,12 +50,10 @@ class AccountForm(Form):
     password = PasswordField(_('Password'), [Required(),
         Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
-    role = SelectField(_('Role'), choices=[(ROOT, 'Root'),(MANAGER, 'Manager'),(ADMIN, 'Admin')])
-    submit = SubmitField(_('Save'))
-
+    role = SelectField(_('Role'), choices=[(ROOT, 'Root'),(MANAGER, 'Manager'),(ADMIN, 'Admin')], coerce=int)
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])
-
     organisations = QuerySelectField(_('Organisation'), get_label='name',query_factory=get_organisations)
+    submit = SubmitField(_('Save'))
 
     def validate_username(self, field):
         user = self.get_user()
@@ -88,7 +86,7 @@ class AccountFormEdit(Form):
     password = PasswordField(_('Password'), [Required(),
         Length(min=8, message=_("It's probably best if your password is longer than 8 characters."))
     ])
-    role = SelectField(_('Role'), choices=[(ROOT, 'Root'),(MANAGER, 'Manager'),(ADMIN, 'Admin')])
+    role = SelectField(_('Role'), choices=[(ROOT, 'Root'),(MANAGER, 'Manager'),(ADMIN, 'Admin')], coerce=int)
     submit = SubmitField(_('Save'))
 
     language = SelectField(_('Language'), choices=[('en', _('English')),('fr', _('French'))])

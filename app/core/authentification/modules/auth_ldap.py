@@ -163,7 +163,7 @@ class UserLdap(UserMixin):
 
         self.username = result[0][1]['uid'][0]
         self.id = int(result[0][1]['uidNumber'][0])
-        self.displayname = result[0][1]['cn'][0]
+        self.displayname = unicode(result[0][1]['cn'][0], "UTF-8")
         self.email = result[0][1]['mail'][0]
         self.organisation_id = self._get_organisation_id(result[0][1]['o'][0])
         self.role = 50

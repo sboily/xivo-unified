@@ -14,11 +14,11 @@
                     <li class=""><a href="#passwd" data-toggle="tab">{{ _('Password') }}</a></li>
                 </ul>
                 <br>
+                <form class="form" method="post">
+                {{ form.csrf_token }}
                 <div class="tab-content">
                     <div class="tab-pane active" id="informations">
-                        <form class="form" method="post">
-                            {{ form.csrf_token }}
-                            <fieldset>
+                        <fieldset>
                             <div class="col-md-2">
                                 <img class="img-rounded" src="{{ account.email | gravatar }}"></img>
                                 <h4>{{ current_user.displayname }}</h4>
@@ -44,20 +44,17 @@
                             </div>
                             </fieldset>
                             {{ render_field(form.submit, class="btn btn-primary") }}
-                        </form>
                     </div>
                     <div class="tab-pane" id="passwd">
-                        <form class="form" method="post">
-                            {{ form.csrf_token }}
                             <fieldset>
                             <div class="col-md-2">
                                 {{ render_field(form.password, with_label=1) }}
                             </div>
-                            </fieldset>
-                            {{ render_field(form.submit, class="btn btn-primary") }}
-                        </form>
+                        </fieldset>
+                        {{ render_field(form.submit, class="btn btn-primary") }}
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>

@@ -4,7 +4,11 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3>{{ _('Your Account') }} ({{ current_user.username }})</h3>
+        <h3>{{ _('Your Account') }} ({{ current_user.username }})
+            {% if current_user.is_user %}
+                <small><em>read only</em></small>
+            {% endif %}
+        </h3>
     </div>
     <div class="panel-body">
         <div class="well well-xs col-md-12">
@@ -43,7 +47,9 @@
                               </div>
                             </div>
                             </fieldset>
-                            {{ render_field(form.submit, class="btn btn-primary") }}
+                            {% if not current_user.is_user %}
+                                {{ render_field(form.submit, class="btn btn-primary") }}
+                            {% endif %}
                     </div>
                     <div class="tab-pane" id="passwd">
                             <fieldset>
@@ -51,7 +57,9 @@
                                 {{ render_field(form.password, with_label=1) }}
                             </div>
                         </fieldset>
-                        {{ render_field(form.submit, class="btn btn-primary") }}
+                        {% if not current_user.is_user %}
+                            {{ render_field(form.submit, class="btn btn-primary") }}
+                        {% endif %}
                     </div>
                 </div>
                 </form>

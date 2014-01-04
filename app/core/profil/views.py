@@ -19,7 +19,7 @@ from flask import render_template, Blueprint, flash, redirect, url_for, request,
 from werkzeug.security import generate_password_hash
 from flask.ext.login import login_required, current_user
 from app.extensions import db
-from app.helpers.acl.roles import root_role, manager_role, admin_role
+from app.helpers.acl.roles import root_role, manager_role, admin_role, user_role
 from app.models import User
 from forms import AccountForm, AccountFormEdit, SignupForm
 from flask.ext.babel import gettext as _
@@ -30,9 +30,12 @@ profil = Blueprint('profil', __name__, template_folder='templates/profil')
 
 @profil.route('/myprofil', methods=['GET', 'POST'])
 @login_required
-@admin_role.require(403)
+@user_role.require(403)
 def myprofil():
-    account = User.query.get_or_404(current_user.id)
+    if current_user.is_user:
+        account = current_user
+    else:
+        account = User.query.get_or_404(current_user.id)
     gravatar = Gravatar(current_app,
                     size=100,
                     rating='g',

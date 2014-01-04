@@ -30,9 +30,6 @@ def get_user_by_id(id):
 def get_user_by_username(username):
     return _call('get_user_by_username', username)
 
-def from_identity(identity):
-    return _call('from_identity', identity)
-
 def check_password():
     return True
 

@@ -102,7 +102,11 @@ def configure_hooks(app):
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
         if identity.id:
-            g.user = core.authentification.auth.from_identity(identity)
+            if hasattr(current_user, 'query'):
+                current_user.query.from_identity(identity)
+            else:
+                current_user.from_identity(identity)
+            g.user = current_user
 
     @babel.localeselector
     def get_locale():

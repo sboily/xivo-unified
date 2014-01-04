@@ -18,11 +18,11 @@
 import ldap
 from app.models import AuthServerLdap, Organisations
 from flask.ext.principal import RoleNeed, UserNeed
-from flask.ext.login import UserMixin
+from flask.ext.login import UserMixin, current_user
+from werkzeug.utils import cached_property
 from ..plugins import Plugin
 
 class AuthLdap(Plugin):
-
     def __init__(self):
         self.auth_type = "ldap"
 
@@ -35,55 +35,63 @@ class AuthLdap(Plugin):
             return ldapobj
         return False
 
-    def get_config(self):
-        authldapserver = AuthServerLdap.query.first()
-        if authldapserver:
-            self.basedn = authldapserver.basedn
-            self.searchfilter = authldapserver.searchfilter
-            return authldapserver
-        return None
+    def bind(self, conn, user, passwd, with_simple=None):
+        try:
+            if with_simple:
+                return conn.simple_bind(user, passwd)
+            else:
+                return conn.bind_s(user, passwd)
+        except:
+            print "Error on LDAP binding"
 
-    def authenticate(self, username, passwd):
+        conn.unbind_s()
+        return False
+
+    def search(self, conn, basedn, searchfilter):
+        attrs = ['uid', 'o', 'uidNumber', 'cn', 'mail']
+        return conn.search_s(basedn, ldap.SCOPE_SUBTREE, searchfilter, attrs)
+
+    def authenticate(self, username=None, passwd=None, by_id=None, by_username=None):
+        with_simple = False
+
         ldapconfig = self.get_config()
         if ldapconfig:
-            searchfilter = ldapconfig.searchfilter +"="+ username
-            userdn = searchfilter +","+ ldapconfig.basedn
-        else:
-            return False
+            host = ldapconfig.host
+            basedn = ldapconfig.basedn
 
-        if ldapconfig.active:
-            conn = self.connect(ldapconfig.host)
-            if conn:
-                user = UserLdap(conn, self.basedn, searchfilter)
-                if user.authenticate(userdn, passwd):
-                    return user
+            if username:
+                searchfilter = ldapconfig.searchfilter +"="+ username
+                username = searchfilter +","+ ldapconfig.basedn
+
+            if by_username:
+                username = ldapconfig.login
+                passwd = ldapconfig.passwd
+                searchfilter = ldapconfig.searchfilter +"="+ by_username
+                with_simple = True
+
+            if by_id:
+                username = ldapconfig.login
+                passwd = ldapconfig.passwd
+                searchfilter = "uidNumber=" + str(by_id)
+                with_simple = True
+
+            if ldapconfig.active:
+                conn = self.connect(host)
+                if self.bind(conn, username, passwd, with_simple):
+                    result = self.search(conn, basedn, searchfilter)
+                    conn.unbind_s()
+                    if result:
+                        return UserLdap(result)
         else:
             print "LDAP backend is not activated"
 
         return False
 
+    def get_config(self):
+        return AuthServerLdap.query.first()
+
     def search_by_id_or_username(self, id=None, username=None):
-        if id:
-            searchfilter = "uidNumber=" + str(id)
-        if username:
-            searchfilter = "uid=" + username
-
-        is_active = False
-        ldapconfig = self.get_config()
-        if ldapconfig:
-            login = ldapconfig.login
-            passwd = ldapconfig.passwd
-            basedn = ldapconfig.basedn
-            host = ldapconfig.host
-            is_active = ldapconfig.active
-
-        if is_active:
-            conn = self.connect(host)
-            user = UserLdap(conn, basedn, searchfilter)
-            if user.authenticate(login, passwd, True):
-                return user
-
-        return False
+        return self.authenticate(by_username=username, by_id=id)
 
     def is_activate(self):
         return True
@@ -98,22 +106,6 @@ class AuthLdap(Plugin):
             return self.search_by_id_or_username(username=username)
         return False
 
-    def from_identity(self, identity):
-        if identity.id and (not identity.auth_type or identity.auth_type == "ldap"):
-            user = self.search_by_id_or_username(id=identity.id)
-            if user:
-                identity.provides.update(self.provides(identity.id))
-                identity.auth_type = "ldap"
-                return user
-            else:
-                identity.auth_type = ""
-        return False
-
-    def provides(self, userid):
-        needs = [RoleNeed('authenticated'), UserNeed(userid)]
-        needs.append(RoleNeed('user'))
-        return needs
-
     def register_signals(self):
         print "Activating LDAP Auth"
 
@@ -124,63 +116,36 @@ class UserLdap(UserMixin):
     MANAGER = 200
     ROOT = 300
 
-    def __init__(self, conn, basedn, searchfilter):
-        self.conn = conn
-        self.basedn = basedn
-        self.searchfilter = searchfilter
-        self.id = None
-        self.organisation_id = None
-        self.role = None
-        self.language = 'en'
-        self.displayname = 'Not set'
-        self.active = 0
-        self.email = None
-        self.attrs = ['uid', 'o', 'uidNumber', 'cn', 'mail']
-
-    def authenticate(self, user, passwd, with_auth_ldap=None):
-        if self.bind(user, passwd, with_auth_ldap):
-            return self.search()
-        return False
-
-    def bind(self, user, passwd, with_simple=None):
-        try:
-            if with_simple:
-                return self.conn.simple_bind(user, passwd)
-            else:
-                return self.conn.bind_s(user, passwd)
-        except:
-            print "Error on LDAP binding"
-
-        self.conn.unbind_s()
-        return False
-
-    def search(self):
-        result = self.conn.search_s(self.basedn, ldap.SCOPE_SUBTREE, self.searchfilter, self.attrs)
-        self.conn.unbind_s()
-
-        if not result:
-            return False
-
-        self.username = result[0][1]['uid'][0]
+    def __init__(self, result):
         self.id = int(result[0][1]['uidNumber'][0])
+        self.username = unicode(result[0][1]['uid'][0], "UTF-8")
         self.displayname = unicode(result[0][1]['cn'][0], "UTF-8")
-        self.email = result[0][1]['mail'][0]
+        self.email = unicode(result[0][1]['mail'][0], "UTF-8")
         self.organisation_id = self._get_organisation_id(result[0][1]['o'][0])
+        self.organisation_name = unicode(result[0][1]['o'][0], "UTF-8")
         self.role = 50
         self.active = 1
-
-        return self
+        self.language = 'en'
+        self.created_time = None
 
     def _get_organisation_id(self, organisation):
-        organisation_id = 0
+        id = 0
         org = Organisations.query.filter(Organisations.name == organisation).first()
         if org:
-            organisation_id = org.id
+            return (int(org.id))
 
-        return organisation_id
+        return id
 
+    def from_identity(self, identity):
+        if identity.id == current_user.id:
+            identity.provides.update(self.provides)
+            identity.auth_type = "ldap"
+        else:
+            identity.auth_type = ""
+
+    @cached_property
     def provides(self):
-        needs = [RoleNeed('authenticated'), UserNeed(self.id)]
+        needs = [RoleNeed('authenticated'), UserNeed(current_user.id)]
 
         if self.is_user:
             needs.append(RoleNeed('user'))

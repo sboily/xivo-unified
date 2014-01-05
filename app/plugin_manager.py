@@ -122,11 +122,11 @@ def _deactivated_plugin(plugin_name):
 
 def _remove_from_db(plugin_name):
     plugin = Plugins.query.filter(Plugins.name == plugin_name) \
-                          .filter(Plugins.organisation_id == current_user.organisation.id) \
+                          .filter(Plugins.organisation_id == current_user.organisation_id) \
                           .first()
     if g.get('server_id', None):
         plugin = Plugins.query.filter(Plugins.name == plugin_name) \
-                              .filter(Plugins.organisation_id == current_user.organisation.id) \
+                              .filter(Plugins.organisation_id == current_user.organisation_id) \
                               .filter(Plugins.server_id == g.server_id) \
                               .first()
     db.session.delete(plugin)

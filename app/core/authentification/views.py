@@ -43,7 +43,7 @@ def login():
     del form.language
     if form.validate_on_submit():
         user = auth.authenticate(form.username.data, form.password.data)
-        if user is not False:
+        if user:
             login_user(user, remember=form.remember_me.data)
             identity_changed.send(current_app._get_current_object(), \
                                   identity=Identity(user.id))

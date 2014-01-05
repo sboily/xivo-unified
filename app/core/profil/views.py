@@ -35,9 +35,9 @@ def myprofil():
     if current_user.is_user:
         account = current_user
     else:
-        account = User.query.get_or_404(current_user.id)
+        account = User.query.filter_by(id=current_user.id).first()
     gravatar = Gravatar(current_app,
-                    size=100,
+                    size=140,
                     rating='g',
                     default='retro',
                     force_default=False,
@@ -56,6 +56,10 @@ def myprofil():
         db.session.commit()
         flash(_('Profil edit'))
         return redirect(url_for("profil.myprofil"))
+    else:
+        if request.method == 'POST':
+            flash(_('Error to save the form !'))
+            return redirect(url_for("profil.myprofil"))
     return render_template('profil.html', form=form, account=account)
 
 @profil.route('/accounts')

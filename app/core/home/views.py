@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash
+from flask import render_template, Blueprint, current_app, g, redirect, url_for, flash, request
 from flask.ext.login import login_required, current_user
 from app.core.organisations.forms import OrganisationsForm
 from app.core.profil.forms import AccountForm
@@ -34,7 +34,8 @@ def initdb():
 @home.route('/')
 @login_required
 def homepage():
-    if not current_user.organisation_id:
+    if not current_user.organisation_id \
+        or not current_user.organisation_domain:
         return redirect(url_for('home.wizard'))
     return render_template('home.html')
 
@@ -52,14 +53,20 @@ def home_server():
 @home.route('/wizard', methods=['GET', 'POST'])
 @login_required
 def wizard():
-    form = OrganisationsForm()
-    del form.users
+    if current_user.organisation_name:
+        organisation = Organisations.query.filter_by(id=current_user.organisation_id).first()
+        form = OrganisationsForm(obj=organisation)
+        form.name.data = current_user.organisation_name
+    else:
+        form = OrganisationsForm()
     if form.validate_on_submit():
-        organisation = Organisations(form.name.data)
-
-        user = User.query.get_or_404(current_user.id)
-
-        organisation.users = [user]
+        if current_user.organisation_name:
+            form.populate_obj(organisation)
+        else:
+            organisation = Organisations(form.name.data)
+            organisation.domain = form.domain.data
+            user = User.query.get_or_404(current_user.id)
+            organisation.users = [user]
         db.session.add(organisation)
         db.session.commit()
         flash(_('Organisation added'))

@@ -9,6 +9,7 @@
     <thead>
       <tr>
         <th>{{ _('Name') }}</th>
+        <th>{{ _('Domain') }}</th>
         <th>{{ _('Created at') }}</th>
         <th style="width: 6%;" class="sorter-false"></th>
       </tr>
@@ -17,6 +18,7 @@
     {% for o in organisations %}
       <tr>
         <td>{{ o.name }}</td>
+        <td>{{ o.domain }}</td>
         <td>{{ o.created_time }}</td>
         <td>
           <a href="{{url_for('organisations.organisation_edit', id=o.id)}}" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>

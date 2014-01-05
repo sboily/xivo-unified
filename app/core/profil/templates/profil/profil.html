@@ -38,11 +38,20 @@
                               <h4>{{ _('Company') }}</h4>
                               <div class="form-group">
                                  <label for="organisation" class="control-label">
-                                     Organisation:
+                                     {{ _('Organisation') }}:
                                  </label>
                                  <div class="input-group">
                                      <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                                     <input class="form-control" disabled="disabled" id="organisation" name="organisation" placeholder="" value="{{ current_user.organisation_name }}" type="text">
+                                     <input class="form-control" disabled="disabled" id="organisation_name" name="organisation_name" placeholder="" value="{{ current_user.organisation_name }}" type="text">
+                                 </div>
+                              </div>
+                              <div class="form-group">
+                                 <label for="organisation" class="control-label">
+                                     {{ _('Domain name') }}:
+                                 </label>
+                                 <div class="input-group">
+                                     <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                                     <input class="form-control" disabled="disabled" id="organisation_domain" name="organisation_domain" placeholder="" value="{{ current_user.organisation_domain }}" type="text">
                                  </div>
                               </div>
                             </div>

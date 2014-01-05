@@ -26,5 +26,6 @@ class OrganisationsForm(Form):
         Regexp(r'^[^@:]*$', message=_("Name shouldn't contain '@' or ':'"))
     ])
 
+    domain = TextField(_('Domain name'), [Required()])
     description = TextAreaField(_('Description'))
     submit = SubmitField(_('Submit'))

@@ -57,6 +57,7 @@ class Organisations(db.Model):
     __tablename__ = 'organisations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
+    domain = db.Column(db.String(300))
     description = db.Column(db.Text())
     created_time = db.Column(db.DateTime, default=datetime.utcnow)
     organisation_id = db.Column(db.Integer, db.ForeignKey('organisations.id'))

@@ -36,6 +36,7 @@ class UserAuth(UserMixin):
         self.email = result['email']
         self.organisation_id = result['organisation_id']
         self.organisation_name = result['organisation_name']
+        self.organisation_domain = result['organisation_domain']
         self.role = result['role']
         self.active = result['active']
         self.language = result['language']

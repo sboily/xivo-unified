@@ -135,6 +135,7 @@ class AuthLdap(Plugin):
                 'email': unicode(result[0][1]['mail'][0], "UTF-8"),
                 'organisation_id': self._get_organisation_id(result[0][1]['o'][0]),
                 'organisation_name': unicode(result[0][1]['o'][0], "UTF-8"),
+                'organisation_domain': self._get_organisation_domain(result[0][1]['o'][0]),
                 'role': 50,
                 'active': 1,
                 'language': 'en',
@@ -148,9 +149,17 @@ class AuthLdap(Plugin):
         id = 0
         org = Organisations.query.filter(Organisations.name == organisation).first()
         if org:
-            return (int(org.id))
+            return org.id
 
         return id
+
+    def _get_organisation_domain(self, organisation):
+        dns = 0
+        org = Organisations.query.filter(Organisations.name == organisation).first()
+        if org:
+            return org.domain
+
+        return dns
 
     def register_signals(self):
         print "Activating LDAP Auth"

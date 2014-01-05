@@ -49,6 +49,7 @@ class AuthSql(Plugin):
                 'email': result.email,
                 'organisation_id': result.organisation_id,
                 'organisation_name': self._get_organisation_name(result.organisation_id),
+                'organisation_domain': self._get_organisation_domain(result.organisation_id),
                 'role': result.role,
                 'active': 1,
                 'language': result.language,
@@ -66,6 +67,14 @@ class AuthSql(Plugin):
             return org.name
 
         return name
+
+    def _get_organisation_domain(self, id):
+        dns = None
+        org = Organisations.query.filter(Organisations.id == id).first()
+        if org:
+            return org.domain
+
+        return dns
 
     def check_passwd(self, sql_passwd, passwd):
         return check_password_hash(sql_passwd, passwd)

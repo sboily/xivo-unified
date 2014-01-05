@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import User
+from app.models import User, Organisations
 from ..plugins import Plugin
 from auth_base import UserAuth
 
@@ -48,7 +48,7 @@ class AuthSql(Plugin):
                 'displayname': result.displayname,
                 'email': result.email,
                 'organisation_id': result.organisation_id,
-                'organisation_name': "Not set",
+                'organisation_name': self._get_organisation_name(result.organisation_id),
                 'role': result.role,
                 'active': 1,
                 'language': result.language,
@@ -58,6 +58,14 @@ class AuthSql(Plugin):
                }
 
         return user
+
+    def _get_organisation_name(self, id):
+        name = None
+        org = Organisations.query.filter(Organisations.id == id).first()
+        if org:
+            return org.name
+
+        return name
 
     def check_passwd(self, sql_passwd, passwd):
         return check_password_hash(sql_passwd, passwd)

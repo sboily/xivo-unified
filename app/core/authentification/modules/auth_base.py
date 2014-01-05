@@ -31,6 +31,7 @@ class UserAuth(UserMixin):
             return None
         self.id = result['id']
         self.username = result['username']
+        self.password = result['password']
         self.displayname = result['displayname']
         self.email = result['email']
         self.organisation_id = result['organisation_id']
@@ -39,11 +40,12 @@ class UserAuth(UserMixin):
         self.active = result['active']
         self.language = result['language']
         self.created_time = result['created_time']
+        self.backend = result['backend']
 
     def from_identity(self, identity):
         if identity.id == current_user.id:
             identity.provides.update(self.provides)
-            identity.auth_type = "ldap"
+            identity.auth_type = self.backend
         else:
             identity.auth_type = ""
 

@@ -65,7 +65,7 @@ def accounts():
     if current_user.is_root:
         users = User.query.all()
     else:
-        users = User.query.filter(User.organisation_id == g.user.organisation_id) \
+        users = User.query.filter(User.organisation_id == current_user.organisation_id) \
                           .filter(User.role <= current_user.MANAGER) \
                           .all()
     return render_template('accounts.html', users=users)
@@ -95,7 +95,7 @@ def account_del(id):
     if current_user.is_root:
         account = User.query.filter_by(id=id).first()
     else:
-        account = User.query.filter(User.organisation_id == g.user.organisation_id) \
+        account = User.query.filter(User.organisation_id == current_user.organisation_id) \
                             .filter_by(id=id) \
                             .first()
     if account:
@@ -113,7 +113,7 @@ def account_edit(id):
     if current_user.is_root:
         account = User.query.get_or_404(id)
     else:
-        account = User.query.filter(User.organisation_id == g.user.organisation_id) \
+        account = User.query.filter(User.organisation_id == current_user.organisation_id) \
                             .filter(User.role <= current_user.MANAGER) \
                             .filter_by(id=id) \
                             .first()

@@ -30,31 +30,7 @@ users_server = db.Table('users_server',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-class UserQuery(BaseQuery):
-
-    def from_identity(self, identity):
-        try:
-            user = self.get(int(identity.id))
-        except ValueError:
-            user = None
-
-        if user:
-            identity.provides.update(user.provides)
-            identity.auth_type = "sql"
-
-        identity.user = user
-
-        return user
-
-class User(db.Model, UserMixin):
-
-    query_class = UserQuery
-
-    USER = 50
-    ADMIN = 100
-    MANAGER = 200
-    ROOT = 300
-
+class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), unique=True)
@@ -72,40 +48,6 @@ class User(db.Model, UserMixin):
         self.password = generate_password_hash(password)
         self.displayname = displayname
         self.role = role
-
-    @cached_property
-    def provides(self):
-        needs = [RoleNeed('authenticated'), UserNeed(self.id)]
-
-        if self.is_user:
-            needs.append(RoleNeed('user'))
-
-        if self.is_admin:
-            needs.append(RoleNeed('admin'))
-
-        if self.is_manager:
-            needs.append(RoleNeed('manager'))
-
-        if self.is_root:
-            needs.append(RoleNeed('root'))
-
-        return needs
-
-    @property
-    def is_user(self):
-        return self.role == self.USER
-
-    @property
-    def is_admin(self):
-        return self.role == self.ADMIN
-
-    @property
-    def is_manager(self):
-        return self.role == self.MANAGER
-
-    @property
-    def is_root(self):
-        return self.role == self.ROOT
 
     def __repr__(self):
         return "<%d : %s (%s)>" % (self.id, self.username, self.email)

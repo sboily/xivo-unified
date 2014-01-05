@@ -1,7 +1,7 @@
-{% if (g.server or (g.user.role >= 50 and g.user.role != 100)) and g.user.organisation_id %}
+{% if (g.server or (current_user.role >= 50 and current_user.role != 100)) and current_user.organisation_id %}
 <div class="well">
     <ul class="nav nav-pills nav-stacked">
-        {% if g.user.role >= 50 and g.user.role != 100 %}
+        {% if current_user.role >= 50 and current_user.role != 100 %}
             <li class="nav-header"><h3>{{ _('Configuration') }}</h3></li>
         {%- endif %}
         {%- for endpoint, caption, role in [
@@ -11,7 +11,7 @@
                                   ('authentification.auth_configure', 'Authentification', 300),
                                   ('market.themarket', 'Market', 50),
         ] %}
-            {% if g.user.role >= role and g.user.role != 100 %}
+            {% if current_user.role >= role and current_user.role != 100 %}
                 <li {% if endpoint == request.endpoint %} class="active" {% endif %}><a href="{{url_for(endpoint)}}">{{ _(caption) }}</a></li>
             {%- endif %}
         {%- endfor %}

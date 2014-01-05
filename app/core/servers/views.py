@@ -38,7 +38,7 @@ def server():
 def server_add():
     form = ServersForm()
     if not current_user.is_root:
-        form.organisations.query_factory = lambda: Organisations.query.filter(Organisations.id == g.user_organisation.id).all()
+        form.organisations.query_factory = lambda: Organisations.query.filter(Organisations.id == current_user.organisation_id).all()
         form.organisations.allow_blank = False
 
     if form.validate_on_submit():
@@ -79,13 +79,13 @@ def server_edit(id):
         server = Servers.query.get_or_404(id)
         form = ServersForm(obj=server)
     else:
-        server = Servers.query.join(User.servers).filter(User.organisation_id==g.user_organisation.id) \
+        server = Servers.query.join(User.servers).filter(User.organisation_id==current_user.organisation_id) \
                                                  .filter(Servers.id == id) \
                                                  .order_by(Servers.name).first()
         form = ServersForm(obj=server)
         form.users.query_factory = lambda: User.query.filter(Servers.organisation_id == Organisations.id) \
                                                      .filter(Servers.organisation_id == User.organisation_id) \
-                                                     .filter(User.organisation_id == g.user.organisation_id) \
+                                                     .filter(User.organisation_id == current_user.organisation_id) \
                                                      .filter(Servers.id == id) \
                                                      .all()
 
@@ -109,7 +109,7 @@ def server_save(id):
     if current_user.is_root:
         server = Servers.query.order_by(Servers.name).first()
     elif current_user.is_manager:
-        server = Servers.query.join(User.servers).filter(User.organisation_id == g.user.organisation_id) \
+        server = Servers.query.join(User.servers).filter(User.organisation_id == current_user.organisation_id) \
                                                  .order_by(Servers.name)
     else:
         server = Servers.query.join(User.servers).filter(User.id == current_user.id) \
@@ -138,11 +138,11 @@ def get_servers_list():
         servers = Servers.query.order_by(Servers.organisation_id)
     elif current_user.is_manager:
         servers = Servers.query.join(User.servers) \
-                               .filter(User.organisation_id == g.user.organisation_id) \
+                               .filter(User.organisation_id == current_user.organisation_id) \
                                .order_by(Servers.name)
     else:
         servers = Servers.query.join(User.servers) \
-                               .filter(User.id == g.user.id) \
+                               .filter(User.id == current_user.id) \
                                .order_by(Servers.name)
 
     return servers

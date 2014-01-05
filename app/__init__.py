@@ -84,9 +84,6 @@ def configure_hooks(app):
     @app.before_request
     def before_request():
         if current_user.is_authenticated():
-            if current_user.organisation_id:
-                g.user_organisation = core.organisations.views.get_my_organisation()
-
             server_id = session.get('server_id', None)
             if server_id:
                 g.server_id = server_id
@@ -102,15 +99,11 @@ def configure_hooks(app):
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
         if identity.id:
-            if hasattr(current_user, 'query'):
-                current_user.query.from_identity(identity)
-            else:
-                current_user.from_identity(identity)
-            g.user = current_user
+            current_user.from_identity(identity)
 
     @babel.localeselector
     def get_locale():
-        if g.get('user', None):
+        if hasattr(current_user, 'language'):
             return current_user.language
         else:
             return request.accept_languages.best_match(LANGUAGES.keys())

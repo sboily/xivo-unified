@@ -130,6 +130,7 @@ class AuthLdap(Plugin):
     def parse_result(self, result):
         user = {'id': int(result[0][1]['uidNumber'][0]),
                 'username': unicode(result[0][1]['uid'][0], "UTF-8"),
+                'password': "",
                 'displayname': unicode(result[0][1]['cn'][0], "UTF-8"),
                 'email': unicode(result[0][1]['mail'][0], "UTF-8"),
                 'organisation_id': self._get_organisation_id(result[0][1]['o'][0]),
@@ -138,6 +139,7 @@ class AuthLdap(Plugin):
                 'active': 1,
                 'language': 'en',
                 'created_time': None,
+                'backend': "ldap"
                }
 
         return user

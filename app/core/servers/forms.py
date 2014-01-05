@@ -30,7 +30,7 @@ def get_servers_list():
     if current_user.is_root:
         return User.query.order_by(User.displayname)
     else:
-        return User.query.filter(User.organisation_id==g.user_organisation.id) \
+        return User.query.filter(User.organisation_id==current_user.organisation_id) \
                          .order_by(User.displayname)
 
 class ServersForm(Form):

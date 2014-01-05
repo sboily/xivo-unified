@@ -34,7 +34,7 @@ def initdb():
 @home.route('/')
 @login_required
 def homepage():
-    if not g.user.organisation_id:
+    if not current_user.organisation_id:
         return redirect(url_for('home.wizard'))
     return render_template('home.html')
 
@@ -57,7 +57,7 @@ def wizard():
     if form.validate_on_submit():
         organisation = Organisations(form.name.data)
 
-        user = User.query.get_or_404(g.user.id)
+        user = User.query.get_or_404(current_user.id)
 
         organisation.users = [user]
         db.session.add(organisation)

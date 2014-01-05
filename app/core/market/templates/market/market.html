@@ -18,11 +18,11 @@
     </thead>
     <tbody>
     {% for u in modules %}
-        {% if u.plugin.parent == 'server' and g.server_id and g.user.role >= 200 %}
+        {% if u.plugin.parent == 'server' and g.server_id and current_user.role >= 200 %}
             {% include "market_list.html" %}
-        {% elif (u.plugin.parent == 'organisation' or u.plugin.parent == 'user') and not g.server_id and g.user.role >= 200 %}
+        {% elif (u.plugin.parent == 'organisation' or u.plugin.parent == 'user') and not g.server_id and current_user.role >= 200 %}
             {% include "market_list.html" %}
-        {% elif u.plugin.parent == 'user' and not g.server_id and g.user.role == 50 %}
+        {% elif u.plugin.parent == 'user' and not g.server_id and current_user.is_user %}
             {% include "market_list.html" %}
         {% endif %}
     {% endfor %}

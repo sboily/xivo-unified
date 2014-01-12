@@ -16,7 +16,7 @@
         {{ render_field(form.displayname) }}
         {{ render_field(form.password) }}
         {{ render_field(form.confirm) }}
-        {{ render_field(form.captcha) }}
+        {{ render_field(form.areyouahuman) }}
         {{ render_field(form.agree) }}
         {{ render_field(form.submit, class="btn btn-default btn-primary") }}
         {{ _('Already have an account? ') }} <a href="{{url_for('authentification.login')}}">{{ _('Sign In') }}</a>

@@ -20,7 +20,7 @@ from wtforms.fields import TextField, BooleanField, PasswordField, SelectField, 
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import ValidationError, Required, Length, Regexp, EqualTo, Email
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from flask.ext.wtf import RecaptchaField
+from flask.ext.wtf import AreYouAHumanField
 from flask.ext.babel import lazy_gettext as _
 from flask.ext.login import current_user
 from app.models import Organisations, User
@@ -111,7 +111,7 @@ class SignupForm(Form):
         EqualTo('confirm', message=_("Passwords must match."))
     ])
     confirm = PasswordField(_('Confirm password'))
-    captcha = RecaptchaField(_('Captcha'))
+    areyouahuman = AreYouAHumanField(_('Human ?'))
 
     agree = BooleanField(_('Agree to the <a href="#license" role="button" class="btn-text" data-toggle="modal">terms and conditions</a>'), [Required()])
 

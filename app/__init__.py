@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask import Flask, session, g, flash, redirect, url_for, request
-from flask.ext.login import current_user
+from flask.ext.login import current_user, user_logged_in
 from flask.ext.principal import identity_loaded
 from extensions import db, babel, celery, login_manager, principal, couchdbmanager
 from flask.ext.babel import gettext as _
@@ -84,9 +84,8 @@ def configure_hooks(app):
     @app.before_request
     def before_request():
         if current_user.is_authenticated():
-            server_id = session.get('server_id', None)
-            if server_id:
-                g.server_id = server_id
+            if session.get('server_id', None):
+                g.server_id = session['server_id']
                 g.server = core.servers.views.get_my_server()
 
             g.servers_list = core.servers.views.get_servers_list()
@@ -95,6 +94,10 @@ def configure_hooks(app):
     @login_manager.user_loader
     def load_user(id):
         return core.authentification.auth.get_user_by_id(id)
+
+    @user_logged_in.connect_via(app)
+    def on_user_logged_in(cur, user):
+        print "User : %s is logged ..." % user.displayname
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):

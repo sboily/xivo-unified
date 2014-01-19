@@ -76,6 +76,7 @@ class AuthLdap(Plugin):
 
     def set_config(self):
         ldapconfig = self.get_config_from_db()
+        config = { 'active' : False }
         if ldapconfig:
             config = { 'host': ldapconfig.host,
                        'basedn' : ldapconfig.basedn,
@@ -107,7 +108,7 @@ class AuthLdap(Plugin):
                 config['with_simple'] = True
                 self.by_id = None
 
-            return config
+        return config
 
     def get_config_from_db(self):
         return AuthServerLdap.query.first()

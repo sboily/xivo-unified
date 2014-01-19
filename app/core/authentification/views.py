@@ -27,11 +27,9 @@ import auth
 
 authentification = Blueprint('authentification', __name__, template_folder='templates/authentification')
 
-ROOT = '300'
-
 @authentification.before_request
 def is_root_installed():
-    if not User.query.filter(User.role == ROOT).first():
+    if not User.query.filter(User.role == '300').first():
         return redirect(url_for('home.first'))
 
 @authentification.route("/login", methods=['GET', 'POST'])

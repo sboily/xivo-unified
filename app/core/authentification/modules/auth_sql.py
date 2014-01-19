@@ -43,20 +43,22 @@ class AuthSql(Plugin):
         return False
 
     def parse_result(self, result):
-        user = {'id': result.id,
-                'username': result.username,
-                'displayname': result.displayname,
-                'email': result.email,
-                'organisation_id': result.organisation_id,
-                'organisation_name': self._get_organisation_name(result.organisation_id),
-                'organisation_domain': self._get_organisation_domain(result.organisation_id),
-                'role': result.role,
-                'active': 1,
-                'language': result.language,
-                'created_time': result.created_time,
-                'password': result.password,
-                'backend': "sql"
-               }
+        user = False
+        if result:
+            user = {'id': result.id,
+                    'username': result.username,
+                    'displayname': result.displayname,
+                    'email': result.email,
+                    'organisation_id': result.organisation_id,
+                    'organisation_name': self._get_organisation_name(result.organisation_id),
+                    'organisation_domain': self._get_organisation_domain(result.organisation_id),
+                    'role': result.role,
+                    'active': 1,
+                    'language': result.language,
+                    'created_time': result.created_time,
+                    'password': result.password,
+                    'backend': "sql"
+                   }
 
         return user
 

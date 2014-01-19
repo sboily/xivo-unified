@@ -46,9 +46,7 @@ class UserAuth(UserMixin):
     def from_identity(self, identity):
         if identity.id == current_user.id:
             identity.provides.update(self.provides)
-
             identity.user = current_user
-
             identity.auth_type = self.backend
         else:
             identity.auth_type = ""

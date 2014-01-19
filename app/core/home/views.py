@@ -75,8 +75,7 @@ def wizard():
 
 @home.route('/first', methods=['GET', 'POST'])
 def first():
-    ROOT = '300'
-    if User.query.filter(User.role == current_user.ROOT).first():
+    if not current_user.is_anonymous:
         return redirect(url_for("home.homepage"))
 
     form = AccountForm()
@@ -85,7 +84,7 @@ def first():
     del form.language
     if form.validate_on_submit():
         account = User(form.username.data, form.password.data,
-                       form.email.data, form.displayname.data, ROOT)
+                       form.email.data, form.displayname.data, '300')
         db.session.add(account)
         db.session.commit()
         flash(_('Account added'))

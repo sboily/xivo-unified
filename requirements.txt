@@ -20,4 +20,5 @@ boto
 fabric
 python-novaclient
 flask-couchdb==0.2.1
+python-ldap
 -e git+https://github.com/sboily/flask-wtf#egg=flask-wtf

@@ -4,14 +4,19 @@
   {% set role = 200 %}
 {% endif %}
 
-  <div class="row" style="margin-bottom: 10px;">
-    <div class="col-md-3 col-md-offset-9">
-      <div class="input-group input-group-sm">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-        <input class="search form-control" type="search">
-        <div class="input-group-btn">
-          <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>
-          {% if url_add and current_user.role >= role %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="glyphicon glyphicon-th-large"></i> {{ request.path }}</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-3 col-md-offset-9">
+        <div class="input-group input-group-sm">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+          <input class="search form-control" type="search">
+          <div class="input-group-btn">
+            <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>
+            {% if url_add and current_user.role >= role %}
               <a class="btn btn-primary btn-xs" href="{{ url_add }}" style="margin-left: 5px;">
               {% if icon_url_add %}
                   <i class="glyphicon glyphicon-{{ icon_url_add }}"></i>
@@ -25,9 +30,8 @@
                   {{ _('Add') }}
               {% endif %}
               </a>
-          {% endif %}
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-

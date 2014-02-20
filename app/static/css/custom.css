@@ -27,3 +27,8 @@
     line-height: 19px; 
     color: white;
 }
+
+.nav-sidebar > .active > a {
+  color: #fff;
+  background-color: #428bca;
+}

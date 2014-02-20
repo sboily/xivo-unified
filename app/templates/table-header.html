@@ -4,15 +4,15 @@
   {% set role = 200 %}
 {% endif %}
 
-  <div class="row" style="margin-right: 0px; padding-left: 0px; margin-bottom: 20px;">
+  <div class="row" style="margin-bottom: 10px;">
     <div class="col-md-3 col-md-offset-9">
       <div class="input-group input-group-sm">
         <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
         <input class="search form-control" type="search">
         <div class="input-group-btn">
-          <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>&nbsp;&nbsp;
+          <button class="btn btn-primary reset"><i class="glyphicon glyphicon-remove"></i></button>
           {% if url_add and current_user.role >= role %}
-              <a class="btn btn-primary btn-xs" href="{{ url_add }}">
+              <a class="btn btn-primary btn-xs" href="{{ url_add }}" style="margin-left: 5px;">
               {% if icon_url_add %}
                   <i class="glyphicon glyphicon-{{ icon_url_add }}"></i>
               {% else %}

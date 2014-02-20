@@ -18,7 +18,7 @@
 from flask import Flask, session, g, flash, redirect, url_for, request
 from flask.ext.login import current_user, user_logged_in
 from flask.ext.principal import identity_loaded
-from extensions import db, babel, celery, login_manager, principal, couchdbmanager
+from extensions import db, babel, celery, login_manager, principal, couchdbmanager, mail
 from flask.ext.babel import gettext as _
 import plugin_manager
 import logging
@@ -74,6 +74,9 @@ def configure_extensions(app):
 
     # Roles
     principal.init_app(app)
+
+    # Mail
+    mail.init_app(app)
 
     # Plugins list global
     plugin_manager.init_plugin_manager(app.root_path + '/plugins', app)

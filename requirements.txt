@@ -21,4 +21,5 @@ fabric
 python-novaclient
 flask-couchdb==0.2.1
 python-ldap
+Flask-Mail==0.9.0
 -e git+https://github.com/sboily/flask-wtf#egg=flask-wtf

@@ -32,3 +32,6 @@ principal = Principal()
 
 from flask.ext.couchdb import CouchDBManager
 couchdbmanager = CouchDBManager()
+
+from flask.ext.mail import Mail
+mail = Mail()

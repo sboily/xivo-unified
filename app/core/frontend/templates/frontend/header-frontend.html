@@ -1,0 +1,25 @@
+    <section id="header" data-speed="4" data-type="background">
+        <div class="container-transparent text-center">
+          <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="heronav left hidden-xs">
+                    <li><a href="http://www.avencall.com">Avencall</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                </ul>
+                <ul class="heronav right hidden-xs">
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="{{ url_for('authentification.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('profil.signup') }}">Signup</a></li>
+                </ul>
+                <h1><img src="{{ url_for('frontend.static', filename='img/cloud.png') }}" height="50" alt="logo name"></h1>
+                <h1 class="page-title">Welcome to XiVO cloud plateform</h1>
+                <h4 class="page-sub-title">In the end, it's not going to matter how many breath you took, <br>but how many moments took your breath away.</h4>
+                <div class="showcase">
+                    <a class="btn btn-warning btn-lg hidden-xs" href="#intro">Learn More &nbsp;&nbsp;<i class="fa fa-play"></i></a>
+                    <a class="btn btn-warning btn-sm visible-xs" href="#intro">Learn More &nbsp;&nbsp;<i class="fa fa-play"></i></a>
+                </div>
+            </div>
+          </div>
+        </div>
+    </section>

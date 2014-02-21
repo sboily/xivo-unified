@@ -30,6 +30,7 @@ CORE_MODULES = (
     'profil',
     'home',
     'organisations',
+    'frontend',
 )
 
 LANGUAGES = {

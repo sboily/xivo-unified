@@ -1,0 +1,13 @@
+{% extends "base.html" %}    
+
+{% block header %}
+    <link rel="stylesheet" media="screen" href="{{ url_for('frontend.static', filename='css/frontend.css') }}">
+    <script language="javascript" type=text/javascript src="{{ url_for('frontend.static', filename='js/init.js') }}"></script>
+{% endblock %}
+
+{% block anonymous_content %}
+    {% include "header-frontend.html" %}
+    {% include "xivo.html" %}
+    {% include "features.html" %}
+    {% include "about.html" %}
+{% endblock %}

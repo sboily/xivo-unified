@@ -31,7 +31,7 @@ def initdb():
     db.create_all()
     db.session.commit()
 
-@home.route('/')
+@home.route('/backend')
 @login_required
 def homepage():
     if not current_user.organisation_id \

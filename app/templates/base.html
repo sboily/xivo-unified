@@ -7,13 +7,11 @@
     </head>
 
     {% block body %}
-        <body>
+        <body role="document">
     {% endblock %}
 
+    {% include "menu_top.html" %}
     {% if current_user.is_authenticated() %}
-        {% include "menu_top.html" %}
-        {% block menu_top %}
-        {% endblock %}
         {% include "messages.html" %}
     {% elif is_anonymous_content %}
         {% block anonymous_content %}

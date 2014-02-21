@@ -15,11 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, redirect
+from flask.ext.login import current_user
 
 frontend = Blueprint('frontend', __name__, template_folder='templates/frontend',
                       static_folder='static', static_url_path='/%s' % __name__)
 
 @frontend.route('/')
 def homepage():
+    if current_user.is_authenticated():
+        return redirect('home.homepage')
     return render_template('index.html', is_anonymous_content=1)

@@ -99,9 +99,9 @@ def configure_hooks(app):
     def load_user(id):
         return core.authentification.auth.get_user_by_id(id)
 
-    @user_logged_in.connect_via(app)
-    def on_user_logged_in(cur, user):
-        print "User : %s is logged ..." % user.displayname
+    #@user_logged_in.connect_via(app)
+    #def on_user_logged_in(cur, user):
+    #    print "User : %s is logged ..." % user.displayname
 
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):

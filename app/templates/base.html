@@ -13,10 +13,7 @@
     {% include "menu_top.html" %}
     {% if current_user.is_authenticated() %}
         {% include "messages.html" %}
-    {% elif is_anonymous_content %}
-        {% block anonymous_content %}
-        {% endblock %}
-    {% else %}
+    {% elif not is_anonymous_content or current_user.is_authenticated() %}
         {% include "messages.html" %}
         {% block login %}
         {% endblock %}
@@ -49,6 +46,9 @@
             {% endif %}
         </div>
       </div>
+    {% elif is_anonymous_content %}
+            {% block anonymous_content %}
+            {% endblock %}
     {% endif %}
 
     {% block footer %}
